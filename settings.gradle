@@ -1,0 +1,3 @@
+rootProject.name='7_Kabale'
+include ':app'
+include ':openCVLibrary343'
