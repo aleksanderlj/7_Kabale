@@ -22,9 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         wauw = MediaPlayer.create(this, R.raw.wow);
 
-        // Permissions
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        getPermissions();
 
         Button start_btn = findViewById(R.id.start_btn);
         start_btn.setOnClickListener(this);
@@ -38,6 +36,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent i = new Intent(this, CameraActivity.class);
                 startActivity(i);
                 break;
+        }
+    }
+
+    private void getPermissions(){
+        String[] permissions = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+        };
+
+        for(String s : permissions){
+            if(ContextCompat.checkSelfPermission(this, s) != PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(this, new String[]{s}, 1);
         }
     }
 }
