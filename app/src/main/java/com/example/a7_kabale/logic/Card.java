@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 public class Card {
 	private int value;
 	private String suit;
-	// This value is only meant for cards in the stackdecks
+	//	// This value is only meant for cards in the stackdecks
 	private boolean shown;
 	
 	public Card (int value, String suit){
