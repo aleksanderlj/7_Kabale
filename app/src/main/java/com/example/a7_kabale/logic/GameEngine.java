@@ -11,7 +11,7 @@ public class GameEngine {
 	private int hiddenCards;
 	private Card shownCard;
 	
-	private void initiateGame(){
+	public void initiateGame(){
 		initiateCards();
 		//setGameState();
 		
@@ -22,7 +22,7 @@ public class GameEngine {
 		allCards = new ArrayList<>();
 		for(int i = 0; i < 52; i++){
 			if (i < 13)
-				allCards.add(new Card((i % 13), "Hearts"));
+				allCards.add(new Card(i % 13, "Hearts"));
 			else if (i < 26)
 				allCards.add(new Card(i % 13, "Diamonds"));
 			else if (i < 39)
