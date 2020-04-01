@@ -78,17 +78,17 @@ public class CardRecognizer {
     }
 
     private int getCardColor() {
-
         return 0;
     }
 
     private String getCardValue() {
-
+        //OCR Genkendelse her!
         return "Value";
     }
 
     private String getCardSuit(int color) {
-
+        //Her kan det være en god idé at matche kuløren ud fra et andet billede med OpenCVs template matching.
+        // Det største match må være kuløren.
         return "Spades";
     }
 
