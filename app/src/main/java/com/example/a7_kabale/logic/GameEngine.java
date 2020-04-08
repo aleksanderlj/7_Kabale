@@ -17,6 +17,14 @@ public class GameEngine {
 		setGameState();
 		checkTopDeckForAce();
 		
+		
+		// Run of the game
+		initiateCards();
+		while (true){
+			setGameState();
+			checkTopDeckForAce();
+			checkTableauDecksForAce();
+		}
 	}
 	
 	private void initiateCards(){
@@ -55,24 +63,41 @@ public class GameEngine {
 				case "Diamonds":
 					foundationsDeck[0] = topDeckCard;
 					topDeckCard = new Card(4, "Hearts");
+					System.out.println("Move the Ace from the talon to the first foundation pile.");
 					break;
 				case "Hearts":
 					foundationsDeck[1] = topDeckCard;
 					topDeckCard = new Card(4, "Hearts");
+					System.out.println("Move the Ace from the talon to the second foundation pile.");
 					break;
 				case "Clubs":
 					foundationsDeck[2] = topDeckCard;
 					topDeckCard = new Card(4, "Hearts");
+					System.out.println("Move the Ace from the talon to the third foundation pile.");
 					break;
 				case "Spades":
 					foundationsDeck[3] = topDeckCard;
 					topDeckCard = new Card(4, "Hearts");
+					System.out.println("Move the Ace from the talon to the fourth foundation pile.");
 					break;
 			}
 		}
 	}
 
 	private void checkTableauDecksForAce(){
-		if (tableauDecks1.contains(Card))
+		if (tableauDecks1.get(tableauDecks1.size()-1).getValue() == 1)
+			System.out.println("Move ace from tableau deck 1, to the correct foundation pile.");
+		else if (tableauDecks1.get(tableauDecks1.size()-1).getValue() == 2)
+			System.out.println("Move ace from tableau deck 2, to the correct foundation pile.");
+		else if (tableauDecks1.get(tableauDecks1.size()-1).getValue() == 3)
+			System.out.println("Move ace from tableau deck 3, to the correct foundation pile.");
+		else if (tableauDecks1.get(tableauDecks1.size()-1).getValue() == 4)
+			System.out.println("Move ace from tableau deck 4, to the correct foundation pile.");
+		else if (tableauDecks1.get(tableauDecks1.size()-1).getValue() == 5)
+			System.out.println("Move ace from tableau deck 5, to the correct foundation pile.");
+		else if (tableauDecks1.get(tableauDecks1.size()-1).getValue() == 6)
+			System.out.println("Move ace from tableau deck 6, to the correct foundation pile.");
+		else if (tableauDecks1.get(tableauDecks1.size()-1).getValue() == 7)
+			System.out.println("Move ace from tableau deck 7, to the correct foundation pile.");
 	}
 }

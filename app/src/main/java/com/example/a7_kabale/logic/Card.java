@@ -7,26 +7,15 @@ public class Card {
 	private String suit;
 	//	// This value is only meant for cards in the stackdecks
 	private boolean shown;
-
-	public int getValue() {
-		return value;
-	}
-
-	public String getSuit() {
-		return suit;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-	public void setSuit(String suit) {
-		this.suit = suit;
-	}
-
+	
 	public Card (int value, String suit){
 		this.value = value;
 		this.suit = suit;
+		this.shown = true;
+	}
+	
+	public Card (){
+		this.shown = false;
 	}
 	
 	@NonNull
@@ -41,5 +30,21 @@ public class Card {
 	
 	public void setShown(boolean shown) {
 		this.shown = shown;
+	}
+	
+	public int getValue() {
+		return value;
+	}
+	
+	public String getSuit() {
+		return suit;
+	}
+	
+	public void setValue(int value) {
+		this.value = value;
+	}
+	
+	public void setSuit(String suit) {
+		this.suit = suit;
 	}
 }
