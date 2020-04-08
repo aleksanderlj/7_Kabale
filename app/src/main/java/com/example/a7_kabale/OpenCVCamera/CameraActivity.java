@@ -18,6 +18,7 @@ import org.opencv.core.*;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
+    Button close_btn;
     ImageView preview;
     JavaCameraView camera;
     Mat video, frame;
@@ -27,7 +28,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         OpenCVLoader.initDebug();
-       preview = findViewById(R.id.image_preview);
+        preview = findViewById(R.id.image_preview);
+        close_btn = findViewById(R.id.closepreview_btn);
 
         camera = findViewById(R.id.camera_view);
         camera.setCameraIndex(0);
@@ -36,6 +38,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         Button capture_btn = findViewById(R.id.capture_btn);
         capture_btn.setOnClickListener(this);
+        close_btn.setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +51,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
                 preview.setVisibility(View.VISIBLE);
+                close_btn.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.closepreview_btn:
+                preview.setVisibility(View.GONE);
+                close_btn.setVisibility(View.GONE);
                 break;
         }
     }
