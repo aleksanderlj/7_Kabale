@@ -1,8 +1,10 @@
 package com.example.a7_kabale.OpenCVCamera;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,19 +13,21 @@ import com.example.a7_kabale.R;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.*;
-import org.opencv.imgproc.Imgproc;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
+    ImageView preview;
     JavaCameraView camera;
-    Mat picture;
+    Mat video, frame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         OpenCVLoader.initDebug();
+       preview = findViewById(R.id.image_preview);
 
         camera = findViewById(R.id.camera_view);
         camera.setCameraIndex(0);
@@ -36,16 +40,25 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        Bitmap bm;
         switch (v.getId()){
             case R.id.capture_btn:
-
+                frame = getFrame();
+                bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(frame, bm);
+                preview.setImageBitmap(bm);
+                preview.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
+    public Mat getFrame(){
+        return video.clone();
+    }
+
     @Override
     public void onCameraViewStarted(int width, int height) {
-        picture = new Mat(width, height, CvType.CV_16UC4);
+        video = new Mat(width, height, CvType.CV_16UC4);
     }
 
     @Override
@@ -55,8 +68,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        picture = inputFrame.rgba();
-        return picture;
+        video = inputFrame.rgba();
+        return video;
     }
 
     @Override
