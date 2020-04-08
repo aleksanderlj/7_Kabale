@@ -11,11 +11,13 @@ import com.example.a7_kabale.R;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Mat;
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
     JavaCameraView camera;
+    Mat picture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onCameraViewStarted(int width, int height) {
-
+        picture = new Mat(width, height, CvType.CV_16UC4);
     }
 
     @Override
@@ -53,7 +55,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        return null;
+        picture = inputFrame.rgba();
+        return picture;
     }
 
     @Override
