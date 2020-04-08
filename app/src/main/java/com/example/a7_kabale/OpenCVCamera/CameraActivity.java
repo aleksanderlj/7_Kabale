@@ -52,6 +52,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 preview.setImageBitmap(bm);
                 preview.setVisibility(View.VISIBLE);
                 close_btn.setVisibility(View.VISIBLE);
+                close_btn.bringToFront();
                 break;
 
             case R.id.closepreview_btn:
