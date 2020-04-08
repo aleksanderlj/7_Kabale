@@ -1,4 +1,4 @@
-package com.example.a7_kabale;
+package com.example.a7_kabale.AndroidCamera;
 
 import android.content.Context;
 import android.hardware.Camera;
@@ -24,6 +24,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceCreated(SurfaceHolder holder) {
         try {
             mCamera.setPreviewDisplay(holder);
+            mCamera.setDisplayOrientation(90);
             mCamera.startPreview();
         } catch (IOException e) {
             e.printStackTrace();

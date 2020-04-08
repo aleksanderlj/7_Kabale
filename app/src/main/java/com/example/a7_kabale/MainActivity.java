@@ -5,13 +5,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.a7_kabale.AndroidCamera.AndroidCameraActivity;
+import com.example.a7_kabale.OpenCVCamera.CameraActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     MediaPlayer wauw;

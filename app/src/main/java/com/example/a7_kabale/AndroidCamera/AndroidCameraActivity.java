@@ -1,33 +1,31 @@
-package com.example.a7_kabale;
+package com.example.a7_kabale.AndroidCamera;
 
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.File;
+import com.example.a7_kabale.R;
 
-public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
+public class AndroidCameraActivity extends AppCompatActivity implements View.OnClickListener {
     private Camera mCamera;
     private CameraPreview mPreview;
-    private Camera.PictureCallback mCallback;
+    private Camera.PictureCallback mPicture;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera);
+        setContentView(R.layout.camera_android);
 
         mCamera = getCameraInstance();
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout frame = findViewById(R.id.camera_frame);
         frame.addView(mPreview);
 
-
+        setPictureCallback();
 
         Button capture_btn = findViewById(R.id.capture_btn);
         capture_btn.setOnClickListener(this);
@@ -37,7 +35,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.capture_btn:
-                mCamera.takePicture(null, null, picture);
+                //mCamera.takePicture(null, null, picture);
                 break;
         }
     }
@@ -53,12 +51,17 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setPictureCallback(){
-        mCallback = new Camera.PictureCallback() {
+        mPicture = new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
 
+                //File output = getOu
             }
         };
+    }
+
+    private void createPictureFile(){
+        //File dir = new File(Environment.getExternalStoragePublicDirectory());
     }
 }
 
