@@ -4,36 +4,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameEngine {
-	private Card[] foundationsDeck; //The 4 decks of cards in the top right corner beginning with an Ace card
 
+	//Det er svært at huske på, at vi ikke behøver gemme alle tidligere kort. Vi skal bare have
+	//info fra billedet og det øverste kort...
 	private ArrayList<Card>
+			//The 7 rows of cards to be moved around and combined - disse skal måske være arrays.
 			tableauDecks1, tableauDecks2, tableauDecks3, tableauDecks4, tableauDecks5,
-			tableauDecks6, tableauDecks7; //The 7 rows of cards to be moved around and combined
+			tableauDecks6, tableauDecks7;
 
-	private Card topDeckCard; //The drawn card from the top of the deck
+	private Card topDeckCard, //The drawn card from the top of the deck
+	//The 4 decks of cards in the top right corner beginning with an Ace card
+	foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 
 	public void initiateGame() {
-		initiateCards();
+		initiateCardsArray();
 		setGameState();
 
-		if (!checkTopDeckForAce()) {
-			if (!checkTableauDecksForAce()) {
-				System.out.println("Næste træk etc.");
-			}
-		}
+		/*Så vi husker hvordan det hele skal opsættes:
+
+		-Check først for Ace i bunken, der vendes
+		-Check derefter for Ace forrest i de 7 rækker kort
+		-Check så efter om der er nogen Ace i de 4 "tårne".
+		-Hvis der er det, så check efter et kort, der er +1 af kortet på toppen af disse 4 - dette
+		skal loopes igennem for hver bunke af kulør.
+		-Her kommer det virkeligt svære - vi skal tjekke, om kortene i de 7 rækker kan flyttes rundt.
+		-Hvis ingen af disse returnerer "true", så skal der vendes et kort fra bunken, og der tjekkes forfra igen.
+		*/
+
+
 
 
 		// Run of the game
 		while (true) {
 			setGameState();
-			checkTopDeckForAce();
-			checkTableauDecksForAce();
+				if (!checkTopDeckForAce()) {
+					if (!checkTableauDecksForAce()) {
+						System.out.println("Næste træk etc.");
+					}
+				} else System.out.println("Vend et nyt kort fra bunken!");
 		}
 	}
 
-	private void initiateCards() {
-		foundationsDeck = new Card[3];
-
+	private void initiateCardsArray() {
 		//Fra venstre mod højre
 		tableauDecks1 = new ArrayList<>();
 		tableauDecks2 = new ArrayList<>();
@@ -44,7 +56,7 @@ public class GameEngine {
 		tableauDecks7 = new ArrayList<>();
 	}
 
-	// TODO - This must be implemented, when we get data from a picture
+	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
 	private void setGameState() {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
@@ -59,28 +71,34 @@ public class GameEngine {
 		tableauDecks5.add(new Card(7, "Spades"));
 		tableauDecks6.add(new Card(8, "Spades"));
 		tableauDecks7.add(new Card(12, "Hearts"));
+
+		//Da alle disse bunker er tomme fra start.
+		foundationsDeckDiamonds = new Card();
+		foundationsDeckHearts = new Card();
+		foundationsDeckClubs = new Card();
+		foundationsDeckSpades = new Card();
 	}
 
 	private boolean checkTopDeckForAce() {
 		if (topDeckCard.getValue() == 1) {
 			switch (topDeckCard.getSuit()) {
 				case "Diamonds":
-					foundationsDeck[0] = topDeckCard;
-					topDeckCard = new Card(4, "Hearts");
+					foundationsDeckDiamonds = topDeckCard;
+					topDeckCard = new Card(4, "Hearts"); //Vender nyt kort - er nok unødvendig, da gameState() ordner det.
 					System.out.println("Move the Ace from the talon to the first foundation pile.");
 					return true;
 				case "Hearts":
-					foundationsDeck[1] = topDeckCard;
+					foundationsDeckHearts = topDeckCard;
 					topDeckCard = new Card(4, "Hearts");
 					System.out.println("Move the Ace from the talon to the second foundation pile.");
 					return true;
 				case "Clubs":
-					foundationsDeck[2] = topDeckCard;
+					foundationsDeckClubs = topDeckCard;
 					topDeckCard = new Card(4, "Hearts");
 					System.out.println("Move the Ace from the talon to the third foundation pile.");
 					return true;
 				case "Spades":
-					foundationsDeck[3] = topDeckCard;
+					foundationsDeckSpades = topDeckCard;
 					topDeckCard = new Card(4, "Hearts");
 					System.out.println("Move the Ace from the talon to the fourth foundation pile.");
 					return true;
