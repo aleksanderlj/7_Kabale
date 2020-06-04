@@ -35,13 +35,16 @@ public class GameEngine {
 
 
 		// Run of the game
-		while (true) {
+		int i = 0;
+		while (i < 1) {
+			i++;
 			setGameState();
-				if (!checkTopDeckForAce()) {
-					if (!checkTableauDecksForAce()) {
-						System.out.println("Næste træk etc.");
-					}
-				} else System.out.println("Vend et nyt kort fra bunken!");
+				if (!checkTopDeckForAce())
+					continue;
+				else if (!checkTableauDecksForAce())
+					continue;
+				else if (checkTableauToFoundationHearts())
+					continue;
 		}
 	}
 
@@ -84,22 +87,18 @@ public class GameEngine {
 			switch (topDeckCard.getSuit()) {
 				case "Diamonds":
 					foundationsDeckDiamonds = topDeckCard;
-					topDeckCard = new Card(4, "Hearts"); //Vender nyt kort - er nok unødvendig, da gameState() ordner det.
 					System.out.println("Move the Ace from the talon to the first foundation pile.");
 					return true;
 				case "Hearts":
 					foundationsDeckHearts = topDeckCard;
-					topDeckCard = new Card(4, "Hearts");
 					System.out.println("Move the Ace from the talon to the second foundation pile.");
 					return true;
 				case "Clubs":
 					foundationsDeckClubs = topDeckCard;
-					topDeckCard = new Card(4, "Hearts");
 					System.out.println("Move the Ace from the talon to the third foundation pile.");
 					return true;
 				case "Spades":
 					foundationsDeckSpades = topDeckCard;
-					topDeckCard = new Card(4, "Hearts");
 					System.out.println("Move the Ace from the talon to the fourth foundation pile.");
 					return true;
 			}
@@ -131,6 +130,14 @@ public class GameEngine {
 				System.out.println("Move ace from tableau deck 7, to the correct foundation pile.");
 				return true;
 		}
+		return false;
+	}
+	
+	private boolean checkTableauToFoundationHearts(){
+		//if (tableauDecks1.get(tableau)
+		
+		
+		
 		return false;
 	}
 }
