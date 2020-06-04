@@ -3,6 +3,7 @@ package com.example.a7_kabale.logic;
 import android.content.SyncStatusObserver;
 
 import com.example.a7_kabale.logic.deepLogic.CheckAces;
+import com.example.a7_kabale.logic.deepLogic.CheckTabToFou;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class GameEngine {
 			i++;
 			setGameState();
 			CheckAces checkAces = new CheckAces(tableauDecks, topDeckCard, foundationsDeckDiamonds,
+					foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
+			CheckTabToFou checkTabToFou = new CheckTabToFou(tableauDecks, topDeckCard, foundationsDeckDiamonds,
 					foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
 				if (checkAces.checkTopDeckForAce())
 					continue;
