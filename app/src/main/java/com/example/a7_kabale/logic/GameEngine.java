@@ -136,6 +136,14 @@ public class GameEngine {
 	}
 	
 	private boolean checkTableauToFoundationHearts(){
+
+		/*
+		Gentages for hver kulør.
+
+		Check først om foundationpile ikke er null. Tjek herefter værdien af kortet.
+		Undersøg om der findes et kort i hvert tableaudeck, som er præcis 1 større end kortet i foundationpile.
+		*/
+
 		//if (tableauDecks1.get(tableau)
 		
 		
