@@ -11,7 +11,7 @@ public class GameEngine {
 			//The 7 rows of cards to be moved around and combined - disse skal måske være arrays.
 			tableauDecks1, tableauDecks2, tableauDecks3, tableauDecks4, tableauDecks5,
 			tableauDecks6, tableauDecks7;
-
+	private ArrayList<ArrayList<Card>> tableauDecks;
 	private Card topDeckCard, //The drawn card from the top of the deck
 	//The 4 decks of cards in the top right corner beginning with an Ace card
 	foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
@@ -57,6 +57,13 @@ public class GameEngine {
 		tableauDecks5 = new ArrayList<>();
 		tableauDecks6 = new ArrayList<>();
 		tableauDecks7 = new ArrayList<>();
+		tableauDecks.add(tableauDecks1);
+		tableauDecks.add(tableauDecks2);
+		tableauDecks.add(tableauDecks3);
+		tableauDecks.add(tableauDecks4);
+		tableauDecks.add(tableauDecks5);
+		tableauDecks.add(tableauDecks6);
+		tableauDecks.add(tableauDecks7);
 	}
 
 	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
