@@ -21,7 +21,7 @@ public class Card {
 	@NonNull
 	@Override
 	public String toString() {
-		return this.value + this.suit;
+		return this.suit + " " + this.value;
 	}
 	
 	public boolean isShown() {

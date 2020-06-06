@@ -5,36 +5,27 @@ import java.util.ArrayList;
 
 public class CheckAces {
 	private ArrayList<ArrayList<Card>> tableauDecks;
-	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
+	private Card topDeckCard;
 	
-	public CheckAces(ArrayList<ArrayList<Card>> tableauDecks, Card topDeckCard, Card foundationsDeckDiamonds, Card foundationsDeckHearts,
-					 Card foundationsDeckClubs, Card foundationsDeckSpades) {
+	public CheckAces(ArrayList<ArrayList<Card>> tableauDecks, Card topDeckCard) {
 		this.tableauDecks = tableauDecks;
 		this.topDeckCard = topDeckCard;
-		this.foundationsDeckDiamonds = foundationsDeckDiamonds;
-		this.foundationsDeckHearts = foundationsDeckHearts;
-		this.foundationsDeckClubs = foundationsDeckClubs;
-		this.foundationsDeckSpades = foundationsDeckSpades;
 	}
 	
 	public boolean checkTopDeckForAce(){
 		if (topDeckCard.getValue() == 1) {
 			switch (topDeckCard.getSuit()) {
 				case "Diamonds":
-					foundationsDeckDiamonds = topDeckCard;
-					System.out.println("Move the Diamonds Ace from the topdeck to the first foundation pile.");
+					System.out.println("Move the "+ topDeckCard.toString() + " from the topdeck to the first foundation pile.");
 					return true;
 				case "Hearts":
-					foundationsDeckHearts = topDeckCard;
-					System.out.println("Move the Hearts Ace from the topdeck to the second foundation pile.");
+					System.out.println("Move the " + topDeckCard.toString() + " from the topdeck to the second foundation pile.");
 					return true;
 				case "Clubs":
-					foundationsDeckClubs = topDeckCard;
-					System.out.println("Move the Clubs Ace from the topdeck to the third foundation pile.");
+					System.out.println("Move the " + topDeckCard.toString() + " from the topdeck to the third foundation pile.");
 					return true;
 				case "Spades":
-					foundationsDeckSpades = topDeckCard;
-					System.out.println("Move the Spades Ace from the topdeck to the fourth foundation pile.");
+					System.out.println("Move the " + topDeckCard.toString() + " from the topdeck to the fourth foundation pile.");
 					return true;
 			}
 		}
