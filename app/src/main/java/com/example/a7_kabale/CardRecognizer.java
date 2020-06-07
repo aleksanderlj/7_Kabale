@@ -1,49 +1,43 @@
 package com.example.a7_kabale;
 
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
+import org.opencv.dnn.Dnn;
+import org.opencv.dnn.Net;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class CardRecognizer {
         private Activity callingActivity;
+        private Context context;
         private ImageView screenImage;
         private int currentImage = 1;
         private Bitmap imgBitmap;
-        private Bitmap spades, hearts, diamonds, clubs;
-        private Mat imageMat, editedImageMat;
-        private Mat spadesMat, heartsMat, diamondsMat, clubsMat;
-        private int matchMethod=Imgproc.TM_CCOEFF;
+        private Mat imageMat;
+        private File storage;
 
         public CardRecognizer(Activity activity) {
             callingActivity = activity;
-
-            //Init openCV
-            editedImageMat = new Mat();
-            spadesMat = new Mat();
-            heartsMat = new Mat();
-            diamondsMat = new Mat();
-            clubsMat = new Mat();
-            spades = BitmapFactory.decodeResource(callingActivity.getResources(), R.mipmap.spades);
-            hearts = BitmapFactory.decodeResource(callingActivity.getResources(), R.mipmap.hearts);
-            diamonds = BitmapFactory.decodeResource(callingActivity.getResources(), R.mipmap.diamonds);
-            clubs = BitmapFactory.decodeResource(callingActivity.getResources(), R.mipmap.clubs);
-            Utils.bitmapToMat(spades, spadesMat);
-            Utils.bitmapToMat(hearts, heartsMat);
-            Utils.bitmapToMat(diamonds, diamondsMat);
-            Utils.bitmapToMat(clubs, clubsMat);
+            context = activity.getApplicationContext();
+            storage = context.getExternalFilesDir(null);
         }
 
         public void doThings() {
@@ -51,10 +45,15 @@ public class CardRecognizer {
         Button button = (Button) callingActivity.findViewById(R.id.button);
         Button openCVbtn = (Button) callingActivity.findViewById(R.id.buttonOpenCV);
 
+
+        imageMat = new Mat();
+        screenImage.setImageResource(R.mipmap.spillekort1);
+        imgBitmap = BitmapFactory.decodeResource(callingActivity.getResources(), R.mipmap.spillekort1);
+        Utils.bitmapToMat(imgBitmap, imageMat);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                imageMat = new Mat();
                 switch (currentImage) {
                     case 1:
                         currentImage++;
@@ -84,49 +83,77 @@ public class CardRecognizer {
         openCVbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                String result = "Der er gået noget galt hvis det her står.";
-                //result = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.mipmap.spillekort2).toString();
                 TextView text = (TextView) callingActivity.findViewById(R.id.textView);
+                downloadAssets();
+                getCards();
 
-                int color = getCardColor();
-                result = getCardSuit(color);
-                result += " " + colorIdToString(color);
-                result += " " + getCardValue();
 
-                Mat tmp = new Mat();
-                Bitmap bmp = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(tmp, bmp);
+
+
+                Bitmap bmp = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(imageMat, bmp);
                 screenImage.setImageBitmap(bmp);
 
-                text.setText(result);
+                text.setText(storage.getPath() + "/data/cards.cfg");
+
             }
         });
+    }
+
+    public void downloadAssets() {
+            File propertyFile = new File(storage.getPath() + "/props.properties");
+            if (!propertyFile.exists()) {
+                try {
+                    propertyFile.createNewFile();
+                    //Skriv eventuelt noget til properties som versionsnummer af weights etc. etc.
+
+                    //Download alt her
+                    DownloadManager dlm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+                    DownloadManager.Request weightsRequest = makeRequest("https://waii.dk/upload/uploads/cards.weights", "cards.weights");
+                    DownloadManager.Request cfgRequest = makeRequest("https://waii.dk/upload/uploads/cards.cfg", "cards.cfg");
+
+                    dlm.enqueue(weightsRequest);
+                    dlm.enqueue(cfgRequest);
+
+                } catch (Exception e) {
+                    System.err.println("Something went wrong with asset downloads!");
+                }
+
+                } else {
+                System.out.println("Files exists!");
+            }
+    }
+
+    private DownloadManager.Request makeRequest(String url, String outName) {
+        File requestedFile = new File(storage.getPath() + "/data/" + outName);
+        if (requestedFile.exists()) {
+            requestedFile.delete();
+        }
+
+        Uri Download_Uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+        request.setTitle("Downloading");
+        request.setDescription("Downloading configuration files for detection");
+        request.setDestinationInExternalFilesDir(context, "data", outName);
+        request.setVisibleInDownloadsUi(false);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+
+        return request;
+    }
+
+    public void getCards() {
+        String weight = storage.getPath() + "/data/cards.weights";
+        String cfg = storage.getPath() + "/data/cards.cfg";
+
+        Net net = Dnn.readNetFromDarknet(cfg, weight);
+        
 
     }
 
-    private int getCardColor() {
-        return 0;
-    }
-
-    private String getCardValue() {
-        //OCR Genkendelse her!
-        return "Value";
-    }
-
-    private String getCardSuit(int color) {
-        //Her kan det være en god idé at matche kuløren ud fra et andet billede med OpenCVs template matching.
-        // Det største match må være kuløren.
-        Imgproc.matchTemplate(imageMat, heartsMat, editedImageMat, matchMethod);
-        Core.MinMaxLocResult mmr = Core.minMaxLoc(editedImageMat);
-        Point matchLoc=mmr.maxLoc;
-        Imgproc.rectangle(imageMat, matchLoc, new Point(matchLoc.x + heartsMat.cols(),
-                matchLoc.y + heartsMat.rows()), new Scalar(255, 255, 255));
-
-        return "Spades";
-    }
-
-    private String colorIdToString(int color) {
-        return color > 0 ? "Red" : "Black";
+    public Mat drawMatOnCards(Mat input) {
+        Mat outputMat = new Mat();
+        return outputMat;
     }
 
 
