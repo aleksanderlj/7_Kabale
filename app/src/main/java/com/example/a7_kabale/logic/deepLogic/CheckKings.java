@@ -20,13 +20,21 @@ public class CheckKings {
     }
     public boolean checkForKing(){
         Integer freeDeck = freeTableauDeck();
-        if (freeDeck!= null){
-            
+        if (freeDeck!= null && topDeckCard.getValue() == 13){
+			System.out.println("Move king from top deck, to tableau deck " + freeDeck);
+			return true;
         }
-        
-        
-        
-        return true;
+        else if (freeDeck != null){
+        	for (int i = 0; i < tableauDecks.size(); i++){
+        		for (int j = 1; j < tableauDecks.get(i).size(); j++){
+        			if (tableauDecks.get(i).get(j).getValue() == 13) {
+						System.out.println("Move king from tableau deck: " + (i + 1) + " to tableau deck: " + (freeDeck + 1));
+						return true;
+        			}
+				}
+			}
+		}
+       	return false;
     }
     
     private Integer freeTableauDeck(){
