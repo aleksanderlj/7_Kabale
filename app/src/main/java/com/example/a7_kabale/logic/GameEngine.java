@@ -10,6 +10,8 @@ public class GameEngine {
 
 	private ArrayList<ArrayList<Card>> tableauDecks;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
+	private CheckAces checkAces;
+	private CheckTabToFou checkTabToFou;
 
 	public void initiateGame() {
 		initiateCardsArray();
@@ -20,19 +22,19 @@ public class GameEngine {
 		while (i < 1) {
 			i++;
 			setGameState();
-			CheckAces checkAces = new CheckAces(tableauDecks, topDeckCard);
-			CheckTabToFou checkTabToFou = new CheckTabToFou(tableauDecks, topDeckCard, foundationsDeckDiamonds,
+			checkAces = new CheckAces(tableauDecks, topDeckCard);
+			checkTabToFou = new CheckTabToFou(tableauDecks, topDeckCard, foundationsDeckDiamonds,
 					foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
 
-				if (checkAces.checkTopDeckForAce()) {
-					System.out.println("checkTopDeckForAce FÆRDIG");
-				}
-				else if (checkAces.checkTableauDecksForAce()) {
-					System.out.println("checkTableauDecksForAce FÆRDIG");
-				}
-				else if (checkTabToFou.checkTableauToFoundation()) {
-					System.out.println("checkTableauToFoundation FÆRDIG");
-				}
+			if (checkAces.checkTopDeckForAce()) {
+				System.out.println("checkTopDeckForAce FÆRDIG");
+			}
+			else if (checkAces.checkTableauDecksForAce()) {
+				System.out.println("checkTableauDecksForAce FÆRDIG");
+			}
+			else if (checkTabToFou.checkTableauToFoundation()) {
+				System.out.println("checkTableauToFoundation FÆRDIG");
+			}
 		}
 	}
 

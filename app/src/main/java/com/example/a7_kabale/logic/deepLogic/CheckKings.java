@@ -18,5 +18,22 @@ public class CheckKings {
         this.foundationsDeckClubs = foundationsDeckClubs;
         this.foundationsDeckSpades = foundationsDeckSpades;
     }
-
+    public boolean checkForKing(){
+        Integer freeDeck = freeTableauDeck();
+        if (freeDeck!= null){
+            
+        }
+        
+        
+        
+        return true;
+    }
+    
+    private Integer freeTableauDeck(){
+        for (int i = 0; i < tableauDecks.size(); i++){
+            if (tableauDecks.get(i).size() == 0)
+                return i;
+        }
+        return null;
+    }
 }

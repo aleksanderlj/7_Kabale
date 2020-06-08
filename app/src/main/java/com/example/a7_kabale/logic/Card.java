@@ -1,6 +1,7 @@
 package com.example.a7_kabale.logic;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Card {
 	private int value;
@@ -47,4 +48,5 @@ public class Card {
 	public void setSuit(String suit) {
 		this.suit = suit;
 	}
+
 }
