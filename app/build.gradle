@@ -12,6 +12,14 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
+        ndkVersion "21.2.6472646"
     }
 
     buildTypes {
@@ -21,6 +29,12 @@ android {
         }
     }
 
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
+        }
+    }
 }
 
 dependencies {
@@ -31,5 +45,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation project(path: ':openCVLibrary343')
+    implementation project(path: ':OpenCV430')
+    implementation project(path: ':OpenCV430')
+    implementation project(path: ':OpenCV430')
 }
+
+

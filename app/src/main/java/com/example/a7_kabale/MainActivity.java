@@ -12,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        System.loadLibrary("opencv_java4");
+
         if (!OpenCVLoader.initDebug()) {
             System.out.println("Fuck");
         } else {

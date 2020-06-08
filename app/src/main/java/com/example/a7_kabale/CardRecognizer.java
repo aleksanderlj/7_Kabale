@@ -6,16 +6,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.dnn.Dnn;
@@ -152,69 +148,25 @@ public class CardRecognizer {
         String cfg = storage.getPath() + "/data/cards.cfg";
         Net net = Dnn.readNetFromDarknet(cfg, weight);
 
-
         //Mat input skal være RGB og ikke RGBA - ellers crasher vi..
         Size sz = new Size(1246, 1246);
         Mat blob = Dnn.blobFromImage(imageMat, 0.00392, sz, new Scalar(0), true, false);
-
         net.setInput(blob);
 
-        Mat detections = net.forward();
+
+        List<Mat> result = new ArrayList<>();
+        List<String> outBlobNames = getOutputNames(net);
+
+        net.forward(result, outBlobNames);
+
+
+
+
         Mat frame = imageMat;
         int cols = frame.cols();
         int rows = frame.rows();
 
-        //Copy paste herfra
-        detections = detections.reshape(1, (int)detections.total() / 7);
 
-        /*for (int i = 0; i < detections.rows(); ++i) {
-            double confidence = detections.get(i, 2)[0];
-            if (confidence > threshhold) {
-                int classId = (int)detections.get(i, 1)[0];
-
-                int left   = (int)(detections.get(i, 3)[0] * cols);
-                int top    = (int)(detections.get(i, 4)[0] * rows);
-                int right  = (int)(detections.get(i, 5)[0] * cols);
-                int bottom = (int)(detections.get(i, 6)[0] * rows);
-
-                // Draw rectangle around detected object.
-                Imgproc.rectangle(frame, new Point(left, top), new Point(right, bottom),
-                        new Scalar(0, 255, 0));
-                String label = classNames[classId] + ": " + confidence;
-                int[] baseLine = new int[1];
-                Size labelSize = Imgproc.getTextSize(label, Core.FONT_HERSHEY_SIMPLEX, 0.5, 1, baseLine);
-
-                // Draw background for label.
-                Imgproc.rectangle(frame, new Point(left, top - labelSize.height),
-                        new Point(left + labelSize.width, top + baseLine[0]),
-                        new Scalar(255, 255, 255), Core.FILLED);
-                // Write class name and confidence.
-                Imgproc.putText(frame, label, new Point(left, top),
-                        Core.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 0, 0));
-            }
-        }*/
-
-        //Net net = Dnn.readNetFromDarknet(cfg, weight);
-
-        //resize billede
-        //Size sz = new Size(1246, 1246);
-        //Mat blob = Dnn.blobFromImage(imageMat, 0.00392, sz, new Scalar(0), true, false);
-        //net.setInput(blob);
-
-        //Lav lister
-        //List<Mat> result = new ArrayList<Mat>();
-        //List<String> outBlobNames = getOutputNames(net);
-
-        //net.forward(result, outBlobNames);
-        /*
-        //Hvor meget skal det ligne før vi godtager?
-        float confThreshold = 0.6f;
-
-        List<Integer> clsIds = new ArrayList<>();
-        List<Float> confs = new ArrayList<>();
-        List<Rect> rects = new ArrayList<>();
-
-         */
 
 
     }
