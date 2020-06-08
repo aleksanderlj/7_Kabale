@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public class CheckTabToFou {
 	
-	private ArrayList<ArrayList<Card>> tableauDecks;
+	private ArrayList<ArrayList<Card>> tableauRows;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades, cardToSearchFor;
 	
-	public CheckTabToFou(ArrayList<ArrayList<Card>> tableauDecks, Card topDeckCard, Card foundationsDeckDiamonds, Card foundationsDeckHearts,
+	public CheckTabToFou(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard, Card foundationsDeckDiamonds, Card foundationsDeckHearts,
 						 Card foundationsDeckClubs, Card foundationsDeckSpades) {
-		this.tableauDecks = tableauDecks;
+		this.tableauRows = tableauRows;
 		this.topDeckCard = topDeckCard;
 		this.foundationsDeckDiamonds = foundationsDeckDiamonds;
 		this.foundationsDeckHearts = foundationsDeckHearts;
@@ -42,11 +42,11 @@ public class CheckTabToFou {
 
 			// Herefter forreste kort i hver række:
 			int tableauNumber;
-			for (int i = 0; i < tableauDecks.size(); i++) {
+			for (int i = 0; i < tableauRows.size(); i++) {
 				tableauNumber = i + 1;
-				if (tableauDecks.get(i).get(tableauDecks.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+				if (tableauRows.get(i).get(tableauRows.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 					System.out.println("Move " + cardToSearchFor.toString() +
-							" from tableaudeck " + tableauNumber +
+							" from tableau row " + tableauNumber +
 							" to the first foundation pile.");
 					return true;
 				}
@@ -67,11 +67,11 @@ public class CheckTabToFou {
 			}
 
 			int tableauNumber;
-			for (int i = 0; i < tableauDecks.size(); i++) {
+			for (int i = 0; i < tableauRows.size(); i++) {
 				tableauNumber = i + 1;
-				if (tableauDecks.get(i).get(tableauDecks.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+				if (tableauRows.get(i).get(tableauRows.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 					System.out.println("Move " + cardToSearchFor.toString() +
-							" from tableaudeck " + tableauNumber +
+							" from tableau row " + tableauNumber +
 							" to the second foundation pile.");
 					return true;
 				}
@@ -92,11 +92,11 @@ public class CheckTabToFou {
 			}
 
 			int tableauNumber;
-			for (int i = 0; i < tableauDecks.size(); i++) {
+			for (int i = 0; i < tableauRows.size(); i++) {
 				tableauNumber = i + 1;
-				if (tableauDecks.get(i).get(tableauDecks.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+				if (tableauRows.get(i).get(tableauRows.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 					System.out.println("Move " + cardToSearchFor.toString() +
-							" from tableaudeck " + tableauNumber +
+							" from tableau row " + tableauNumber +
 							" to the third foundation pile.");
 					return true;
 				}
@@ -117,11 +117,11 @@ public class CheckTabToFou {
 			}
 
 			int tableauNumber;
-			for (int i = 0; i < tableauDecks.size(); i++) {
+			for (int i = 0; i < tableauRows.size(); i++) {
 				tableauNumber = i + 1;
-				if (tableauDecks.get(i).get(tableauDecks.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+				if (tableauRows.get(i).get(tableauRows.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 					System.out.println("Move " + cardToSearchFor.toString() +
-							" from tableaudeck " + tableauNumber +
+							" from tableau row " + tableauNumber +
 							" to the fourth foundation pile.");
 					return true;
 				}
