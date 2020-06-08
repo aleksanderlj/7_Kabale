@@ -43,6 +43,8 @@ public class GameEngine {
 				System.out.println("checkForKing FÆRDIG");
 			else if (tableauMovement.topdeckToTableau())
 				System.out.println("topdeckToTableau FÆRDIG");
+			else if (tableauMovement.tableauToTableauHiddenCard())
+				System.out.println("tableauToTableauHidden FÆRDIG");
 			else if (tableauMovement.tableauToTableau())
 				System.out.println("tableauToTableau FÆRDIG");
 		}

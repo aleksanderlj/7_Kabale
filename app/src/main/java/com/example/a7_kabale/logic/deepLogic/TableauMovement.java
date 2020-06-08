@@ -29,10 +29,42 @@ public class TableauMovement {
         return false;
     }
 
-
-    public boolean tableauToTableau() {
+    public boolean tableauToTableauHiddenCard() {
         /* Check om forreste kort i tableau row, hvor tableau row kun har et shown card,
         kan rykkes over på en anden tableau row - vend derefter det bagvedliggende kort. */
+
+        for (int i = 0; i < tableauRows.size(); i++) {
+            Card cardToSearch = tableauRows.get(i).get(tableauRows.get(i).size() - 1);
+            Card cardBehind;
+
+            try {
+                cardBehind = tableauRows.get(i).get(tableauRows.get(i).size() - 2);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            if (!cardBehind.isShown()) {
+                for (int j = 0; j < tableauRows.size(); j++) {
+                    if (tableauRows.get(j).get(tableauRows.get(j).size() - 1).getValue()
+                            == cardToSearch.getValue() + 1
+                            && tableauRows.get(j).get(tableauRows.get(j).size() - 1)
+                            .getSuit().equals(cardToSearch.getSuit())) {
+                        System.out.println("Move " + cardToSearch.toString() + " from tableau row "
+                                + (i + 1) + " to tableau row " + (j + 1) + " and flip hidden card");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+    public boolean tableauToTableau() {
+        /* Check om forreste kort i tableau deck, kan rykkes over på et andet tableau deck,
+        sålænge der ikke skabes et infinite loop. */
 
         for (int i = 0; i < tableauRows.size(); i++) {
             Card cardToSearch = tableauRows.get(i).get(tableauRows.get(i).size() - 1);
@@ -47,6 +79,8 @@ public class TableauMovement {
                         return true;
                     }
                 }
+
+                // ET ELLER ANDET RECURSIVE KALD TIL checkTabToFou
         }
         return false;
     }
