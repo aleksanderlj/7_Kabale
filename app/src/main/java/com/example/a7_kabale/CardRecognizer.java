@@ -18,6 +18,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -150,26 +151,39 @@ public class CardRecognizer {
     public void getCards() {
         String weight = storage.getPath() + "/data/cards.weights";
         String cfg = storage.getPath() + "/data/cards.cfg";
-
         Net net = Dnn.readNetFromDarknet(cfg, weight);
 
-        //resize billede
+        Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_RGBA2RGB);
+
         Size sz = new Size(1246, 1246);
         Mat blob = Dnn.blobFromImage(imageMat, 0.00392, sz, new Scalar(0), true, false);
+
         net.setInput(blob);
 
+        Mat outputMat = net.forward();
+
+
+        //Net net = Dnn.readNetFromDarknet(cfg, weight);
+
+        //resize billede
+        //Size sz = new Size(1246, 1246);
+        //Mat blob = Dnn.blobFromImage(imageMat, 0.00392, sz, new Scalar(0), true, false);
+        //net.setInput(blob);
+
         //Lav lister
-        List<Mat> result = new ArrayList<>();
-        List<String> outBlobNames = getOutputNames(net);
+        //List<Mat> result = new ArrayList<Mat>();
+        //List<String> outBlobNames = getOutputNames(net);
 
-        net.forward(result, outBlobNames);
-
+        //net.forward(result, outBlobNames);
+        /*
         //Hvor meget skal det ligne før vi godtager?
         float confThreshold = 0.6f;
 
         List<Integer> clsIds = new ArrayList<>();
         List<Float> confs = new ArrayList<>();
         List<Rect> rects = new ArrayList<>();
+
+         */
 
 
     }
