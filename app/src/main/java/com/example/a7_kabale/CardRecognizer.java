@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -20,14 +22,7 @@ import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,6 +147,7 @@ public class CardRecognizer {
     }
 
     public void getCards() {
+        double threshhold = 0.2;
         String weight = storage.getPath() + "/data/cards.weights";
         String cfg = storage.getPath() + "/data/cards.cfg";
         Net net = Dnn.readNetFromDarknet(cfg, weight);
@@ -163,8 +159,40 @@ public class CardRecognizer {
 
         net.setInput(blob);
 
-        Mat outputMat = net.forward();
+        Mat detections = net.forward();
+        Mat frame = imageMat;
+        int cols = frame.cols();
+        int rows = frame.rows();
 
+        //Copy paste herfra
+        detections = detections.reshape(1, (int)detections.total() / 7);
+
+        /*for (int i = 0; i < detections.rows(); ++i) {
+            double confidence = detections.get(i, 2)[0];
+            if (confidence > threshhold) {
+                int classId = (int)detections.get(i, 1)[0];
+
+                int left   = (int)(detections.get(i, 3)[0] * cols);
+                int top    = (int)(detections.get(i, 4)[0] * rows);
+                int right  = (int)(detections.get(i, 5)[0] * cols);
+                int bottom = (int)(detections.get(i, 6)[0] * rows);
+
+                // Draw rectangle around detected object.
+                Imgproc.rectangle(frame, new Point(left, top), new Point(right, bottom),
+                        new Scalar(0, 255, 0));
+                String label = classNames[classId] + ": " + confidence;
+                int[] baseLine = new int[1];
+                Size labelSize = Imgproc.getTextSize(label, Core.FONT_HERSHEY_SIMPLEX, 0.5, 1, baseLine);
+
+                // Draw background for label.
+                Imgproc.rectangle(frame, new Point(left, top - labelSize.height),
+                        new Point(left + labelSize.width, top + baseLine[0]),
+                        new Scalar(255, 255, 255), Core.FILLED);
+                // Write class name and confidence.
+                Imgproc.putText(frame, label, new Point(left, top),
+                        Core.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(0, 0, 0));
+            }
+        }*/
 
         //Net net = Dnn.readNetFromDarknet(cfg, weight);
 
@@ -190,6 +218,21 @@ public class CardRecognizer {
 
 
     }
+
+    private static final String[] classNames = {
+            "1", "2", "3", "4", "5",
+            "6", "7", "8", "9", "10",
+            "11", "12", "13", "14",
+            "15", "16", "17",
+            "18", "19", "20", "21",
+            "22", "23", "24", "25",
+            "26", "27", "28", "29",
+            "30", "31", "32", "33",
+            "34", "35", "36", "37",
+            "38", "39", "40", "41",
+            "42", "43", "44", "45",
+            "46", "47", "48", "49",
+            "50", "51", "52" };
 
     private static List<String> getOutputNames(Net net) {
         List<String> names = new ArrayList<>();
