@@ -13,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
 
@@ -24,6 +27,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CardRecognizer {
         private Activity callingActivity;
@@ -147,8 +152,39 @@ public class CardRecognizer {
         String cfg = storage.getPath() + "/data/cards.cfg";
 
         Net net = Dnn.readNetFromDarknet(cfg, weight);
-        
 
+        //resize billede
+        Size sz = new Size(1246, 1246);
+        Mat blob = Dnn.blobFromImage(imageMat, 0.00392, sz, new Scalar(0), true, false);
+        net.setInput(blob);
+
+        //Lav lister
+        List<Mat> result = new ArrayList<>();
+        List<String> outBlobNames = getOutputNames(net);
+
+        net.forward(result, outBlobNames);
+
+        //Hvor meget skal det ligne før vi godtager?
+        float confThreshold = 0.6f;
+
+        List<Integer> clsIds = new ArrayList<>();
+        List<Float> confs = new ArrayList<>();
+        List<Rect> rects = new ArrayList<>();
+
+
+    }
+
+    private static List<String> getOutputNames(Net net) {
+        List<String> names = new ArrayList<>();
+
+        List<Integer> outLayers = net.getUnconnectedOutLayers().toList();
+        List<String> layersNames = net.getLayerNames();
+
+        for (int item : outLayers) {
+            names.add(layersNames.get(item - 1));
+        }
+
+        return names;
     }
 
     public Mat drawMatOnCards(Mat input) {
