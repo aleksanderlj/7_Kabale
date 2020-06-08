@@ -56,6 +56,7 @@ public class CardRecognizer {
         screenImage.setImageResource(R.mipmap.spillekort1);
         imgBitmap = BitmapFactory.decodeResource(callingActivity.getResources(), R.mipmap.spillekort1);
         Utils.bitmapToMat(imgBitmap, imageMat);
+        Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_RGBA2RGB);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +83,9 @@ public class CardRecognizer {
                         imgBitmap = BitmapFactory.decodeResource(callingActivity.getResources(), R.mipmap.spillekort4);
                         break;
                 }
+
                 Utils.bitmapToMat(imgBitmap, imageMat);
+                Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_RGBA2RGB);
             }
         });
 
@@ -153,8 +156,8 @@ public class CardRecognizer {
         String cfg = storage.getPath() + "/data/cards.cfg";
         Net net = Dnn.readNetFromDarknet(cfg, weight);
 
-        Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_RGBA2RGB);
 
+        //Mat input skal være RGB og ikke RGBA - ellers crasher vi..
         Size sz = new Size(1246, 1246);
         Mat blob = Dnn.blobFromImage(imageMat, 0.00392, sz, new Scalar(0), true, false);
 
