@@ -7,31 +7,34 @@ import java.util.ArrayList;
 public class CheckKings {
 
     private ArrayList<ArrayList<Card>> tableauDecks;
-    private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades, cardToSearchFor;
+    private Card topDeckCard;
 
-    public CheckKings(ArrayList<ArrayList<Card>> tableauDecks, Card topDeckCard, Card foundationsDeckDiamonds, Card foundationsDeckHearts,
-                         Card foundationsDeckClubs, Card foundationsDeckSpades) {
+    public CheckKings(ArrayList<ArrayList<Card>> tableauDecks, Card topDeckCard) {
         this.tableauDecks = tableauDecks;
         this.topDeckCard = topDeckCard;
-        this.foundationsDeckDiamonds = foundationsDeckDiamonds;
-        this.foundationsDeckHearts = foundationsDeckHearts;
-        this.foundationsDeckClubs = foundationsDeckClubs;
-        this.foundationsDeckSpades = foundationsDeckSpades;
     }
+    
     public boolean checkForKing(){
         Integer freeDeck = freeTableauDeck();
-        if (freeDeck!= null && topDeckCard.getValue() == 13){
+        if (freeDeck == null)
+        	return false;
+        else if (topDeckCard.getValue() == 13){
 			System.out.println("Move king from top deck, to tableau deck " + freeDeck);
 			return true;
         }
-        else if (freeDeck != null){
+        else {
+        	int highestKing = 0, tableauKing = 0;
         	for (int i = 0; i < tableauDecks.size(); i++){
         		for (int j = 1; j < tableauDecks.get(i).size(); j++){
-        			if (tableauDecks.get(i).get(j).getValue() == 13) {
-						System.out.println("Move king from tableau deck: " + (i + 1) + " to tableau deck: " + (freeDeck + 1));
-						return true;
+        			if (tableauDecks.get(i).get(j).getValue() == 13 && highestKing < j) {
+        				highestKing = j;
+        				tableauKing = i;
         			}
 				}
+			}
+        	if (highestKing != 0){
+				System.out.println("Move king from tableau deck: " + (tableauKing + 1) + " to tableau deck: " + (freeDeck + 1));
+				return true;
 			}
 		}
        	return false;

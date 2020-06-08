@@ -1,6 +1,7 @@
 package com.example.a7_kabale.logic;
 
 import com.example.a7_kabale.logic.deepLogic.CheckAces;
+import com.example.a7_kabale.logic.deepLogic.CheckKings;
 import com.example.a7_kabale.logic.deepLogic.CheckTabToFou;
 import java.util.ArrayList;
 
@@ -10,12 +11,13 @@ public class GameEngine {
 
 	private ArrayList<ArrayList<Card>> tableauDecks;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
-	private CheckAces checkAces;
-	private CheckTabToFou checkTabToFou;
 
 	public void initiateGame() {
 		initiateCardsArray();
 		setGameState();
+		CheckAces checkAces;
+		CheckTabToFou checkTabToFou;
+		CheckKings checkKings;
 		
 		// Run of the game
 		int i = 0;
@@ -25,16 +27,16 @@ public class GameEngine {
 			checkAces = new CheckAces(tableauDecks, topDeckCard);
 			checkTabToFou = new CheckTabToFou(tableauDecks, topDeckCard, foundationsDeckDiamonds,
 					foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
+			checkKings = new CheckKings(tableauDecks, topDeckCard);
 
-			if (checkAces.checkTopDeckForAce()) {
+			if (checkAces.checkTopDeckForAce())
 				System.out.println("checkTopDeckForAce FÆRDIG");
-			}
-			else if (checkAces.checkTableauDecksForAce()) {
+			else if (checkAces.checkTableauDecksForAce())
 				System.out.println("checkTableauDecksForAce FÆRDIG");
-			}
-			else if (checkTabToFou.checkTableauToFoundation()) {
+			else if (checkTabToFou.checkTableauToFoundation())
 				System.out.println("checkTableauToFoundation FÆRDIG");
-			}
+			else if (checkKings.checkForKing())
+				System.out.println("checkForKing FÆRDIG");
 		}
 	}
 
