@@ -248,7 +248,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 
     /**
      * This method is provided for clients, so they can disable camera connection and stop
-     * the delivery of frames even though the surface view itself is not destroyed and still stays on the screen
+     * the delivery of frames even though the surface view itself is not destroyed and still stays on the scren
      */
     public void disableView() {
         synchronized(mSyncObject) {

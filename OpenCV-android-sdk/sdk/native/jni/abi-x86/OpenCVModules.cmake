@@ -16,7 +16,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_targetsDefined)
 set(_targetsNotDefined)
 set(_expectedTargets)
-foreach(_expectedTarget libcpufeatures libjpeg-turbo libtiff libwebp libjasper libpng IlmImf tbb ippiw libprotobuf quirc ittnotify ade ocv.3rdparty.android_mediandk opencv_core opencv_flann opencv_imgproc opencv_ml opencv_photo opencv_dnn opencv_features2d opencv_gapi opencv_imgcodecs opencv_videoio opencv_calib3d opencv_highgui opencv_objdetect opencv_stitching opencv_video opencv_java)
+foreach(_expectedTarget libcpufeatures libjpeg-turbo libtiff libwebp libjasper libpng IlmImf tbb ippiw libprotobuf quirc ittnotify ocv.3rdparty.android_mediandk opencv_core opencv_flann opencv_imgproc opencv_ml opencv_photo opencv_dnn opencv_features2d opencv_imgcodecs opencv_videoio opencv_calib3d opencv_highgui opencv_objdetect opencv_stitching opencv_video opencv_java)
   list(APPEND _expectedTargets ${_expectedTarget})
   if(NOT TARGET ${_expectedTarget})
     list(APPEND _targetsNotDefined ${_expectedTarget})
@@ -89,7 +89,7 @@ set_target_properties(IlmImf PROPERTIES
 add_library(tbb STATIC IMPORTED)
 
 set_target_properties(tbb PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "TBB_USE_GCC_BUILTINS=1;__TBB_GCC_BUILTIN_ATOMICS_PRESENT=1;TBB_SUPPRESS_DEPRECATED_MESSAGES=1"
+  INTERFACE_COMPILE_DEFINITIONS "TBB_USE_GCC_BUILTINS=1;__TBB_GCC_BUILTIN_ATOMICS_PRESENT=1"
   INTERFACE_LINK_LIBRARIES "c;m;dl"
 )
 
@@ -108,9 +108,6 @@ add_library(ittnotify STATIC IMPORTED)
 set_target_properties(ittnotify PROPERTIES
   INTERFACE_LINK_LIBRARIES "dl"
 )
-
-# Create imported target ade
-add_library(ade STATIC IMPORTED)
 
 # Create imported target ocv.3rdparty.android_mediandk
 add_library(ocv.3rdparty.android_mediandk INTERFACE IMPORTED)
@@ -169,13 +166,6 @@ add_library(opencv_features2d STATIC IMPORTED)
 
 set_target_properties(opencv_features2d PROPERTIES
   INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;\$<LINK_ONLY:opencv_flann>;\$<LINK_ONLY:opencv_imgproc>;opencv_core;opencv_flann;opencv_imgproc;\$<LINK_ONLY:dl>;\$<LINK_ONLY:m>;\$<LINK_ONLY:log>;\$<LINK_ONLY:ippiw>;\$<LINK_ONLY:ippicv>"
-)
-
-# Create imported target opencv_gapi
-add_library(opencv_gapi STATIC IMPORTED)
-
-set_target_properties(opencv_gapi PROPERTIES
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:opencv_core>;\$<LINK_ONLY:opencv_imgproc>;opencv_core;opencv_imgproc;\$<LINK_ONLY:dl>;\$<LINK_ONLY:m>;\$<LINK_ONLY:log>;\$<LINK_ONLY:ippiw>;\$<LINK_ONLY:ippicv>;\$<LINK_ONLY:ade>;\$<LINK_ONLY:tbb>"
 )
 
 # Create imported target opencv_imgcodecs
