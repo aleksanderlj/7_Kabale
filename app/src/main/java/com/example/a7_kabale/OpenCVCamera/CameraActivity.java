@@ -14,6 +14,7 @@ import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
 import com.example.a7_kabale.MoveHistoryActivity;
+import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 
 import org.opencv.android.CameraBridgeViewBase;

@@ -1,8 +1,10 @@
-package com.example.a7_kabale;
+package com.example.a7_kabale.RecyclerView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.a7_kabale.R;
 
 public class MoveHistoryActivity extends AppCompatActivity {
 
