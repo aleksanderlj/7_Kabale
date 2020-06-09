@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.a7_kabale.MoveHistoryActivity;
+import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 
 import org.opencv.android.CameraBridgeViewBase;
