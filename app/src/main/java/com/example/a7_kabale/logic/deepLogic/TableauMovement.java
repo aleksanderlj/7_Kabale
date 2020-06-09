@@ -1,6 +1,7 @@
 package com.example.a7_kabale.logic.deepLogic;
 
 import com.example.a7_kabale.logic.Card;
+import com.example.a7_kabale.logic.LogicState;
 
 import java.util.ArrayList;
 
@@ -9,9 +10,9 @@ public class TableauMovement {
     private ArrayList<ArrayList<Card>> tableauRows;
     private Card topDeckCard;
 
-    public TableauMovement(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard) {
-        this.tableauRows = tableauRows;
-        this.topDeckCard = topDeckCard;
+    public TableauMovement(LogicState logicState) {
+        this.tableauRows = logicState.getTableauRows();
+        this.topDeckCard = logicState.getTopDeckCard();
     }
 
 

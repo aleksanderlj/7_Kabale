@@ -10,13 +10,12 @@ import java.util.ArrayList;
 //DET BLIVER NOGLE VILDE LOOPS DET HER!!!!!
 
 public class GameEngine {
-
-	private ArrayList<ArrayList<Card>> tableauRows;
-	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
+	private LogicState logicState;
 
 	public void initiateGame() {
 		initiateCardsArray();
 		setGameState();
+		
 		CheckAces checkAces;
 		CheckTabToFou checkTabToFou;
 		CheckKings checkKings;
@@ -27,11 +26,10 @@ public class GameEngine {
 		while (i < 1) {
 			i++;
 			setGameState();
-			checkAces = new CheckAces(tableauRows, topDeckCard);
-			checkTabToFou = new CheckTabToFou(tableauRows, topDeckCard, foundationsDeckDiamonds,
-					foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
-			checkKings = new CheckKings(tableauRows, topDeckCard);
-			tableauMovement = new TableauMovement(tableauRows, topDeckCard);
+			checkAces = new CheckAces(logicState);
+			checkTabToFou = new CheckTabToFou(logicState);
+			checkKings = new CheckKings(logicState);
+			tableauMovement = new TableauMovement(logicState);
 
 			if (checkAces.checkTopDeckForAce())
 				System.out.println("checkTopDeckForAce FÆRDIG");
@@ -52,21 +50,24 @@ public class GameEngine {
 
 	private void initiateCardsArray() {
 		//Fra venstre mod højre
-		tableauRows = new ArrayList<>();
-		tableauRows.add(new ArrayList<Card>());
-		tableauRows.add(new ArrayList<Card>());
-		tableauRows.add(new ArrayList<Card>());
-		tableauRows.add(new ArrayList<Card>());
-		tableauRows.add(new ArrayList<Card>());
-		tableauRows.add(new ArrayList<Card>());
-		tableauRows.add(new ArrayList<Card>());
+		logicState.setTableauRows(new ArrayList<ArrayList<Card>>());
+		logicState.getTableauRows().add(new ArrayList<Card>());
+		logicState.getTableauRows().add(new ArrayList<Card>());
+		logicState.getTableauRows().add(new ArrayList<Card>());
+		logicState.getTableauRows().add(new ArrayList<Card>());
+		logicState.getTableauRows().add(new ArrayList<Card>());
+		logicState.getTableauRows().add(new ArrayList<Card>());
+		logicState.getTableauRows().add(new ArrayList<Card>());
 	}
 
 	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
 	private void setGameState() {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
-
+		ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
+		Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
+		LogicState logicState;
+		
 		topDeckCard = new Card(8, "Clubs"); //Ace of Diamonds
 
 		//Made from the picture in our Discord chat:
@@ -83,6 +84,9 @@ public class GameEngine {
 		foundationsDeckHearts = new Card();
 		foundationsDeckClubs = new Card();
 		foundationsDeckSpades = new Card();
+		
+		logicState = new LogicState(tableauRows, topDeckCard, foundationsDeckDiamonds,
+				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
 	}
 }
 

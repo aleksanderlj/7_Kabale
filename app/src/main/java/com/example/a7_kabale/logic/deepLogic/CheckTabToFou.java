@@ -1,6 +1,8 @@
 package com.example.a7_kabale.logic.deepLogic;
 
 import com.example.a7_kabale.logic.Card;
+import com.example.a7_kabale.logic.LogicState;
+
 import java.util.ArrayList;
 
 public class CheckTabToFou {
@@ -8,14 +10,13 @@ public class CheckTabToFou {
 	private ArrayList<ArrayList<Card>> tableauRows;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades, cardToSearchFor;
 	
-	public CheckTabToFou(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard, Card foundationsDeckDiamonds, Card foundationsDeckHearts,
-						 Card foundationsDeckClubs, Card foundationsDeckSpades) {
-		this.tableauRows = tableauRows;
-		this.topDeckCard = topDeckCard;
-		this.foundationsDeckDiamonds = foundationsDeckDiamonds;
-		this.foundationsDeckHearts = foundationsDeckHearts;
-		this.foundationsDeckClubs = foundationsDeckClubs;
-		this.foundationsDeckSpades = foundationsDeckSpades;
+	public CheckTabToFou(LogicState logicState) {
+		this.tableauRows = logicState.getTableauRows();
+		this.topDeckCard = logicState.getTopDeckCard();
+		this.foundationsDeckDiamonds = logicState.getFoundationsDeckDiamonds();
+		this.foundationsDeckHearts = logicState.getFoundationsDeckHearts();
+		this.foundationsDeckClubs = logicState.getFoundationsDeckClubs();
+		this.foundationsDeckSpades = logicState.getFoundationsDeckSpades();
 	}
 	
 	public boolean checkTableauToFoundation(){

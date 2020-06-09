@@ -1,15 +1,17 @@
 package com.example.a7_kabale.logic.deepLogic;
 
 import com.example.a7_kabale.logic.Card;
+import com.example.a7_kabale.logic.LogicState;
+
 import java.util.ArrayList;
 
 public class CheckAces {
 	private ArrayList<ArrayList<Card>> tableauRow;
 	private Card topDeckCard;
 	
-	public CheckAces(ArrayList<ArrayList<Card>> tableauRow, Card topDeckCard) {
-		this.tableauRow = tableauRow;
-		this.topDeckCard = topDeckCard;
+	public CheckAces(LogicState logicState) {
+		this.tableauRow = logicState.getTableauRows();
+		this.topDeckCard = logicState.getTopDeckCard();
 	}
 	
 	public boolean checkTopDeckForAce(){
