@@ -21,6 +21,9 @@ import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
@@ -37,8 +40,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         OpenCVLoader.initDebug();
-        db = DatabaseBuilder.get(this);
-        db.instructionDAO().nuke(); //TODO remove this?
+        Executors.newSingleThreadExecutor().execute(() -> {
+            db = DatabaseBuilder.get(this);
+            db.instructionDAO().nuke(); //TODO remove this?
+        });
         preview = findViewById(R.id.image_preview);
         close_btn = findViewById(R.id.closepreview_btn);
         capture_btn = findViewById(R.id.capture_btn);
@@ -65,6 +70,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()){
             case R.id.capture_btn:
                 frame = getFrame();
+                frame = drawArrow(frame, 200, 200, 500, 500);
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
@@ -106,13 +112,24 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setInstruction(String text){
-        db = DatabaseBuilder.get(this);
         Instruction ins = new Instruction(text);
-
-        db.instructionDAO().insert(ins);
         instructionTextView.setText(ins.getText());
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            db = DatabaseBuilder.get(this);
+            db.instructionDAO().insert(ins);
+        });
     }
 
+    public Mat drawArrow(Mat image, int x1, int y1, int x2, int y2){
+        Point p1 = new Point(x1,y1);
+        Point p2 = new Point(x2, y2);
+        Scalar color = new Scalar(255,0,0,255);
+
+        Imgproc.arrowedLine(image, p1, p2, color, 3);
+
+        return image;
+    }
 
     public Mat getFrame(){
         return video.clone();
