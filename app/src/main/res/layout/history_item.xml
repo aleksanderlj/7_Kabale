@@ -2,11 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:padding="3dp">
 
     <androidx.cardview.widget.CardView
+        android:layout_margin="@dimen/cardview_compat_inset_shadow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:translationX="2dp"
+        android:translationY="2dp"
+        android:translationZ="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -15,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/cardview_default_radius">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/historyText"
@@ -23,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="Move H6 to C7."
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold"></TextView>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.cardview.widget.CardView>
