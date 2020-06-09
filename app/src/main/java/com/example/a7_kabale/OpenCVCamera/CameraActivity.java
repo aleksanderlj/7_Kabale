@@ -74,12 +74,18 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
 
+
                 capture_btn.setVisibility(View.GONE);
                 preview.setVisibility(View.VISIBLE);
                 close_btn.setVisibility(View.VISIBLE);
                 confirm_btn.setVisibility(View.VISIBLE);
                 s = "Create instructions based on this image?";
                 instructionTextView.setText(s);
+
+                close_btn.bringToFront();
+                confirm_btn.bringToFront();
+                close_btn.setElevation(20);
+                confirm_btn.setElevation(20);
 
                 //TODO: evt. indsæt bitmap i lokal database
                 break;
