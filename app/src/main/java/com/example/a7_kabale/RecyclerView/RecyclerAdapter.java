@@ -9,19 +9,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.a7_kabale.Database.Entity.Instruction;
 import com.example.a7_kabale.R;
-import com.example.a7_kabale.RecyclerView.model.HistoryItem;
 
 import java.util.List;
 
 // https://www.youtube.com/watch?v=gGFvbvkZiMs
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-    public RecyclerAdapter(List<HistoryItem> historyItems, Context context) {
-        this.historyItems = historyItems;
+    public RecyclerAdapter(List<Instruction> instructions, Context context) {
+        this.instructions = instructions;
         this.context = context;
     }
 
-    private List<HistoryItem> historyItems;
+    private List<Instruction> instructions;
     private Context context;
 
     @NonNull
@@ -34,13 +34,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        HistoryItem historyItem = historyItems.get(position);
-        holder.historyText.setText(historyItem.getHistoryText());
+        Instruction instruction = instructions.get(position);
+        holder.historyText.setText(instruction.getText());
     }
 
     @Override
     public int getItemCount() {
-        return historyItems.size();
+        return instructions.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

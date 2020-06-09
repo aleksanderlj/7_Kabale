@@ -8,17 +8,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.a7_kabale.Database.AppDatabase;
+import com.example.a7_kabale.Database.DatabaseBuilder;
+import com.example.a7_kabale.Database.Entity.Instruction;
 import com.example.a7_kabale.R;
-import com.example.a7_kabale.RecyclerView.model.HistoryItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class MoveHistoryActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private AppDatabase db;
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
-    private List<HistoryItem> historyItems;
+    private List<Instruction> instructions;
 
     private Button backButton;
 
@@ -31,15 +35,14 @@ public class MoveHistoryActivity extends AppCompatActivity implements View.OnCli
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        historyItems = new ArrayList<>();
+        instructions = new ArrayList<>();
 
-        for (int i = 0; i<=10; i++){
-            HistoryItem historyItem = new HistoryItem("Move H7 to C8.");
-            historyItems.add(historyItem);
-        }
-
-        adapter = new RecyclerAdapter(historyItems, this);
-        recyclerView.setAdapter(adapter);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            db = DatabaseBuilder.get(this);
+            instructions = db.instructionDAO().getAll();
+            adapter = new RecyclerAdapter(instructions, this);
+            recyclerView.setAdapter(adapter);
+        });
 
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(this);
