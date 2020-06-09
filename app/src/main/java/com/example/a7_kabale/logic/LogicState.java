@@ -7,7 +7,6 @@ public class LogicState {
 	private ArrayList<ArrayList<Card>> tableauRows;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 	private int shownCards;
-	private List<Integer> hiddenCards = new ArrayList<>();
 	
 	public LogicState(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard, Card foundationsDeckDiamonds, Card foundationsDeckHearts,
 					  Card foundationsDeckClubs, Card foundationsDeckSpades){
@@ -18,13 +17,16 @@ public class LogicState {
 		this.foundationsDeckClubs = foundationsDeckClubs;
 		this.foundationsDeckSpades = foundationsDeckSpades;
 		shownCards = 7;
-		hiddenCards.add(0);
-		hiddenCards.add(1);
-		hiddenCards.add(2);
-		hiddenCards.add(3);
-		hiddenCards.add(4);
-		hiddenCards.add(5);
-		hiddenCards.add(6);
+	}
+	
+	public void updateState(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard, Card foundationsDeckDiamonds,
+								  Card foundationsDeckHearts, Card foundationsDeckClubs, Card foundationsDeckSpades){
+		this.tableauRows = tableauRows;
+		this.topDeckCard = topDeckCard;
+		this.foundationsDeckDiamonds = foundationsDeckDiamonds;
+		this.foundationsDeckHearts = foundationsDeckHearts;
+		this.foundationsDeckClubs = foundationsDeckClubs;
+		this.foundationsDeckSpades = foundationsDeckSpades;
 	}
 	
 	public ArrayList<ArrayList<Card>> getTableauRows() {
@@ -79,15 +81,21 @@ public class LogicState {
 		return shownCards;
 	}
 	
-	public void setHiddenCards(List<Integer> hiddenCards) {
-		this.hiddenCards = hiddenCards;
-	}
-	
-	public List<Integer> getHiddenCards() {
-		return hiddenCards;
-	}
-	
 	public void setShownCards(int shownCards) {
 		this.shownCards = shownCards;
+	}
+	
+	public int[] getArrayofHiddenCards(){
+		int[] hiddenCards = new int[7];
+		int currHiddenCards;
+		for (int i = 0; i < tableauRows.size(); i++){
+			currHiddenCards = 0;
+			for (int j = 0; j < tableauRows.get(i).size(); j++){
+				if (!tableauRows.get(i).get(j).isShown())
+					currHiddenCards++;
+			}
+			hiddenCards[i] = currHiddenCards;
+		}
+		return hiddenCards;
 	}
 }
