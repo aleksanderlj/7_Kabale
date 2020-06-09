@@ -28,4 +28,12 @@ public class Instruction {
     public void setInstruction_id(long instruction_id) {
         this.instruction_id = instruction_id;
     }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }
