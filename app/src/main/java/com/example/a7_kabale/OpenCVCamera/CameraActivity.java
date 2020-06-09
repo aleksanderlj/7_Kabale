@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
     AppDatabase db;
-    Button close_btn, capture_btn, confirm_btn, history_btn;
+    Button close_btn, capture_btn, confirm_btn;
     ImageView preview;
     TextView instructionTextView;
     JavaCameraView camera;
@@ -48,7 +48,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn = findViewById(R.id.closepreview_btn);
         capture_btn = findViewById(R.id.capture_btn);
         confirm_btn = findViewById(R.id.confirm_btn);
-        history_btn = findViewById(R.id.history_btn);
         instructionTextView = findViewById(R.id.instructionTextView);
 
         camera = findViewById(R.id.camera_view);
@@ -59,7 +58,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         capture_btn.setOnClickListener(this);
         close_btn.setOnClickListener(this);
         confirm_btn.setOnClickListener(this);
-        history_btn.setOnClickListener(this);
+        instructionTextView.setOnClickListener(this);
 
         i = new Intent(this, MoveHistoryActivity.class);
     }
@@ -67,46 +66,51 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         Bitmap bm;
+        String s;
         switch (v.getId()){
             case R.id.capture_btn:
                 frame = getFrame();
-                frame = drawArrow(frame, 200, 200, 500, 500);
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
-                preview.setVisibility(View.VISIBLE);
+
                 capture_btn.setVisibility(View.GONE);
-                history_btn.setVisibility(View.GONE);
+                preview.setVisibility(View.VISIBLE);
                 close_btn.setVisibility(View.VISIBLE);
-                close_btn.bringToFront();
                 confirm_btn.setVisibility(View.VISIBLE);
-                instructionTextView.setText("Create instructions based on this image?");
+                s = "Create instructions based on this image?";
+                instructionTextView.setText(s);
 
                 //TODO: evt. indsæt bitmap i lokal database
                 break;
 
             case R.id.closepreview_btn:
+                s = "retry";
+                close_btn.setText(s);
                 preview.setVisibility(View.GONE);
                 close_btn.setVisibility(View.GONE);
                 confirm_btn.setVisibility(View.GONE);
                 capture_btn.setVisibility(View.VISIBLE);
-                history_btn.setVisibility(View.VISIBLE);
-                instructionTextView.setText("Capture image for next instruction.");
+                s = "Capture image for next instruction.";
+                instructionTextView.setText(s);
                 break;
 
             case R.id.confirm_btn:
                 //TODO: Check om board state har ændret sig?
                 //TODO: Giv instruktion i TextView + opdater historik
 
-                preview.setVisibility(View.GONE);
-                close_btn.setVisibility(View.GONE);
+                frame = drawArrow(frame, 200, 200, 500, 500);
+                bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(frame, bm);
+                preview.setImageBitmap(bm);
+
+                s = "Next";
+                close_btn.setText(s);
                 confirm_btn.setVisibility(View.GONE);
-                capture_btn.setVisibility(View.VISIBLE);
-                history_btn.setVisibility(View.VISIBLE);
                 setInstruction("Move H6 to C7");
                 break;
 
-            case R.id.history_btn:
+            case R.id.instructionTextView:
                 startActivity(i);
         }
     }
