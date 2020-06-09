@@ -46,5 +46,5 @@ public interface InstructionDAO {
     void deleteList(List<Instruction> instructions);
 
     @Query("DELETE FROM Instruction")
-    public void nuke();
+    void nuke();
 }

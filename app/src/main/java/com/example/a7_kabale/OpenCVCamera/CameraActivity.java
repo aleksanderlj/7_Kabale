@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.a7_kabale.Database.AppDatabase;
+import com.example.a7_kabale.Database.DatabaseBuilder;
+import com.example.a7_kabale.Database.Entity.Instruction;
 import com.example.a7_kabale.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 
@@ -21,6 +24,7 @@ import org.opencv.core.*;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
+    AppDatabase db;
     Button close_btn, capture_btn, confirm_btn, history_btn;
     ImageView preview;
     TextView instructionTextView;
@@ -33,6 +37,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         OpenCVLoader.initDebug();
+        db = DatabaseBuilder.get(this);
+        db.instructionDAO().nuke(); //TODO remove this?
         preview = findViewById(R.id.image_preview);
         close_btn = findViewById(R.id.closepreview_btn);
         capture_btn = findViewById(R.id.capture_btn);
@@ -91,13 +97,22 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 confirm_btn.setVisibility(View.GONE);
                 capture_btn.setVisibility(View.VISIBLE);
                 history_btn.setVisibility(View.VISIBLE);
-                instructionTextView.setText("Move H6 to C7.");
+                setInstruction("Move H6 to C7");
                 break;
 
             case R.id.history_btn:
                 startActivity(i);
         }
     }
+
+    public void setInstruction(String text){
+        db = DatabaseBuilder.get(this);
+        Instruction ins = new Instruction(text);
+
+        db.instructionDAO().insert(ins);
+        instructionTextView.setText(ins.getText());
+    }
+
 
     public Mat getFrame(){
         return video.clone();
