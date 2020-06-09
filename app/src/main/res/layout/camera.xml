@@ -56,20 +56,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.87" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.66" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.83" />
-
 
     <Button
         android:id="@+id/confirm_btn"
@@ -89,14 +75,14 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/btn_shape_rnd"
         android:gravity="center"
         android:text="Capture image for next instruction."
         android:textAlignment="gravity"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
