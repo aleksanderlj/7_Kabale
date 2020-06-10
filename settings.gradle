@@ -1,3 +1,5 @@
 rootProject.name='7_Kabale'
 include ':app'
 include ':openCVLibrary343'
+include ':OpenCV430'
+include ':OpenCV420'
