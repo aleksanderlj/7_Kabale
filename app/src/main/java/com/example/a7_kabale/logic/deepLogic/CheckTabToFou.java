@@ -40,11 +40,13 @@ public class CheckTabToFou {
 			int tableauNumber;
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				tableauNumber = i + 1;
-				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
-					System.out.println("Move " + cardToSearchFor.toString() +
-							" from tableau row " + tableauNumber +
-							" to the first foundation pile.");
-					return true;
+				if (logicState.getTableauRows().get(i).size() != 0) {
+					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+						System.out.println("Move " + cardToSearchFor.toString() +
+								" from tableau row " + tableauNumber +
+								" to the first foundation pile.");
+						return true;
+					}
 				}
 			}
 		}
@@ -65,11 +67,13 @@ public class CheckTabToFou {
 			int tableauNumber;
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				tableauNumber = i + 1;
-				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
-					System.out.println("Move " + cardToSearchFor.toString() +
-							" from tableau row " + tableauNumber +
-							" to the second foundation pile.");
-					return true;
+				if (logicState.getTableauRows().get(i).size() != 0) {
+					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+						System.out.println("Move " + cardToSearchFor.toString() +
+								" from tableau row " + tableauNumber +
+								" to the second foundation pile.");
+						return true;
+					}
 				}
 			}
 		}
@@ -90,11 +94,13 @@ public class CheckTabToFou {
 			int tableauNumber;
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				tableauNumber = i + 1;
-				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
-					System.out.println("Move " + cardToSearchFor.toString() +
-							" from tableau row " + tableauNumber +
-							" to the third foundation pile.");
-					return true;
+				if (logicState.getTableauRows().get(i).size() != 0) {
+					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+						System.out.println("Move " + cardToSearchFor.toString() +
+								" from tableau row " + tableauNumber +
+								" to the third foundation pile.");
+						return true;
+					}
 				}
 			}
 		}
@@ -115,11 +121,13 @@ public class CheckTabToFou {
 			int tableauNumber;
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				tableauNumber = i + 1;
-				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
-					System.out.println("Move " + cardToSearchFor.toString() +
-							" from tableau row " + tableauNumber +
-							" to the fourth foundation pile.");
-					return true;
+				if (logicState.getTableauRows().get(i).size() != 0) {
+					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+						System.out.println("Move " + cardToSearchFor.toString() +
+								" from tableau row " + tableauNumber +
+								" to the fourth foundation pile.");
+						return true;
+					}
 				}
 			}
 		}

@@ -28,14 +28,11 @@ public class GameEngine {
 		int i = 0;
 		while (i < 1) {
 			i++;
-			setGameState();
 			checkAces = new CheckAces(logicState);
 			checkTabToFou = new CheckTabToFou(logicState);
 			checkKings = new CheckKings(logicState);
 			tableauMovement = new TableauMovement(logicState);
-
-			System.out.println(Arrays.toString(logicState.getHiddenCards()));
-
+			
 			if (checkAces.checkTopDeckForAce())
 				System.out.println("checkTopDeckForAce FÆRDIG");
 			else if (checkAces.checkTableauRowsForAce())
@@ -73,13 +70,13 @@ public class GameEngine {
 		topDeckCard = new Card(8, "Clubs"); //Ace of Diamonds
 
 		//Made from the picture in our Discord chat:
-		tableauRows.get(0).add((new Card(13, "Diamonds")));
+		//tableauRows.get(0).add(new Card(13, "Diamonds"));
 		tableauRows.get(1).add(new Card(5, "Diamonds"));
 		tableauRows.get(2).add(new Card(4, "Spades"));
 		tableauRows.get(3).add(new Card(10, "Spades"));
 		tableauRows.get(4).add(new Card(7, "Spades"));
 		tableauRows.get(5).add(new Card(9, "Clubs"));
-		tableauRows.get(6).add(new Card(12, "Hearts"));
+		tableauRows.get(6).add(new Card(13, "Hearts"));
 
 		//Da alle disse bunker er tomme fra start.
 		foundationsDeckDiamonds = new Card(3, "Diamonds");

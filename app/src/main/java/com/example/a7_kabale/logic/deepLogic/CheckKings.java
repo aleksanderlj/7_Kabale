@@ -24,13 +24,15 @@ public class CheckKings {
         else {
         	int highestKing = 0, tableauKing = 0;
         	for (int i = 0; i < logicState.getTableauRows().size(); i++){
-        		if (logicState.getTableauRows().get(i).get(0).getValue() == 13 && highestKing < logicState.getHiddenCards()[i]) {
-        			highestKing = logicState.getHiddenCards()[i];
-        			tableauKing = i;
-        		}
+        		if (logicState.getTableauRows().get(i).size() != 0) {
+					if (logicState.getTableauRows().get(i).get(0).getValue() == 13 && highestKing < logicState.getHiddenCards()[i]) {
+						highestKing = logicState.getHiddenCards()[i];
+						tableauKing = i;
+					}
+				}
 			}
         	if (highestKing != 0){
-				System.out.println("Move " + logicState.getTableauRows().get(0).toString() + " from tableau row " +
+				System.out.println("Move " + "king" + " from tableau row " +
 						(tableauKing + 1) + " to tableau row " + (freeDeck + 1));
 				int[] newHiddenCards = logicState.getHiddenCards();
 				newHiddenCards[highestKing] = newHiddenCards[highestKing]-1;

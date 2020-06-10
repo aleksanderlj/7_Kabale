@@ -33,29 +33,31 @@ public class CheckAces {
 		int tableauNumber;
 		for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 			tableauNumber = i + 1;
-			if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() == 1) {
-				int[] newHiddenCards = logicState.getHiddenCards();
-				switch (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit()) {
-					case "Diamonds":
-						System.out.println("Move the Diamonds Ace from tableau row " + tableauNumber + " to the first foundation pile.");
-						if (logicState.getHiddenCards()[tableauNumber] != 0)
-							newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
-						return true;
-					case "Hearts":
-						System.out.println("Move the Hearts Ace from the tableau row " + tableauNumber + " to the second foundation pile.");
-						if (logicState.getHiddenCards()[tableauNumber] != 0)
-							newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
-						return true;
-					case "Clubs":
-						System.out.println("Move the Clubs Ace from the tableau row " + tableauNumber + " to the third foundation pile.");
-						if (logicState.getHiddenCards()[tableauNumber] != 0)
-							newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
-						return true;
-					case "Spades":
-						System.out.println("Move the Spades Ace from the tableau row " + tableauNumber + " to the fourth foundation pile.");
-						if (logicState.getHiddenCards()[tableauNumber] != 0)
-							newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
-						return true;
+			if (logicState.getTableauRows().get(i).size() != 0) {
+				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() == 1) {
+					int[] newHiddenCards = logicState.getHiddenCards();
+					switch (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit()) {
+						case "Diamonds":
+							System.out.println("Move the Diamonds Ace from tableau row " + tableauNumber + " to the first foundation pile.");
+							if (logicState.getHiddenCards()[tableauNumber] != 0)
+								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
+							return true;
+						case "Hearts":
+							System.out.println("Move the Hearts Ace from the tableau row " + tableauNumber + " to the second foundation pile.");
+							if (logicState.getHiddenCards()[tableauNumber] != 0)
+								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
+							return true;
+						case "Clubs":
+							System.out.println("Move the Clubs Ace from the tableau row " + tableauNumber + " to the third foundation pile.");
+							if (logicState.getHiddenCards()[tableauNumber] != 0)
+								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
+							return true;
+						case "Spades":
+							System.out.println("Move the Spades Ace from the tableau row " + tableauNumber + " to the fourth foundation pile.");
+							if (logicState.getHiddenCards()[tableauNumber] != 0)
+								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
+							return true;
+					}
 				}
 			}
 		}
