@@ -6,17 +6,10 @@ import java.util.List;
 public class LogicState {
 	private ArrayList<ArrayList<Card>> tableauRows;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
-	private int shownCards;
+	private int shownCards = 7;
+	private int[] hiddenCards = {0, 1, 2, 3, 4, 5, 6};
 	
-	public LogicState(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard, Card foundationsDeckDiamonds, Card foundationsDeckHearts,
-					  Card foundationsDeckClubs, Card foundationsDeckSpades){
-		this.tableauRows = tableauRows;
-		this.topDeckCard = topDeckCard;
-		this.foundationsDeckDiamonds = foundationsDeckDiamonds;
-		this.foundationsDeckHearts = foundationsDeckHearts;
-		this.foundationsDeckClubs = foundationsDeckClubs;
-		this.foundationsDeckSpades = foundationsDeckSpades;
-		shownCards = 7;
+	public LogicState(){
 	}
 	
 	public void updateState(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard, Card foundationsDeckDiamonds,

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 //DET BLIVER NOGLE VILDE LOOPS DET HER!!!!!
 
 public class GameEngine {
-	private LogicState logicState;
+	private LogicState logicState = new LogicState();
 
 	public void initiateGame() {
 		initiateCardsArray();
@@ -66,7 +66,6 @@ public class GameEngine {
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
 		ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
 		Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
-		LogicState logicState;
 		
 		topDeckCard = new Card(8, "Clubs"); //Ace of Diamonds
 
@@ -85,7 +84,7 @@ public class GameEngine {
 		foundationsDeckClubs = new Card();
 		foundationsDeckSpades = new Card();
 		
-		logicState = new LogicState(tableauRows, topDeckCard, foundationsDeckDiamonds,
+		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
 	}
 }

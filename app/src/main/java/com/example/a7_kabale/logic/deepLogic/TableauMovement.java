@@ -47,10 +47,8 @@ public class TableauMovement {
 
             if (!cardBehind.isShown()) {
                 for (int j = 0; j < tableauRows.size(); j++) {
-                    if (tableauRows.get(j).get(tableauRows.get(j).size() - 1).getValue()
-                            == cardToSearch.getValue() + 1
-                            && tableauRows.get(j).get(tableauRows.get(j).size() - 1)
-                            .getSuit().equals(cardToSearch.getSuit())) {
+                    if (tableauRows.get(j).get(tableauRows.get(j).size() - 1).getValue() == cardToSearch.getValue() + 1 &&
+                            tableauRows.get(j).get(tableauRows.get(j).size() - 1).getSuit().equals(cardToSearch.getSuit())) {
                         System.out.println("Move " + cardToSearch.toString() + " from tableau row "
                                 + (i + 1) + " to tableau row " + (j + 1) + " and flip hidden card");
                         return true;
