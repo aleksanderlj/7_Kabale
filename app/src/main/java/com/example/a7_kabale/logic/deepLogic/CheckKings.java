@@ -9,10 +9,12 @@ public class CheckKings {
 
     private ArrayList<ArrayList<Card>> tableauRows;
     private Card topDeckCard;
+    private LogicState logicState;
 
     public CheckKings(LogicState logicState) {
         this.tableauRows = logicState.getTableauRows();
         this.topDeckCard = logicState.getTopDeckCard();
+        this.logicState = logicState;
     }
     
     public boolean checkForKing(){
@@ -26,12 +28,12 @@ public class CheckKings {
         else {
         	int highestKing = 0, tableauKing = 0;
         	for (int i = 0; i < tableauRows.size(); i++){
-        		for (int j = 1; j < tableauRows.get(i).size(); j++){
-        			if (tableauRows.get(i).get(j).getValue() == 13 && highestKing < j) {
-        				highestKing = j;
+
+        			if (tableauRows.get(i).get(0).getValue() == 13 && highestKing < logicState.getHiddenCards()[i]) {
+        				highestKing = i;
         				tableauKing = i;
         			}
-				}
+				
 			}
         	if (highestKing != 0){
 				System.out.println("Move " + topDeckCard.toString() + " from tableau row " + (tableauKing + 1) + " to tableau row " + (freeDeck + 1));

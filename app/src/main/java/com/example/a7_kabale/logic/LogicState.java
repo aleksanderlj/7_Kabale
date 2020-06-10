@@ -78,6 +78,14 @@ public class LogicState {
 		this.shownCards = shownCards;
 	}
 	
+	public int[] getHiddenCards() {
+		return hiddenCards;
+	}
+	
+	public void setHiddenCards(int[] hiddenCards) {
+		this.hiddenCards = hiddenCards;
+	}
+	
 	public int[] getArrayofHiddenCards(){
 		int[] hiddenCards = new int[7];
 		int currHiddenCards;
