@@ -6,17 +6,12 @@ import com.example.a7_kabale.logic.LogicState;
 import java.util.ArrayList;
 
 public class CheckTabToFou {
-	
-	private ArrayList<ArrayList<Card>> tableauRows;
-	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades, cardToSearchFor;
+
+	private final LogicState logicState;
+	private  Card cardToSearchFor;
 	
 	public CheckTabToFou(LogicState logicState) {
-		this.tableauRows = logicState.getTableauRows();
-		this.topDeckCard = logicState.getTopDeckCard();
-		this.foundationsDeckDiamonds = logicState.getFoundationsDeckDiamonds();
-		this.foundationsDeckHearts = logicState.getFoundationsDeckHearts();
-		this.foundationsDeckClubs = logicState.getFoundationsDeckClubs();
-		this.foundationsDeckSpades = logicState.getFoundationsDeckSpades();
+		this.logicState = logicState;
 	}
 	
 	public boolean checkTableauToFoundation(){
@@ -29,13 +24,13 @@ public class CheckTabToFou {
 	// Private metoder
 	private boolean checkTableauToFoundationDiamonds() {
 		// Først tjek for at der er minimum et es og tjek for at alle kort ikke er der
-		if (foundationsDeckDiamonds.getValue() > 0 && foundationsDeckDiamonds.getValue() < 13) {
+		if (logicState.getFoundationsDeckDiamonds().getValue() > 0 && logicState.getFoundationsDeckDiamonds().getValue() < 13) {
 
 			// Da vi skal finde kortet, der er 1 højere
-			cardToSearchFor = new Card(foundationsDeckDiamonds.getValue() + 1, foundationsDeckDiamonds.getSuit());
+			cardToSearchFor = new Card(logicState.getFoundationsDeckDiamonds().getValue() + 1, logicState.getFoundationsDeckDiamonds().getSuit());
 
 			// Tjek først topdeck:
-			if (topDeckCard.toString().equals(cardToSearchFor.toString())){
+			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
 				System.out.println("Move " + cardToSearchFor.toString() +
 						" from topdeck to the first foundation pile.");
 				return true;
@@ -43,9 +38,9 @@ public class CheckTabToFou {
 
 			// Herefter forreste kort i hver række:
 			int tableauNumber;
-			for (int i = 0; i < tableauRows.size(); i++) {
+			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				tableauNumber = i + 1;
-				if (tableauRows.get(i).get(tableauRows.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 					System.out.println("Move " + cardToSearchFor.toString() +
 							" from tableau row " + tableauNumber +
 							" to the first foundation pile.");
@@ -57,20 +52,20 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationHearts(){
-		if (foundationsDeckHearts.getValue() != 0 && foundationsDeckHearts.getValue() > 13) {
+		if (logicState.getFoundationsDeckHearts().getValue() != 0 && logicState.getFoundationsDeckHearts().getValue() > 13) {
 
-			cardToSearchFor = new Card(foundationsDeckHearts.getValue() + 1, foundationsDeckHearts.getSuit());
+			cardToSearchFor = new Card(logicState.getFoundationsDeckHearts().getValue() + 1, logicState.getFoundationsDeckHearts().getSuit());
 
-			if (topDeckCard.toString().equals(cardToSearchFor.toString())){
+			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
 				System.out.println("Move " + cardToSearchFor.toString() +
 						" from topdeck to the second foundation pile.");
 				return true;
 			}
 
 			int tableauNumber;
-			for (int i = 0; i < tableauRows.size(); i++) {
+			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				tableauNumber = i + 1;
-				if (tableauRows.get(i).get(tableauRows.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 					System.out.println("Move " + cardToSearchFor.toString() +
 							" from tableau row " + tableauNumber +
 							" to the second foundation pile.");
@@ -82,20 +77,20 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationClubs(){
-		if (foundationsDeckClubs.getValue() != 0 && foundationsDeckClubs.getValue() > 13) {
+		if (logicState.getFoundationsDeckClubs().getValue() != 0 && logicState.getFoundationsDeckClubs().getValue() > 13) {
 
-			cardToSearchFor = new Card(foundationsDeckClubs.getValue() + 1, foundationsDeckClubs.getSuit());
+			cardToSearchFor = new Card(logicState.getFoundationsDeckClubs().getValue() + 1, logicState.getFoundationsDeckClubs().getSuit());
 
-			if (topDeckCard.toString().equals(cardToSearchFor.toString())){
+			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
 				System.out.println("Move " + cardToSearchFor.toString() +
 						" from topdeck to the third foundation pile.");
 				return true;
 			}
 
 			int tableauNumber;
-			for (int i = 0; i < tableauRows.size(); i++) {
+			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				tableauNumber = i + 1;
-				if (tableauRows.get(i).get(tableauRows.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 					System.out.println("Move " + cardToSearchFor.toString() +
 							" from tableau row " + tableauNumber +
 							" to the third foundation pile.");
@@ -107,20 +102,20 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationSpades(){
-		if (foundationsDeckSpades.getValue() != 0 && foundationsDeckSpades.getValue() > 13) {
+		if (logicState.getFoundationsDeckSpades().getValue() != 0 && logicState.getFoundationsDeckSpades().getValue() > 13) {
 
-			cardToSearchFor = new Card(foundationsDeckSpades.getValue() + 1, foundationsDeckSpades.getSuit());
+			cardToSearchFor = new Card(logicState.getFoundationsDeckSpades().getValue() + 1, logicState.getFoundationsDeckSpades().getSuit());
 
-			if (topDeckCard.toString().equals(cardToSearchFor.toString())){
+			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
 				System.out.println("Move " + cardToSearchFor.toString() +
 						" from topdeck to the fourth foundation pile.");
 				return true;
 			}
 
 			int tableauNumber;
-			for (int i = 0; i < tableauRows.size(); i++) {
+			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				tableauNumber = i + 1;
-				if (tableauRows.get(i).get(tableauRows.get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 					System.out.println("Move " + cardToSearchFor.toString() +
 							" from tableau row " + tableauNumber +
 							" to the fourth foundation pile.");

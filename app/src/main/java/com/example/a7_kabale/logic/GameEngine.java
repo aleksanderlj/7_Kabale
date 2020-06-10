@@ -31,6 +31,8 @@ public class GameEngine {
 			checkKings = new CheckKings(logicState);
 			tableauMovement = new TableauMovement(logicState);
 
+			System.out.println(logicState.getArrayofHiddenCards()[3]);
+
 			if (checkAces.checkTopDeckForAce())
 				System.out.println("checkTopDeckForAce FÆRDIG");
 			else if (checkAces.checkTableauRowsForAce())
