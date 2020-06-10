@@ -45,6 +45,11 @@ public class CheckTabToFou {
 						System.out.println("Move " + cardToSearchFor.toString() +
 								" from tableau row " + tableauNumber +
 								" to the first foundation pile.");
+						if (logicState.getHiddenCards()[i] != 0){
+							int [] newHiddenCards = logicState.getHiddenCards();
+							newHiddenCards[i] = newHiddenCards[i]-1;
+							logicState.setHiddenCards(newHiddenCards);
+						}
 						return true;
 					}
 				}
@@ -72,6 +77,11 @@ public class CheckTabToFou {
 						System.out.println("Move " + cardToSearchFor.toString() +
 								" from tableau row " + tableauNumber +
 								" to the second foundation pile.");
+						if (logicState.getHiddenCards()[i] != 0){
+							int [] newHiddenCards = logicState.getHiddenCards();
+							newHiddenCards[i] = newHiddenCards[i]-1;
+							logicState.setHiddenCards(newHiddenCards);
+						}
 						return true;
 					}
 				}
@@ -99,6 +109,11 @@ public class CheckTabToFou {
 						System.out.println("Move " + cardToSearchFor.toString() +
 								" from tableau row " + tableauNumber +
 								" to the third foundation pile.");
+						if (logicState.getHiddenCards()[i] != 0){
+							int [] newHiddenCards = logicState.getHiddenCards();
+							newHiddenCards[i] = newHiddenCards[i]-1;
+							logicState.setHiddenCards(newHiddenCards);
+						}
 						return true;
 					}
 				}
@@ -126,6 +141,11 @@ public class CheckTabToFou {
 						System.out.println("Move " + cardToSearchFor.toString() +
 								" from tableau row " + tableauNumber +
 								" to the fourth foundation pile.");
+						if (logicState.getHiddenCards()[i] != 0){
+							int [] newHiddenCards = logicState.getHiddenCards();
+							newHiddenCards[i] = newHiddenCards[i]-1;
+							logicState.setHiddenCards(newHiddenCards);
+						}
 						return true;
 					}
 				}

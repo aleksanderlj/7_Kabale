@@ -39,6 +39,11 @@ public class TableauMovement {
                 for (int j = 0; j < logicState.getTableauRows().size(); j++) {
                     if (logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1).getValue() == cardToSearch.getValue() + 1 &&
                             logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1).getSuit().equals(cardToSearch.getSuit())) {
+
+                        int [] newHiddenCards = logicState.getHiddenCards();
+                        newHiddenCards[i] = newHiddenCards[i]-1;
+                        logicState.setHiddenCards(newHiddenCards);
+
                         System.out.println("Move " + cardToSearch.toString() + " from tableau row "
                                 + (i + 1) + " to tableau row " + (j + 1) + " and flip hidden card");
                         return true;
