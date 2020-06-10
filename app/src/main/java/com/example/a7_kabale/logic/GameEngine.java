@@ -6,11 +6,12 @@ import com.example.a7_kabale.logic.deepLogic.CheckTabToFou;
 import com.example.a7_kabale.logic.deepLogic.TableauMovement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 //DET BLIVER NOGLE VILDE LOOPS DET HER!!!!!
 
 public class GameEngine {
-	private LogicState logicState = new LogicState();
+	private LogicState logicState;
 	private ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 
@@ -33,7 +34,7 @@ public class GameEngine {
 			checkKings = new CheckKings(logicState);
 			tableauMovement = new TableauMovement(logicState);
 
-			System.out.println(logicState.getArrayofHiddenCards()[3]);
+			System.out.println(Arrays.toString(logicState.getHiddenCards()));
 
 			if (checkAces.checkTopDeckForAce())
 				System.out.println("checkTopDeckForAce FÆRDIG");
@@ -73,11 +74,11 @@ public class GameEngine {
 
 		//Made from the picture in our Discord chat:
 		tableauRows.get(0).add((new Card(13, "Diamonds")));
-		tableauRows.get(1).add(new Card(9, "Diamonds"));
+		tableauRows.get(1).add(new Card(5, "Diamonds"));
 		tableauRows.get(2).add(new Card(4, "Spades"));
 		tableauRows.get(3).add(new Card(10, "Spades"));
 		tableauRows.get(4).add(new Card(7, "Spades"));
-		tableauRows.get(5).add(new Card(3, "Spades"));
+		tableauRows.get(5).add(new Card(9, "Clubs"));
 		tableauRows.get(6).add(new Card(12, "Hearts"));
 
 		//Da alle disse bunker er tomme fra start.
@@ -85,7 +86,8 @@ public class GameEngine {
 		foundationsDeckHearts = null;
 		foundationsDeckClubs = null;
 		foundationsDeckSpades = null;
-		
+
+		logicState = new LogicState();
 		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
 	}

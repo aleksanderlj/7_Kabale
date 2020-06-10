@@ -7,9 +7,16 @@ public class LogicState {
 	private ArrayList<ArrayList<Card>> tableauRows;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 	private int shownCards = 7;
-	private int[] hiddenCards = {0, 1, 2, 3, 4, 5, 6};
+	private int[] hiddenCards = new int[7];
 	
 	public LogicState(){
+		hiddenCards[0] = 0;
+		hiddenCards[1] = 1;
+		hiddenCards[2] = 2;
+		hiddenCards[3] = 3;
+		hiddenCards[4] = 4;
+		hiddenCards[5] = 5;
+		hiddenCards[6] = 6;
 	}
 	
 	public void updateState(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard, Card foundationsDeckDiamonds,
@@ -84,19 +91,5 @@ public class LogicState {
 	
 	public void setHiddenCards(int[] hiddenCards) {
 		this.hiddenCards = hiddenCards;
-	}
-	
-	public int[] getArrayofHiddenCards(){
-		int[] hiddenCards = new int[7];
-		int currHiddenCards;
-		for (int i = 0; i < tableauRows.size(); i++){
-			currHiddenCards = 0;
-			for (int j = 0; j < tableauRows.get(i).size(); j++){
-				if (!tableauRows.get(i).get(j).isShown())
-					currHiddenCards++;
-			}
-			hiddenCards[i] = currHiddenCards;
-		}
-		return hiddenCards;
 	}
 }

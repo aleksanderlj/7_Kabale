@@ -24,7 +24,7 @@ public class CheckTabToFou {
 	// Private metoder
 	private boolean checkTableauToFoundationDiamonds() {
 		// Først tjek for at der er minimum et es og tjek for at alle kort ikke er der
-		if (logicState.getFoundationsDeckDiamonds().getValue() > 0 && logicState.getFoundationsDeckDiamonds().getValue() < 13) {
+		if (logicState.getFoundationsDeckDiamonds() != null && logicState.getFoundationsDeckDiamonds().getValue() < 13) {
 
 			// Da vi skal finde kortet, der er 1 højere
 			cardToSearchFor = new Card(logicState.getFoundationsDeckDiamonds().getValue() + 1, logicState.getFoundationsDeckDiamonds().getSuit());
@@ -52,7 +52,7 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationHearts(){
-		if (logicState.getFoundationsDeckHearts().getValue() != 0 && logicState.getFoundationsDeckHearts().getValue() > 13) {
+		if (logicState.getFoundationsDeckHearts() != null && logicState.getFoundationsDeckHearts().getValue() > 13) {
 
 			cardToSearchFor = new Card(logicState.getFoundationsDeckHearts().getValue() + 1, logicState.getFoundationsDeckHearts().getSuit());
 
@@ -77,7 +77,7 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationClubs(){
-		if (logicState.getFoundationsDeckClubs().getValue() != 0 && logicState.getFoundationsDeckClubs().getValue() > 13) {
+		if (logicState.getFoundationsDeckClubs() != null && logicState.getFoundationsDeckClubs().getValue() > 13) {
 
 			cardToSearchFor = new Card(logicState.getFoundationsDeckClubs().getValue() + 1, logicState.getFoundationsDeckClubs().getSuit());
 
@@ -102,7 +102,7 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationSpades(){
-		if (logicState.getFoundationsDeckSpades().getValue() != 0 && logicState.getFoundationsDeckSpades().getValue() > 13) {
+		if (logicState.getFoundationsDeckSpades() != null && logicState.getFoundationsDeckSpades().getValue() > 13) {
 
 			cardToSearchFor = new Card(logicState.getFoundationsDeckSpades().getValue() + 1, logicState.getFoundationsDeckSpades().getSuit());
 

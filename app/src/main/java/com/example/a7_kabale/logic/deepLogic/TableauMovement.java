@@ -32,7 +32,7 @@ public class TableauMovement {
         kan rykkes over på en anden tableau row - vend derefter det bagvedliggende kort. */
 
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            if (logicState.getArrayofHiddenCards()[i] > 0 && logicState.getTableauRows().get(i).size() == 1){
+            if (logicState.getHiddenCards()[i] > 0 && logicState.getTableauRows().get(i).size() == 1){
 
                 Card cardToSearch = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 
