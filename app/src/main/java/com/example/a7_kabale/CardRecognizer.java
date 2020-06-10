@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
@@ -15,29 +16,30 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class CardRecognizer {
-        private Activity callingActivity;
-        private Context context;
-        private ImageView screenImage;
-        private int currentImage = 1;
-        private Bitmap imgBitmap;
-        private Mat imageMat;
-        private File storage;
-        private YOLOProcessor yoloProcessor;
+    private Activity callingActivity;
+    private Context context;
+    private ImageView screenImage;
+    private int currentImage = 1;
+    private Bitmap imgBitmap;
+    private Mat imageMat;
+    private File storage;
+    private YOLOProcessor yoloProcessor;
 
-        public CardRecognizer(Activity activity) {
-            callingActivity = activity;
-            context = activity.getApplicationContext();
-            storage = context.getExternalFilesDir(null);
+    public CardRecognizer(Activity activity) {
+        callingActivity = activity;
+        context = activity.getApplicationContext();
+        storage = context.getExternalFilesDir(null);
 
-            AssetDownloader assetDownloader = new AssetDownloader(context);
-            assetDownloader.downloadAssets();
+        AssetDownloader assetDownloader = new AssetDownloader(context);
+        assetDownloader.downloadAssets();
 
-            //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
-            yoloProcessor = new YOLOProcessor();
-            yoloProcessor.initDarknet(storage);
-        }
+        //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
+        yoloProcessor = new YOLOProcessor();
+        yoloProcessor.initDarknet(storage);
+    }
 
-        public void doThings() {
+    /*
+    public void doThings() {
         screenImage = (ImageView) callingActivity.findViewById(R.id.imageView1);
         Button button = (Button) callingActivity.findViewById(R.id.button);
         Button openCVbtn = (Button) callingActivity.findViewById(R.id.buttonOpenCV);
@@ -77,6 +79,9 @@ public class CardRecognizer {
             }
         });
 
+
+
+
         openCVbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -102,4 +107,6 @@ public class CardRecognizer {
             }
         });
     }
+
+     */
 }

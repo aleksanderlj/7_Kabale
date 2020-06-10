@@ -12,7 +12,7 @@ public class AssetDownloader {
 
     public AssetDownloader(Context context) {
         this.context = context;
-        storage = context.getExternalFilesDir(null);;
+        storage = context.getExternalFilesDir(null);
     }
 
     public void downloadAssets() {

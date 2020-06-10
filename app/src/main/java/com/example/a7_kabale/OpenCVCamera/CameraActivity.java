@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.a7_kabale.AssetDownloader;
 import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
+import com.example.a7_kabale.YOLOProcessor;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
@@ -34,12 +36,21 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     JavaCameraView camera;
     Mat video, frame;
     Intent i;
+    YOLOProcessor yoloProcessor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
         OpenCVLoader.initDebug();
+
+        AssetDownloader assetDownloader = new AssetDownloader(this);
+        assetDownloader.downloadAssets();
+
+        //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
+        yoloProcessor = new YOLOProcessor();
+        yoloProcessor.initDarknet(this.getExternalFilesDir(null));
+
         Executors.newSingleThreadExecutor().execute(() -> {
             db = DatabaseBuilder.get(this);
             db.instructionDAO().nuke(); //TODO remove this?
