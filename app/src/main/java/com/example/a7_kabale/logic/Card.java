@@ -6,31 +6,22 @@ import androidx.annotation.Nullable;
 public class Card {
 	private int value;
 	private String suit;
+	private boolean red;
 	//	// This value is only meant for cards in the stackdecks
-	private boolean shown;
 	
 	public Card (int value, String suit){
 		this.value = value;
 		this.suit = suit;
-		this.shown = true;
-	}
-	
-	public Card (){
-		this.shown = false;
+		if (suit.equals("Hearts") || suit.equals("Diamonds"))
+			red = true;
+		else
+			red = false;
 	}
 	
 	@NonNull
 	@Override
 	public String toString() {
 		return this.suit + " " + this.value;
-	}
-	
-	public boolean isShown() {
-		return shown;
-	}
-	
-	public void setShown(boolean shown) {
-		this.shown = shown;
 	}
 	
 	public int getValue() {
@@ -48,5 +39,12 @@ public class Card {
 	public void setSuit(String suit) {
 		this.suit = suit;
 	}
-
+	
+	public boolean isRed() {
+		return red;
+	}
+	
+	public void setRed(boolean red) {
+		this.red = red;
+	}
 }
