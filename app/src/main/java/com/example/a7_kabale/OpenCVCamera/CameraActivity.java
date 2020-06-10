@@ -98,7 +98,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 close_btn.setElevation(20);
                 confirm_btn.setElevation(20);
 
-                //TODO: evt. indsæt bitmap i lokal database
                 break;
 
             case R.id.closepreview_btn:
@@ -114,7 +113,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.confirm_btn:
                 //TODO: Check om board state har ændret sig?
-                //TODO: Giv instruktion i TextView + opdater historik
+                //TODO: Check om instruktioner kan gives baseret på billedet. Hvis fejl, spørg om nyt billede.
 
                 frame = drawArrow(frame, 200, 200, 500, 500);
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
