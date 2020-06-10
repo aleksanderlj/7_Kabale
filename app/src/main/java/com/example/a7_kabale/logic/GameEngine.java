@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 public class GameEngine {
 	private LogicState logicState = new LogicState();
+	private ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
+	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 
 	public void initiateGame() {
 		initiateCardsArray();
@@ -52,22 +54,20 @@ public class GameEngine {
 
 	private void initiateCardsArray() {
 		//Fra venstre mod højre
-		logicState.setTableauRows(new ArrayList<ArrayList<Card>>());
-		logicState.getTableauRows().add(new ArrayList<Card>());
-		logicState.getTableauRows().add(new ArrayList<Card>());
-		logicState.getTableauRows().add(new ArrayList<Card>());
-		logicState.getTableauRows().add(new ArrayList<Card>());
-		logicState.getTableauRows().add(new ArrayList<Card>());
-		logicState.getTableauRows().add(new ArrayList<Card>());
-		logicState.getTableauRows().add(new ArrayList<Card>());
+		tableauRows = new ArrayList<>();
+		tableauRows.add(new ArrayList<Card>());
+		tableauRows.add(new ArrayList<Card>());
+		tableauRows.add(new ArrayList<Card>());
+		tableauRows.add(new ArrayList<Card>());
+		tableauRows.add(new ArrayList<Card>());
+		tableauRows.add(new ArrayList<Card>());
+		tableauRows.add(new ArrayList<Card>());
 	}
 
 	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
 	private void setGameState() {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
-		ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
-		Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 		
 		topDeckCard = new Card(8, "Clubs"); //Ace of Diamonds
 
@@ -82,9 +82,9 @@ public class GameEngine {
 
 		//Da alle disse bunker er tomme fra start.
 		foundationsDeckDiamonds = new Card(3, "Diamonds");
-		foundationsDeckHearts = new Card();
-		foundationsDeckClubs = new Card();
-		foundationsDeckSpades = new Card();
+		foundationsDeckHearts = null;
+		foundationsDeckClubs = null;
+		foundationsDeckSpades = null;
 		
 		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
