@@ -98,7 +98,7 @@ public class YOLOProcessor {
         for (int i = 0; i < recognizedCards.size(); i++) {
             Rect rect = recognizedCards.get(i).getRect();
             Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 0, 255), 4);
-            Imgproc.putText(mat, recognizedCards.get(i).getClassName(), rect.tl(), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0), 3);
+            Imgproc.putText(mat, recognizedCards.get(i).getClassName(), rect.tl(), Imgproc.FONT_HERSHEY_SIMPLEX, 2, new Scalar(255,0,0), 3);
         }
 
         return mat;
