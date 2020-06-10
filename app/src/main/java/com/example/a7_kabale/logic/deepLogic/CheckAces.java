@@ -1,33 +1,28 @@
 package com.example.a7_kabale.logic.deepLogic;
 
-import com.example.a7_kabale.logic.Card;
 import com.example.a7_kabale.logic.LogicState;
 
-import java.util.ArrayList;
-
 public class CheckAces {
-	private ArrayList<ArrayList<Card>> tableauRow;
-	private Card topDeckCard;
+	private LogicState logicState;
 	
 	public CheckAces(LogicState logicState) {
-		this.tableauRow = logicState.getTableauRows();
-		this.topDeckCard = logicState.getTopDeckCard();
+		this.logicState = logicState;
 	}
 	
 	public boolean checkTopDeckForAce(){
-		if (topDeckCard.getValue() == 1) {
-			switch (topDeckCard.getSuit()) {
+		if (logicState.getTopDeckCard().getValue() == 1) {
+			switch (logicState.getTopDeckCard().getSuit()) {
 				case "Diamonds":
-					System.out.println("Move the "+ topDeckCard.toString() + " from the top deck to the first foundation pile.");
+					System.out.println("Move the "+ logicState.getTopDeckCard().toString() + " from the top deck to the first foundation pile.");
 					return true;
 				case "Hearts":
-					System.out.println("Move the " + topDeckCard.toString() + " from the top deck to the second foundation pile.");
+					System.out.println("Move the " + logicState.getTopDeckCard().toString() + " from the top deck to the second foundation pile.");
 					return true;
 				case "Clubs":
-					System.out.println("Move the " + topDeckCard.toString() + " from the top deck to the third foundation pile.");
+					System.out.println("Move the " + logicState.getTopDeckCard().toString() + " from the top deck to the third foundation pile.");
 					return true;
 				case "Spades":
-					System.out.println("Move the " + topDeckCard.toString() + " from the top deck to the fourth foundation pile.");
+					System.out.println("Move the " + logicState.getTopDeckCard().toString() + " from the top deck to the fourth foundation pile.");
 					return true;
 			}
 		}
@@ -36,21 +31,30 @@ public class CheckAces {
 	
 	public boolean checkTableauRowsForAce(){
 		int tableauNumber;
-		for (int i = 0; i < tableauRow.size(); i++) {
+		for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 			tableauNumber = i + 1;
-			if (tableauRow.get(i).get(tableauRow.get(i).size() - 1).getValue() == 1) {
-				switch (tableauRow.get(i).get(tableauRow.get(i).size() - 1).getSuit()) {
+			if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() == 1) {
+				int[] newHiddenCards = logicState.getHiddenCards();
+				switch (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit()) {
 					case "Diamonds":
 						System.out.println("Move the Diamonds Ace from tableau row " + tableauNumber + " to the first foundation pile.");
+						if (logicState.getHiddenCards()[tableauNumber] != 0)
+							newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 						return true;
 					case "Hearts":
 						System.out.println("Move the Hearts Ace from the tableau row " + tableauNumber + " to the second foundation pile.");
+						if (logicState.getHiddenCards()[tableauNumber] != 0)
+							newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 						return true;
 					case "Clubs":
 						System.out.println("Move the Clubs Ace from the tableau row " + tableauNumber + " to the third foundation pile.");
+						if (logicState.getHiddenCards()[tableauNumber] != 0)
+							newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 						return true;
 					case "Spades":
 						System.out.println("Move the Spades Ace from the tableau row " + tableauNumber + " to the fourth foundation pile.");
+						if (logicState.getHiddenCards()[tableauNumber] != 0)
+							newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 						return true;
 				}
 			}
