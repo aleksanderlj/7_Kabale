@@ -8,9 +8,7 @@ public class TableauMovement {
 
     private LogicState logicState;
 
-    public TableauMovement(LogicState logicState) {
-        this.logicState = logicState;
-    }
+    public TableauMovement() {}
 
 
     public boolean topdeckToTableau() {
@@ -95,5 +93,8 @@ public class TableauMovement {
         }
         return false;
     }
-
+    
+    public void setLogicState(LogicState logicState) {
+        this.logicState = logicState;
+    }
 }

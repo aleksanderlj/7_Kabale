@@ -13,10 +13,10 @@ public class GameEngine {
 	private LogicState logicState = new LogicState();
 	private ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
-	private CheckAces checkAces;
-	private CheckTabToFou checkTabToFou;
-	private CheckKings checkKings;
-	private TableauMovement tableauMovement;
+	private CheckAces checkAces = new CheckAces();
+	private CheckTabToFou checkTabToFou = new CheckTabToFou();
+	private CheckKings checkKings = new CheckKings();
+	private TableauMovement tableauMovement = new TableauMovement();
 
 	public void initiateGame() {
 		initiateCardsArray();
@@ -63,10 +63,10 @@ public class GameEngine {
 	}
 	
 	private void calculateNextMove(){
-		checkAces = new CheckAces(logicState);
-		checkTabToFou = new CheckTabToFou(logicState);
-		checkKings = new CheckKings(logicState);
-		tableauMovement = new TableauMovement(logicState);
+		checkAces.setLogicState(logicState);
+		checkTabToFou.setLogicState(logicState);
+		checkKings.setLogicState(logicState);
+		tableauMovement.setLogicState(logicState);
 		
 		if (checkAces.checkTopDeckForAce())
 			System.out.println("checkTopDeckForAce FÆRDIG");

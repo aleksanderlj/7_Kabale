@@ -4,10 +4,8 @@ import com.example.a7_kabale.logic.LogicState;
 
 public class CheckAces {
 	private LogicState logicState;
-	
-	public CheckAces(LogicState logicState) {
-		this.logicState = logicState;
-	}
+
+	public CheckAces(){}
 	
 	public boolean checkTopDeckForAce(){
 		if (logicState.getTopDeckCard().getValue() == 1) {
@@ -71,5 +69,9 @@ public class CheckAces {
 			}
 		}
 		return false;
+	}
+	
+	public void setLogicState(LogicState logicState) {
+		this.logicState = logicState;
 	}
 }

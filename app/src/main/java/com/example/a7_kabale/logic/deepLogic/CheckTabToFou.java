@@ -5,11 +5,10 @@ import com.example.a7_kabale.logic.LogicState;
 
 public class CheckTabToFou {
 
-	private final LogicState logicState;
-	private  Card cardToSearchFor;
+	private LogicState logicState;
+	private Card cardToSearchFor;
 	
-	public CheckTabToFou(LogicState logicState) {
-		this.logicState = logicState;
+	public CheckTabToFou(){
 	}
 	
 	public boolean checkTableauToFoundation(){
@@ -152,5 +151,9 @@ public class CheckTabToFou {
 			}
 		}
 		return false;
+	}
+	
+	public void setLogicState(LogicState logicState) {
+		this.logicState = logicState;
 	}
 }

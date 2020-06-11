@@ -6,9 +6,7 @@ public class CheckKings {
 	
     private LogicState logicState;
 
-    public CheckKings(LogicState logicState) {
-        this.logicState = logicState;
-    }
+    public CheckKings(){}
     
     public boolean checkForKing(){
         Integer freeDeck = freeTableauRow();
@@ -48,4 +46,8 @@ public class CheckKings {
         }
         return null;
     }
+	
+	public void setLogicState(LogicState logicState) {
+		this.logicState = logicState;
+	}
 }
