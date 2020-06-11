@@ -31,6 +31,7 @@ public class CheckTabToFou {
 
 			// Tjek først topdeck:
 			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
+				logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 				System.out.println("Move " + cardToSearchFor.toString() +
 						" from topdeck to the first foundation pile.");
 				return true;
@@ -64,6 +65,7 @@ public class CheckTabToFou {
 			cardToSearchFor = new Card(logicState.getFoundationsDeckHearts().getValue() + 1, logicState.getFoundationsDeckHearts().getSuit());
 
 			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
+				logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 				System.out.println("Move " + cardToSearchFor.toString() +
 						" from topdeck to the second foundation pile.");
 				return true;
@@ -96,6 +98,7 @@ public class CheckTabToFou {
 			cardToSearchFor = new Card(logicState.getFoundationsDeckClubs().getValue() + 1, logicState.getFoundationsDeckClubs().getSuit());
 
 			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
+				logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 				System.out.println("Move " + cardToSearchFor.toString() +
 						" from topdeck to the third foundation pile.");
 				return true;
@@ -128,6 +131,7 @@ public class CheckTabToFou {
 			cardToSearchFor = new Card(logicState.getFoundationsDeckSpades().getValue() + 1, logicState.getFoundationsDeckSpades().getSuit());
 
 			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
+				logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 				System.out.println("Move " + cardToSearchFor.toString() +
 						" from topdeck to the fourth foundation pile.");
 				return true;

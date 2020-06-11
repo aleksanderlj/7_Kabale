@@ -18,6 +18,7 @@ public class CheckKings {
         if (freeDeck == null)
         	return false;
         else if (logicState.getTopDeckCard().getValue() == 13){
+        	logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 			System.out.println("Move " + logicState.getTopDeckCard().toString() + " from top deck to tableau row " + freeDeck);
 			return true;
         }

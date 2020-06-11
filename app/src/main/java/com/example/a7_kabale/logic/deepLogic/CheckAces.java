@@ -11,6 +11,7 @@ public class CheckAces {
 	
 	public boolean checkTopDeckForAce(){
 		if (logicState.getTopDeckCard().getValue() == 1) {
+			logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 			switch (logicState.getTopDeckCard().getSuit()) {
 				case "Diamonds":
 					System.out.println("Move the "+ logicState.getTopDeckCard().toString() + " from the top deck to the first foundation pile.");

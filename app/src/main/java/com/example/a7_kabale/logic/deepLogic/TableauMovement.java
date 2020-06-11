@@ -20,6 +20,7 @@ public class TableauMovement {
             if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() == logicState.getTopDeckCard().getValue()+1
                     && logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit()
                     .equals(logicState.getTopDeckCard().getSuit())) {
+                        logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
                         System.out.println("Move " + logicState.getTopDeckCard() + " from top deck to tableau row " + (i + 1));
                         return true;
             }
