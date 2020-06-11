@@ -6,48 +6,22 @@ import com.example.a7_kabale.logic.deepLogic.CheckTabToFou;
 import com.example.a7_kabale.logic.deepLogic.TableauMovement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 //DET BLIVER NOGLE VILDE LOOPS DET HER!!!!!
 
 public class GameEngine {
-	private LogicState logicState;
+	private LogicState logicState = new LogicState();
 	private ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
+	private CheckAces checkAces;
+	private CheckTabToFou checkTabToFou;
+	private CheckKings checkKings;
+	private TableauMovement tableauMovement;
 
 	public void initiateGame() {
 		initiateCardsArray();
-		setGameState();
-		
-		CheckAces checkAces;
-		CheckTabToFou checkTabToFou;
-		CheckKings checkKings;
-		TableauMovement tableauMovement;
-		
-		// Run of the game
-		int i = 0;
-		while (i < 1) {
-			i++;
-			checkAces = new CheckAces(logicState);
-			checkTabToFou = new CheckTabToFou(logicState);
-			checkKings = new CheckKings(logicState);
-			tableauMovement = new TableauMovement(logicState);
-			
-			if (checkAces.checkTopDeckForAce())
-				System.out.println("checkTopDeckForAce FÆRDIG");
-			else if (checkAces.checkTableauRowsForAce())
-				System.out.println("checkTableauRowsForAce FÆRDIG");
-			else if (checkTabToFou.checkTableauToFoundation())
-				System.out.println("checkTableauToFoundation FÆRDIG");
-			else if (checkKings.checkForKing())
-				System.out.println("checkForKing FÆRDIG");
-			else if (tableauMovement.topdeckToTableau())
-				System.out.println("topdeckToTableau FÆRDIG");
-			else if (tableauMovement.tableauToTableauHiddenCard())
-				System.out.println("tableauToTableauHidden FÆRDIG");
-			else if (tableauMovement.tableauToTableau())
-				System.out.println("tableauToTableau FÆRDIG");
-		}
+		// Finished game might not need this call:
+		updateGameState();
 	}
 
 	private void initiateCardsArray() {
@@ -63,10 +37,9 @@ public class GameEngine {
 	}
 
 	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
-	private void setGameState() {
+	public void updateGameState() {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
-		
 		topDeckCard = new Card(8, "Clubs"); //Ace of Diamonds
 
 		//Made from the picture in our Discord chat:
@@ -83,10 +56,32 @@ public class GameEngine {
 		foundationsDeckHearts = null;
 		foundationsDeckClubs = null;
 		foundationsDeckSpades = null;
-
-		logicState = new LogicState();
+		
 		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
+		calculateNextMove();
+	}
+	
+	private void calculateNextMove(){
+		checkAces = new CheckAces(logicState);
+		checkTabToFou = new CheckTabToFou(logicState);
+		checkKings = new CheckKings(logicState);
+		tableauMovement = new TableauMovement(logicState);
+		
+		if (checkAces.checkTopDeckForAce())
+			System.out.println("checkTopDeckForAce FÆRDIG");
+		else if (checkAces.checkTableauRowsForAce())
+			System.out.println("checkTableauRowsForAce FÆRDIG");
+		else if (checkTabToFou.checkTableauToFoundation())
+			System.out.println("checkTableauToFoundation FÆRDIG");
+		else if (checkKings.checkForKing())
+			System.out.println("checkForKing FÆRDIG");
+		else if (tableauMovement.topdeckToTableau())
+			System.out.println("topdeckToTableau FÆRDIG");
+		else if (tableauMovement.tableauToTableauHiddenCard())
+			System.out.println("tableauToTableauHidden FÆRDIG");
+		else if (tableauMovement.tableauToTableau())
+			System.out.println("tableauToTableau FÆRDIG");
 	}
 }
 

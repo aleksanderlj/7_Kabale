@@ -1,7 +1,6 @@
 package com.example.a7_kabale.logic;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LogicState {
 	private ArrayList<ArrayList<Card>> tableauRows;

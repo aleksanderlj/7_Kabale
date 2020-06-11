@@ -3,8 +3,6 @@ package com.example.a7_kabale.logic.deepLogic;
 import com.example.a7_kabale.logic.Card;
 import com.example.a7_kabale.logic.LogicState;
 
-import java.util.ArrayList;
-
 public class CheckTabToFou {
 
 	private final LogicState logicState;
@@ -18,9 +16,7 @@ public class CheckTabToFou {
 		return checkTableauToFoundationDiamonds() || checkTableauToFoundationHearts()
 				|| checkTableauToFoundationClubs() || checkTableauToFoundationSpades();
 	}
-
-
-
+	
 	// Private metoder
 	private boolean checkTableauToFoundationDiamonds() {
 		// Først tjek for at der er minimum et es og tjek for at alle kort ikke er der

@@ -1,7 +1,6 @@
 package com.example.a7_kabale.logic;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class Card {
 	private int value;

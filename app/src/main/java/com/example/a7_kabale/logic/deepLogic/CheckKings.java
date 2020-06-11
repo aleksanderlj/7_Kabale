@@ -1,9 +1,6 @@
 package com.example.a7_kabale.logic.deepLogic;
 
-import com.example.a7_kabale.logic.Card;
 import com.example.a7_kabale.logic.LogicState;
-
-import java.util.ArrayList;
 
 public class CheckKings {
 	
