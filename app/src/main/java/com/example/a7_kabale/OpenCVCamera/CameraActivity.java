@@ -42,19 +42,22 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera);
+        System.loadLibrary("opencv_java4");
         OpenCVLoader.initDebug();
 
-        AssetDownloader assetDownloader = new AssetDownloader(this);
-        assetDownloader.downloadAssets();
+        // TODO get files from web
+        //AssetDownloader assetDownloader = new AssetDownloader(this);
+        //assetDownloader.downloadAssets();
 
         //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
-        yoloProcessor = new YOLOProcessor();
-        yoloProcessor.initDarknet(this.getExternalFilesDir(null));
+        //yoloProcessor = new YOLOProcessor();
+        //yoloProcessor.initDarknet(this.getExternalFilesDir(null));
 
         Executors.newSingleThreadExecutor().execute(() -> {
             db = DatabaseBuilder.get(this);
             db.instructionDAO().nuke(); //TODO remove this?
         });
+
         preview = findViewById(R.id.image_preview);
         close_btn = findViewById(R.id.closepreview_btn);
         capture_btn = findViewById(R.id.capture_btn);
@@ -62,6 +65,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         instructionTextView = findViewById(R.id.instructionTextView);
 
         camera = findViewById(R.id.camera_view);
+        camera.setCameraPermissionGranted();
         camera.setCameraIndex(0);
         camera.setCvCameraViewListener(this);
         camera.enableView();
