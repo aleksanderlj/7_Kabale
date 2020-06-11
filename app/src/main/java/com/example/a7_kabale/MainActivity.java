@@ -13,10 +13,16 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.a7_kabale.AndroidCamera.AndroidCameraActivity;
+import com.example.a7_kabale.Database.*;
 import com.example.a7_kabale.OpenCVCamera.CameraActivity;
+import com.example.a7_kabale.RecyclerView.RecyclerAdapter;
+
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     MediaPlayer wauw;
+    private Button newGameButton, continueButton;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +30,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         wauw = MediaPlayer.create(this, R.raw.wow);
 
+        newGameButton = findViewById(R.id.newGame_btn);
+        continueButton = findViewById(R.id.continue_btn);
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            db = DatabaseBuilder.get(this);
+            if (db.instructionDAO().getAll().isEmpty()){
+                runOnUiThread(() -> {
+                    continueButton.setAlpha(.5f);
+                    continueButton.setClickable(false);
+                });
+            }
+        });
+
+
         getPermissions();
 
-        Button start_btn = findViewById(R.id.start_btn);
-        start_btn.setOnClickListener(this);
+        newGameButton.setOnClickListener(this);
+        continueButton.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
+        Intent i = new Intent(this, CameraActivity.class);
         switch (v.getId()){
-            case R.id.start_btn:
-                wauw.start();
-                Intent i = new Intent(this, CameraActivity.class);
+            case R.id.newGame_btn:
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    wauw.start();
+                    db = DatabaseBuilder.get(this);
+                    db.instructionDAO().nuke();
+                    startActivity(i);
+                });
+                break;
+
+            case R.id.continue_btn:
                 startActivity(i);
                 break;
         }
@@ -52,5 +81,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(ContextCompat.checkSelfPermission(this, s) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(this, new String[]{s}, 1);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            db = DatabaseBuilder.get(this);
+            if (!db.instructionDAO().getAll().isEmpty()){
+                runOnUiThread(() -> {
+                    continueButton.setAlpha(1);
+                    continueButton.setClickable(true);
+                });
+            }
+        });
+        super.onResume();
     }
 }

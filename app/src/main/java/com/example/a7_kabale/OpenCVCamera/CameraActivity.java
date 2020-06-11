@@ -53,11 +53,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         //yoloProcessor = new YOLOProcessor();
         //yoloProcessor.initDarknet(this.getExternalFilesDir(null));
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            db = DatabaseBuilder.get(this);
-            db.instructionDAO().nuke(); //TODO remove this?
-        });
-
         preview = findViewById(R.id.image_preview);
         close_btn = findViewById(R.id.closepreview_btn);
         capture_btn = findViewById(R.id.capture_btn);
