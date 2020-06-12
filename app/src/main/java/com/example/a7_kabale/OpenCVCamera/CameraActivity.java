@@ -36,6 +36,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     JavaCameraView camera;
     Mat video, frame;
     Intent i;
+    Button historyButton;
     YOLOProcessor yoloProcessor;
 
     @Override
@@ -58,6 +59,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         capture_btn = findViewById(R.id.capture_btn);
         confirm_btn = findViewById(R.id.confirm_btn);
         instructionTextView = findViewById(R.id.instructionTextView);
+        historyButton = findViewById(R.id.history_btn);
 
         camera = findViewById(R.id.camera_view);
         camera.setCameraPermissionGranted();
@@ -68,7 +70,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         capture_btn.setOnClickListener(this);
         close_btn.setOnClickListener(this);
         confirm_btn.setOnClickListener(this);
-        instructionTextView.setOnClickListener(this);
+        historyButton.setOnClickListener(this);
 
         i = new Intent(this, MoveHistoryActivity.class);
     }
@@ -77,7 +79,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         Bitmap bm;
         String s;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.capture_btn:
                 frame = getFrame();
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
@@ -92,10 +94,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 s = "Create instructions based on this image?";
                 instructionTextView.setText(s);
 
-                close_btn.bringToFront();
-                confirm_btn.bringToFront();
-                close_btn.setElevation(20);
-                confirm_btn.setElevation(20);
+                bringButtonsToFront();
 
                 break;
 
@@ -125,12 +124,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 setInstruction("Move H6 to C7");
                 break;
 
-            case R.id.instructionTextView:
+            case R.id.history_btn:
                 startActivity(i);
         }
     }
 
-    public void setInstruction(String text){
+    public void setInstruction(String text) {
         Instruction ins = new Instruction(text);
         instructionTextView.setText(ins.getText());
 
@@ -140,17 +139,17 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    public Mat drawArrow(Mat image, int x1, int y1, int x2, int y2){
-        Point p1 = new Point(x1,y1);
+    public Mat drawArrow(Mat image, int x1, int y1, int x2, int y2) {
+        Point p1 = new Point(x1, y1);
         Point p2 = new Point(x2, y2);
-        Scalar color = new Scalar(255,0,0,255);
+        Scalar color = new Scalar(255, 0, 0, 255);
 
         Imgproc.arrowedLine(image, p1, p2, color, 3);
 
         return image;
     }
 
-    public Mat getFrame(){
+    public Mat getFrame() {
         return video.clone();
     }
 
@@ -178,6 +177,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onResume() {
+        bringButtonsToFront();
         super.onResume();
         camera.enableView();
     }
@@ -186,5 +186,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     protected void onDestroy() {
         camera.disableView();
         super.onDestroy();
+    }
+
+    private void bringButtonsToFront() {
+        historyButton.bringToFront();
+        confirm_btn.bringToFront();
+        close_btn.bringToFront();
+        historyButton.setElevation(20);
+        confirm_btn.setElevation(20);
+        close_btn.setElevation(20);
     }
 }
