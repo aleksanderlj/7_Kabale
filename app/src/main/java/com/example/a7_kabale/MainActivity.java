@@ -33,17 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         newGameButton = findViewById(R.id.newGame_btn);
         continueButton = findViewById(R.id.continue_btn);
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            db = DatabaseBuilder.get(this);
-            if (db.instructionDAO().getAll().isEmpty()){
-                runOnUiThread(() -> {
-                    continueButton.setAlpha(.5f);
-                    continueButton.setClickable(false);
-                });
-            }
-        });
-
-
+        checkDatabaseCondition();
         getPermissions();
 
         newGameButton.setOnClickListener(this);
@@ -85,6 +75,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onResume() {
+        checkDatabaseCondition();
+        super.onResume();
+    }
+
+
+    // Opdaterer "Continue" knappen, hvis historik listen i databasen er tom, bliver knappen
+    // semi-gennemsigtig og disabled. Ellers enables den, så man kan fortsætte spil uden at
+    // wipe databasen.
+    private void checkDatabaseCondition(){
         Executors.newSingleThreadExecutor().execute(() -> {
             db = DatabaseBuilder.get(this);
             if (!db.instructionDAO().getAll().isEmpty()){
@@ -92,8 +91,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     continueButton.setAlpha(1);
                     continueButton.setClickable(true);
                 });
+            } else {
+                runOnUiThread(() -> {
+                    continueButton.setAlpha(0.5f);
+                    continueButton.setClickable(false);
+                });
             }
         });
-        super.onResume();
     }
 }
