@@ -17,6 +17,7 @@ public class GameEngine {
 	private CheckTabToFou checkTabToFou = new CheckTabToFou();
 	private CheckKings checkKings = new CheckKings();
 	private TableauMovement tableauMovement = new TableauMovement();
+	private int backToBackTopDeck = 0;
 
 	public void initiateGame() {
 		initiateCardsArray();
@@ -68,20 +69,42 @@ public class GameEngine {
 		checkKings.setLogicState(logicState);
 		tableauMovement.setLogicState(logicState);
 		
-		if (checkAces.checkTopDeckForAce())
+		
+		if (checkAces.checkTopDeckForAce()) {
 			System.out.println("checkTopDeckForAce FÆRDIG");
-		else if (checkAces.checkTableauRowsForAce())
+			backToBackTopDeck = 0;
+		}
+		else if (checkAces.checkTableauRowsForAce()){
 			System.out.println("checkTableauRowsForAce FÆRDIG");
-		else if (checkTabToFou.checkTableauToFoundation())
+			backToBackTopDeck = 0;
+		}
+		else if (checkTabToFou.checkTableauToFoundation()) {
 			System.out.println("checkTableauToFoundation FÆRDIG");
-		else if (checkKings.checkForKing())
+			backToBackTopDeck = 0;
+		}
+		else if (checkKings.checkForKing()) {
 			System.out.println("checkForKing FÆRDIG");
-		else if (tableauMovement.topdeckToTableau())
+			backToBackTopDeck = 0;
+		}
+		else if (tableauMovement.topdeckToTableau()) {
 			System.out.println("topdeckToTableau FÆRDIG");
-		else if (tableauMovement.tableauToTableauHiddenCard())
+			backToBackTopDeck = 0;
+		}
+		else if (tableauMovement.tableauToTableauHiddenCard()) {
 			System.out.println("tableauToTableauHidden FÆRDIG");
-		else if (tableauMovement.tableauToTableau())
+			backToBackTopDeck = 0;
+		}
+		else if (tableauMovement.tableauToTableau()) {
 			System.out.println("tableauToTableau FÆRDIG");
+			backToBackTopDeck = 0;
+		}
+		else if (logicState.getTotalCardsInTopDeck() > 0 && backToBackTopDeck < 30) {
+			System.out.println("Turn the top deck.");
+			System.out.println("topDeck FÆRDIG");
+			backToBackTopDeck++;
+		}
+		else
+			System.out.println("Game over\nThere are no further moved!");
 	}
 }
 
