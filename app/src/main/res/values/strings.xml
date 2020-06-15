@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">7_Kabale</string>
-    <string name="history_info">Here you see a list of previous moves
-                                as dictated by the AI. You can scroll
+    <string name="history_info1">List of previous moves as
+                                dictated by the AI. Scroll
                                 in the list by swiping up/down.
-                                Press the arrow below to return to the game.</string>
+                                </string>
+    <string name="history_info2">Press the arrow below to return to the game.</string>
 </resources>
