@@ -104,7 +104,7 @@ public class GameEngine {
 			backToBackTopDeck++;
 		}
 		else
-			System.out.println("Game over\nThere are no further moved!");
+			System.out.println("Game over\nThere are no further moves!");
 	}
 }
 
