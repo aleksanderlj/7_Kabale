@@ -41,12 +41,13 @@ public class GameEngine {
 	public void updateGameState() {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
-		topDeckCard = null; //Ace of Diamonds
+		topDeckCard = new Card(12, "Diamonds"); //Ace of Diamonds
 
 		//Made from the picture in our Discord chat:
-		//tableauRows.get(0).add(new Card(13, "Diamonds"));
-		tableauRows.get(1).add(new Card(5, "Diamonds"));
-		tableauRows.get(2).add(new Card(4, "Spades"));
+		tableauRows.get(0).add(new Card(13, "Diamonds"));
+		tableauRows.get(1).add(new Card(4, "Diamonds"));
+		tableauRows.get(1).add(new Card(3, "Clubs"));
+		tableauRows.get(2).add(new Card(4, "Hearts"));
 		tableauRows.get(3).add(new Card(10, "Spades"));
 		tableauRows.get(4).add(new Card(7, "Spades"));
 		tableauRows.get(5).add(new Card(9, "Clubs"));
