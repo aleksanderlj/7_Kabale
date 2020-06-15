@@ -25,11 +25,13 @@ public class CheckTabToFou {
 			cardToSearchFor = new Card(logicState.getFoundationsDeckDiamonds().getValue() + 1, logicState.getFoundationsDeckDiamonds().getSuit());
 
 			// Tjek først topdeck:
-			if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())){
-				logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
-				System.out.println("Move " + cardToSearchFor.toString() +
-						" from topdeck to the first foundation pile.");
-				return true;
+			if (logicState.getTopDeckCard() != null) {
+				if (logicState.getTopDeckCard().toString().equals(cardToSearchFor.toString())) {
+					logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
+					System.out.println("Move " + cardToSearchFor.toString() +
+							" from topdeck to the first foundation pile.");
+					return true;
+				}
 			}
 
 			// Herefter forreste kort i hver række:

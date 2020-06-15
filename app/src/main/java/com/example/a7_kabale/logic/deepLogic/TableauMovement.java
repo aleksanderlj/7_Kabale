@@ -14,7 +14,8 @@ public class TableauMovement {
 
     public boolean topdeckToTableau() {
         // Check om topdeck kortet kan lægges ned på en tableau row.
-
+        if (logicState.getTopDeckCard() == null)
+            return false;
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
             temporaryCard = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
             if (temporaryCard.getValue() == logicState.getTopDeckCard().getValue()+1
@@ -39,18 +40,18 @@ public class TableauMovement {
                 Card cardToSearch = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 
                 for (int j = 0; j < logicState.getTableauRows().size(); j++) {
-                    temporaryCard = logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
-                    if (temporaryCard.getValue() == cardToSearch.getValue() + 1
-                            && temporaryCard.getSuit().equals(cardToSearch.getSuit())
-                            && temporaryCard.isRed() != cardToSearch.isRed())
-                    {
-                        int [] newHiddenCards = logicState.getHiddenCards();
-                        newHiddenCards[i] = newHiddenCards[i]-1;
-                        logicState.setHiddenCards(newHiddenCards);
-
-                        System.out.println("Move " + cardToSearch.toString() + " from tableau row "
-                                + (i + 1) + " to tableau row " + (j + 1) + " and flip hidden card");
-                        return true;
+                    if (logicState.getTableauRows().get(j).size() != 0) {
+                        temporaryCard = logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
+                        if (temporaryCard.getValue() == cardToSearch.getValue() + 1
+                                && temporaryCard.isRed() != cardToSearch.isRed()) {
+                            int[] newHiddenCards = logicState.getHiddenCards();
+                            newHiddenCards[i] = newHiddenCards[i] - 1;
+                            logicState.setHiddenCards(newHiddenCards);
+        
+                            System.out.println("Move " + cardToSearch.toString() + " from tableau row "
+                                    + (i + 1) + " to tableau row " + (j + 1) + " and flip hidden card");
+                            return true;
+                        }
                     }
                 }
             }
@@ -65,20 +66,24 @@ public class TableauMovement {
         sålænge der ikke skabes et infinite loop. */
 
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            Card cardToSearch = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
-
+            if (logicState.getTableauRows().get(i).size() != 0) {
+                Card cardToSearch = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
+    
                 for (int j = 0; j < logicState.getTableauRows().size(); j++) {
-                    temporaryCard = logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
-                    if (temporaryCard.getValue() == cardToSearch.getValue()+1
-                            && temporaryCard.getSuit().equals(cardToSearch.getSuit())
-                            && temporaryCard.isRed() != cardToSearch.isRed()) {
-                        if (checkBehindTabToFou(cardToSearch)) {
-                            System.out.println("Move " + cardToSearch.toString() + " from tableau row "
-                                    + (i + 1) + " to tableau row " + (j + 1));
-                            return true;
+                    if (logicState.getTableauRows().get(j).size() != 0) {
+                        temporaryCard = logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
+                        if (temporaryCard.getValue() == cardToSearch.getValue() + 1
+                                && temporaryCard.getSuit().equals(cardToSearch.getSuit())
+                                && temporaryCard.isRed() != cardToSearch.isRed()) {
+                            if (checkBehindTabToFou(cardToSearch)) {
+                                System.out.println("Move " + cardToSearch.toString() + " from tableau row "
+                                        + (i + 1) + " to tableau row " + (j + 1));
+                                return true;
+                            }
                         }
                     }
                 }
+            }
         }
         return false;
     }
