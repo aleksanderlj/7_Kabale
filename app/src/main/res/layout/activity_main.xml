@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/solitairenybaggrund"
     tools:context=".MainActivity">
+    <!-- Used for background: https://pixabay.com/vectors/cards-game-aces-four-diamonds-161404/ -->
 
     <Button
         android:id="@+id/newGame_btn"
