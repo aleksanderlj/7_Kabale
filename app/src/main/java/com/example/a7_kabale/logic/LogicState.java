@@ -6,17 +6,9 @@ public class LogicState {
 	private ArrayList<ArrayList<Card>> tableauRows;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 	private int totalCardsInTopDeck = 24;
-	private int[] hiddenCards = new int[7];
+	private int[] hiddenCards = {0,1,2,3,4,5,6};
 	
-	public LogicState(){
-		hiddenCards[0] = 0;
-		hiddenCards[1] = 1;
-		hiddenCards[2] = 2;
-		hiddenCards[3] = 3;
-		hiddenCards[4] = 4;
-		hiddenCards[5] = 5;
-		hiddenCards[6] = 6;
-	}
+	public LogicState(){}
 	
 	public void updateState(ArrayList<ArrayList<Card>> tableauRows, Card topDeckCard, Card foundationsDeckDiamonds,
 								  Card foundationsDeckHearts, Card foundationsDeckClubs, Card foundationsDeckSpades){

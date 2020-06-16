@@ -43,6 +43,7 @@ public class CheckAces {
 							if (logicState.getHiddenCards()[tableauNumber] != 0) {
 								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 								logicState.setHiddenCards(newHiddenCards);
+								System.out.println("Flip the hidden card!");
 							}
 							return true;
 						case "Hearts":
@@ -50,6 +51,7 @@ public class CheckAces {
 							if (logicState.getHiddenCards()[tableauNumber] != 0) {
 								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 								logicState.setHiddenCards(newHiddenCards);
+								System.out.println("Flip the hidden card!");
 							}
 							return true;
 						case "Clubs":
@@ -57,6 +59,7 @@ public class CheckAces {
 							if (logicState.getHiddenCards()[tableauNumber] != 0) {
 								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 								logicState.setHiddenCards(newHiddenCards);
+								System.out.println("Flip the hidden card!");
 							}
 							return true;
 						case "Spades":
@@ -64,6 +67,7 @@ public class CheckAces {
 							if (logicState.getHiddenCards()[tableauNumber] != 0) {
 								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 								logicState.setHiddenCards(newHiddenCards);
+								System.out.println("Flip the hidden card!");
 							}
 							return true;
 					}
