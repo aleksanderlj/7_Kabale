@@ -44,13 +44,14 @@ public class GameEngine {
 		topDeckCard = new Card(13, "Diamonds"); //Ace of Diamonds
 
 		//Made from the picture in our Discord chat:
+		tableauRows.get(0).add(new Card(13, "Diamonds"));
 		tableauRows.get(0).add(new Card(10, "Diamonds"));
 		tableauRows.get(0).add(new Card(9, "Spades"));
 		tableauRows.get(0).add(new Card(8, "Hearts"));
 		tableauRows.get(1).add(new Card(8, "Spades"));
-		tableauRows.get(2).add(new Card(12, "Diamonds"));
+		tableauRows.get(2).add(new Card(13, "Diamonds"));
 		tableauRows.get(3).add(new Card(13, "Diamonds"));
-		tableauRows.get(4).add(new Card(10, "Spades"));
+		tableauRows.get(4).add(new Card(13, "Spades"));
 		tableauRows.get(5).add(new Card(10, "Hearts"));
 		tableauRows.get(6).add(new Card(13, "Hearts"));
 

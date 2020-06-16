@@ -93,9 +93,10 @@ public class TableauMovement {
         at bagvedliggende kort kan bruges til foundations row.
          */
 
-        for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            for (int j = 0; j <= logicState.getTableauRows().get(i).size()-2; j++) {
-                if (logicState.getTableauRows().get(i).get(j) != null && checkBehindTabToTab(logicState.getTableauRows().get(i).get(j), i)){
+        for (int tableauRow = 0; tableauRow < logicState.getTableauRows().size(); tableauRow++) {
+            for (int cardPlacement = 0; cardPlacement <= logicState.getTableauRows().get(tableauRow).size()-2; cardPlacement++) {
+                if (logicState.getTableauRows().get(tableauRow).get(cardPlacement) != null
+                        && checkBehindTabToTab(logicState.getTableauRows().get(tableauRow).get(cardPlacement), tableauRow, cardPlacement)){
                     return true;
                 }
             }
@@ -119,7 +120,7 @@ public class TableauMovement {
         return false;
     }
 
-    private boolean checkBehindTabToTab(Card card, int tableauRow){
+    private boolean checkBehindTabToTab(Card card, int tableauRow, int cardPlacement){
           /* Check om bagerste kort i række af kort i tableau row, kan rykkes over på et andet tableau deck,
         sålænge der ikke skabes et infinite loop. */
 
@@ -128,9 +129,26 @@ public class TableauMovement {
                 temporaryCard = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
                 if (temporaryCard.getValue() == card.getValue()+1
                         && temporaryCard.isRed() != card.isRed()) {
-                    if (logicState.getTableauRows().get(tableauRow).get(logicState.getTableauRows().indexOf(card) - 1) == null //Skal være hidden card
-                            || checkBehindTabToFou(logicState.getTableauRows().get(tableauRow).get(logicState.getTableauRows().indexOf(card) - 1))) {
+
+                    // Først tjek for hidden card bagved række, der flyttes:
+                    if (logicState.getHiddenCards()[tableauRow] != 0 && cardPlacement == 0){
                         System.out.println("Move the row of cards starting from " + card + " in tableau row "
+                                + (tableauRow + 1) + " onto " + temporaryCard + " in front of tableau row " + (i + 1) + " and flip the hidden card!");
+                        int[] newHiddenCards = logicState.getHiddenCards();
+                        newHiddenCards[i] = newHiddenCards[i] - 1;
+                        logicState.setHiddenCards(newHiddenCards);
+                        return true;
+                    }
+                    // Derefter tjek for at kortet bagved rækken der flyttes (hvis der er et) kan rykkes op på foundations bagefter:
+                    else if (logicState.getTableauRows().get(tableauRow).get(cardPlacement - 1) != null
+                            && checkBehindTabToFou(logicState.getTableauRows().get(tableauRow).get(cardPlacement - 1))) {
+                        System.out.println("Move the row of cards starting from " + card + " in tableau row "
+                                + (tableauRow + 1) + " onto " + temporaryCard + " in front of tableau row " + (i + 1));
+                        return true;
+                    }
+                    // Til sidst tjek om en hel række kort kan rykkes uden nogen kort bagved
+                    else if (logicState.getHiddenCards()[tableauRow] == 0 && cardPlacement == 0){
+                        System.out.println("Move the entire row of cards in tableau row "
                                 + (tableauRow + 1) + " onto " + temporaryCard + " in front of tableau row " + (i + 1));
                         return true;
                     }
