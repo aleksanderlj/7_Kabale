@@ -1,11 +1,13 @@
 package com.example.a7_kabale.OpenCVCamera;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -114,20 +116,27 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO: Check om board state har ændret sig?
                 //TODO: Check om instruktioner kan gives baseret på billedet. Hvis fejl, spørg om nyt billede.
 
+                ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
 
-                ArrayList arr = yoloProcessor.getCards(frame);
-                frame = yoloProcessor.DrawMatFromList(frame, arr);
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    ArrayList arr = yoloProcessor.getCards(frame);
+                    frame = yoloProcessor.DrawMatFromList(frame, arr);
 
-                frame = drawArrow(frame, 200, 200, 500, 500);
-                bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(frame, bm);
-                preview.setImageBitmap(bm);
+                    frame = drawArrow(frame, 200, 200, 500, 500);
+                    final Bitmap bm2 = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(frame, bm2);
+                    preview.setImageBitmap(bm2);
 
+                    String s2 = "Next";
 
-                s = "Next";
-                close_btn.setText(s);
-                confirm_btn.setVisibility(View.GONE);
-                setInstruction("Move H6 to C7");
+                    runOnUiThread(() -> {
+                        close_btn.setText(s2);
+                        confirm_btn.setVisibility(View.GONE);
+                        setInstruction("Move H6 to C7");
+                        dialog.dismiss();
+                    });
+                });
+
                 break;
 
             case R.id.history_btn:
