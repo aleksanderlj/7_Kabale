@@ -41,20 +41,21 @@ public class GameEngine {
 	public void updateGameState() {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
-		topDeckCard = new Card(3, "Diamonds"); //Ace of Diamonds
+		topDeckCard = new Card(13, "Diamonds"); //Ace of Diamonds
 
 		//Made from the picture in our Discord chat:
-		tableauRows.get(0).add(new Card(10, "Clubs"));
-		tableauRows.get(0).add(new Card(9, "Clubs"));
-		tableauRows.get(1).add(new Card(9, "Spades"));
-		tableauRows.get(2).add(new Card(11, "Diamonds"));
+		tableauRows.get(0).add(new Card(10, "Diamonds"));
+		tableauRows.get(0).add(new Card(9, "Spades"));
+		tableauRows.get(0).add(new Card(8, "Hearts"));
+		tableauRows.get(1).add(new Card(8, "Spades"));
+		tableauRows.get(2).add(new Card(12, "Diamonds"));
 		tableauRows.get(3).add(new Card(13, "Diamonds"));
-		tableauRows.get(4).add(new Card(7, "Spades"));
-		tableauRows.get(5).add(new Card(9, "Diamonds"));
-		tableauRows.get(6).add(new Card(11, "Hearts"));
+		tableauRows.get(4).add(new Card(10, "Spades"));
+		tableauRows.get(5).add(new Card(10, "Hearts"));
+		tableauRows.get(6).add(new Card(13, "Hearts"));
 
 		//Da alle disse bunker er tomme fra start.
-		foundationsDeckDiamonds = null;
+		foundationsDeckDiamonds = new Card(9, "Diamonds");
 		foundationsDeckHearts = null;
 		foundationsDeckClubs = null;
 		foundationsDeckSpades = null;
@@ -103,7 +104,7 @@ public class GameEngine {
 			System.out.println("tabRowToTabRow FÆRDIG");
 			backToBackTopDeck = 0;
 		}
-		else if (logicState.getTotalCardsInTopDeck() > 0 && backToBackTopDeck < 30) {
+		else if (logicState.getTotalCardsInTopDeck() > 0 && backToBackTopDeck < logicState.getTotalCardsInTopDeck()) {
 			System.out.println("Turn the top deck.");
 			System.out.println("topDeck FÆRDIG");
 			backToBackTopDeck++;
@@ -112,4 +113,3 @@ public class GameEngine {
 			System.out.println("Game over\nThere are no further moves!");
 	}
 }
-
