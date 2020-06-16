@@ -25,6 +25,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
@@ -47,12 +48,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         OpenCVLoader.initDebug();
 
         // TODO get files from web
-        //AssetDownloader assetDownloader = new AssetDownloader(this);
-        //assetDownloader.downloadAssets();
+        AssetDownloader assetDownloader = new AssetDownloader(this);
+        assetDownloader.downloadAssets();
 
         //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
-        //yoloProcessor = new YOLOProcessor();
-        //yoloProcessor.initDarknet(this.getExternalFilesDir(null));
+        yoloProcessor = new YOLOProcessor();
+        yoloProcessor.initDarknet(this.getExternalFilesDir(null));
 
         preview = findViewById(R.id.image_preview);
         close_btn = findViewById(R.id.closepreview_btn);
@@ -113,10 +114,15 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO: Check om board state har ændret sig?
                 //TODO: Check om instruktioner kan gives baseret på billedet. Hvis fejl, spørg om nyt billede.
 
+
+                ArrayList arr = yoloProcessor.getCards(frame);
+                frame = yoloProcessor.DrawMatFromList(frame, arr);
+
                 frame = drawArrow(frame, 200, 200, 500, 500);
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
+
 
                 s = "Next";
                 close_btn.setText(s);
