@@ -32,11 +32,12 @@ public class BoardDetection {
         return (int) (o1x - o2x);
 
     };
+        //TODO Create new Contructor for the class
 
     public BoardDetection(){
 
     }
-
+        //TODO Extend process image to compare Cardrecognition with the found fields.
     public void processImage(Mat img){
         Mat blur = new Mat();
         Mat grey = new Mat();
