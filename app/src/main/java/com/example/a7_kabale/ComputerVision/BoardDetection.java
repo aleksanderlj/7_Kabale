@@ -13,29 +13,37 @@ import java.util.List;
 public class BoardDetection {
 
     public List<MatOfPoint> fields;
-    private final Comparator<MatOfPoint> comp = (o1, o2) -> {
+    /*  Index order of the contours.
+        0 - H
+        1 - W
+        2..5 - F1-F4
+        6..12 - T1-T7
+     */
 
-        double o1x = o1.get(0, 0)[0];
-        double o1y = o1.get(0, 0)[1];
-        double o2x = o2.get(0, 0)[0];
-        double o2y = o2.get(0, 0)[1];
-        int cmp = 0;
-        int resulty = (int) (o1y - o2y);
-        if (resulty >= 20 || resulty <= -20)
-            cmp = resulty;
-
-        //int cmp = Integer.compare((int)o1y, (int)o2y);
-        if (cmp != 0) {
-            return cmp;
-        }
-
-        return (int) (o1x - o2x);
-
-    };
-        //TODO Create new Contructor for the class
+    private final Comparator<MatOfPoint> comp;
 
     public BoardDetection(){
+        fields = new ArrayList<>();
 
+        comp = (o1, o2) -> {
+
+            double o1x = o1.get(0, 0)[0];
+            double o1y = o1.get(0, 0)[1];
+            double o2x = o2.get(0, 0)[0];
+            double o2y = o2.get(0, 0)[1];
+            int cmp = 0;
+            int resulty = (int) (o1y - o2y);
+            if (resulty >= 20 || resulty <= -20)
+                cmp = resulty;
+
+            //int cmp = Integer.compare((int)o1y, (int)o2y);
+            if (cmp != 0) {
+                return cmp;
+            }
+
+            return (int) (o1x - o2x);
+
+        };
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
     public void processImage(Mat img){
@@ -48,7 +56,6 @@ public class BoardDetection {
         Mat persmask = new Mat();
         Mat cnthiarchy = new Mat();
 
-        fields = new ArrayList<>();
         List<MatOfPoint> contours = new ArrayList<>();
 
         //1. Process picture to find and isolate the board.
@@ -99,14 +106,10 @@ public class BoardDetection {
             }
         }
         //TODO Check size of list. Should be 13 else there was an error.
+
         Collections.sort(fields, comp);
 
-        /*  Index order of the contours.
-            0 - H
-            1 - W
-            2..5 - F1-F4
-            6..12 - T1-T7
-         */
+        return;
 
     }
 
