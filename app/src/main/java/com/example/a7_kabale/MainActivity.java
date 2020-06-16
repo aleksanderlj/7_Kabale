@@ -16,6 +16,7 @@ import com.example.a7_kabale.AndroidCamera.AndroidCameraActivity;
 import com.example.a7_kabale.Database.*;
 import com.example.a7_kabale.OpenCVCamera.CameraActivity;
 import com.example.a7_kabale.RecyclerView.RecyclerAdapter;
+import com.example.a7_kabale.logic.GameEngine;
 
 import java.util.concurrent.Executors;
 
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         checkDatabaseCondition();
         getPermissions();
+
+        GameEngine ge = new GameEngine();
+        ge.initiateGame();
 
         newGameButton.setOnClickListener(this);
         continueButton.setOnClickListener(this);
