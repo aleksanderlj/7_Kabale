@@ -119,6 +119,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
 
                 Executors.newSingleThreadExecutor().execute(() -> {
+
+                    //TODO FIX DA BIG BOY NO CARD BUG
                     ArrayList arr = yoloProcessor.getCards(frame);
                     frame = yoloProcessor.DrawMatFromList(frame, arr);
 
