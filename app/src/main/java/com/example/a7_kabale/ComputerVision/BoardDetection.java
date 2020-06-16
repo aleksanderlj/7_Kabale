@@ -5,58 +5,58 @@ import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class BoardDetection extends JFrame {
+public class BoardDetection {
 
-    public BufferedImage imgIn, imgOut;
-    public JPanel panel;
-    public JLabel input, bw, output;
-    public Mat hsvImage;
-    public Mat mask;
-    public Mat in, persimg, org;
-    public HashMap<Integer, ArrayContourObject> hashContour;
-    public ArrayList<ArrayContourObject> arrayContourObjects;
-    public Iterator<MatOfPoint> iterator;
-    public List<MatOfPoint> contours, apcontours;
-    private ImageIcon icon0, icon1, icon2;
+    public List<MatOfPoint> fields;
+    private final Comparator<MatOfPoint> comp = (o1, o2) -> {
 
+        double o1x = o1.get(0, 0)[0];
+        double o1y = o1.get(0, 0)[1];
+        double o2x = o2.get(0, 0)[0];
+        double o2y = o2.get(0, 0)[1];
+        int cmp = 0;
+        int resulty = (int) (o1y - o2y);
+        if (resulty >= 20 || resulty <= -20)
+            cmp = resulty;
 
-    public BoardDetection(String title, String imgname){
+        //int cmp = Integer.compare((int)o1y, (int)o2y);
+        if (cmp != 0) {
+            return cmp;
+        }
+
+        return (int) (o1x - o2x);
+
+    };
+
+    public BoardDetection(){
+
+    }
+
+    public void processImage(Mat img){
+        Mat blur = new Mat();
         Mat grey = new Mat();
         Mat canny = new Mat();
-        Mat cannyimg = new Mat();
+        Mat persimg = new Mat();
+        Mat persblur = new Mat();
+        Mat pershsv = new Mat();
+        Mat persmask = new Mat();
         Mat cnthiarchy = new Mat();
-        Mat boardimg = new Mat();
 
-        org = new Mat();
-        arrayContourObjects = new ArrayList<>();
-        contours = new ArrayList<>();
-        apcontours = new ArrayList<MatOfPoint>( );
-        try {
-            imgIn = ImageIO.read(new File(imgname));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        in = Imgcodecs.imread(imgname);
-        in.copyTo(boardimg);
+        fields = new ArrayList<>();
+        List<MatOfPoint> contours = new ArrayList<>();
 
-        Imgproc.GaussianBlur(in, in, new Size(5, 5), 0);
+        //1. Process picture to find and isolate the board.
 
-        Imgproc.cvtColor(in, grey, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.GaussianBlur(img, blur, new Size(5, 5), 0);
+
+        Imgproc.cvtColor(blur, grey, Imgproc.COLOR_BGR2GRAY);
 
         Imgproc.Canny(grey, canny, 10, 70);
-        canny.copyTo(cannyimg);
-        Imgproc.cvtColor(cannyimg, cannyimg,Imgproc.COLOR_GRAY2BGR);
 
         Imgproc.findContours(canny,contours,cnthiarchy,Imgproc.RETR_TREE,Imgproc.CHAIN_APPROX_SIMPLE);
 
@@ -66,7 +66,8 @@ public class BoardDetection extends JFrame {
 
         approx = sortApproxContour(approx);
 
-        printContour(approx);
+        //2. Perspective warp the board to an picture of only the board.
+
         Size imgsize = new Size(1500, 1500);
 
         //Create an transform matrix of the wished size. 1500x1500.
@@ -78,69 +79,34 @@ public class BoardDetection extends JFrame {
 
         Mat warpMat = Imgproc.getPerspectiveTransform(approx, dst);
 
-        persimg = new Mat();
 
-        Imgproc.warpPerspective(boardimg, persimg, warpMat, imgsize);
-        persimg.copyTo(org);
-        hsvImage = new Mat();
-        mask = new Mat();
-        Mat persblur = new Mat();
+        Imgproc.warpPerspective(img, persimg, warpMat, imgsize);
+
+        //3. Find fields and sort them in the proper order.
         Imgproc.GaussianBlur(persimg, persblur, new Size(5, 5), 0);
-        Imgproc.cvtColor(persblur, hsvImage, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(persblur, pershsv, Imgproc.COLOR_BGR2HSV);
         contours.clear();
-        Core.inRange(hsvImage,  new Scalar(90,25, 25), new Scalar(150, 255, 255), mask);
-        Imgproc.findContours(mask,contours,new Mat(),Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
+        Core.inRange(pershsv,  new Scalar(90,25, 25), new Scalar(150, 255, 255), persmask);
+        Imgproc.findContours(persmask,contours,new Mat(),Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
 
         for(MatOfPoint cont : contours){
             double area = Imgproc.contourArea(cont);
             if (area >= 6000){
                 MatOfPoint2f apcontour = approxContourAsRect(cont);
                 apcontour = sortApproxContour(apcontour);
-                apcontours.add(new MatOfPoint(apcontour.toArray()));
-                System.out.println("Area of contour = " + area);
+                fields.add(new MatOfPoint(apcontour.toArray()));
             }
         }
+        //TODO Check size of list. Should be 13 else there was an error.
+        Collections.sort(fields, comp);
 
-        Collections.sort(apcontours, (o1, o2) -> {
+        /*  Index order of the contours.
+            0 - H
+            1 - W
+            2..5 - F1-F4
+            6..12 - T1-T7
+         */
 
-            double o1x = o1.get(0,0)[0];
-            double o1y = o1.get(0,0)[1];
-            double o2x = o2.get(0,0)[0];
-            double o2y = o2.get(0,0)[1];
-            int cmp = 0;
-            int resulty = (int) (o1y - o2y);
-            if(resulty >= 20 || resulty <= -20)
-                cmp = resulty;
-
-            //int cmp = Integer.compare((int)o1y, (int)o2y);
-            if (cmp != 0) {
-                return cmp;
-            }
-
-            return (int) (o1x - o2x);
-
-        });
-
-        Imgproc.drawContours(persimg, apcontours, -1, new Scalar(0, 0 ,255), 5);
-
-        imgOut = matToBufferedImage(persimg);
-
-        input = new JLabel();
-        bw = new JLabel();
-        output = new JLabel();
-
-        icon0 = new ImageIcon(imgIn.getScaledInstance(800, 480, Image.SCALE_SMOOTH));
-        icon1 = new ImageIcon(matToBufferedImage(mask).getScaledInstance(800, 480, Image.SCALE_SMOOTH));
-        icon2 = new ImageIcon(imgOut.getScaledInstance(800, 480, Image.SCALE_SMOOTH));
-        input.setIcon(icon0);
-        bw.setIcon(icon1);
-        output.setIcon(icon2);
-        panel = new JPanel();
-        panel.add(input);
-        panel.add(bw);
-        panel.add(output);
-        this.setTitle(title);
-        this.add(panel);
     }
 
     private MatOfPoint findMaxContour(List<MatOfPoint> contours){
@@ -186,6 +152,7 @@ public class BoardDetection extends JFrame {
     */
 
      //This has the potential to be stuck in infinite loop, trying to find an epsilon which approximates to 4. This epsilon might not exist.
+    //TODO Create watchdog thread to close the process and force reset.
     private MatOfPoint2f approxContourAsRect(MatOfPoint contour){
         Thread watchdog = new Thread();
         MatOfPoint2f m2f = new MatOfPoint2f(contour.toArray());
@@ -295,66 +262,5 @@ public class BoardDetection extends JFrame {
                 System.out.printf("( %d , %d ) = %f %f \n", i, j, contour.get(i, j)[0], contour.get(i, j)[1]);
     }
 
-    /*https://github.com/opencv-java/object-detection/commit/b6c2afe355c34ff6b103961142f5f0e2601d024f*/
-    private BufferedImage matToBufferedImage(Mat original)
-    {
-        // init
-        BufferedImage image = null;
-        int width = original.width(), height = original.height(), channels = original.channels();
-        byte[] sourcePixels = new byte[width * height * channels];
-        original.get(0, 0, sourcePixels);
 
-        if (original.channels() > 1)
-        {
-            image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-        }
-        else
-        {
-            image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-        }
-        final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-        System.arraycopy(sourcePixels, 0, targetPixels, 0, sourcePixels.length);
-
-        return image;
-    }
-
-
-    public void nextContour(){
-
-
-        for (int i=0; i <= apcontours.size()-1; i++) {
-            org.copyTo(persimg);
-
-            ArrayContourObject arrayContourObject = new ArrayContourObject(apcontours.get(i));
-            Imgproc.drawContours(persimg, apcontours, i, new Scalar(0, 0, 0), 2);
-            arrayContourObjects.add(arrayContourObject);
-
-            System.out.println(arrayContourObjects.get(i).topLeft());
-            System.out.println(arrayContourObjects.get(i).bottomRight());
-            imgOut = matToBufferedImage(persimg);
-            icon2 = new ImageIcon(imgOut.getScaledInstance(800, 480, Image.SCALE_SMOOTH));
-            output.setIcon(icon2);
-            System.out.println("Now printing contour: " + i);
-            System.out.printf("Coordinates of point (0, 0) = ( %f , %f )\n", apcontours.get(i).get(0, 0)[0], apcontours.get(i).get(0, 0)[1]);
-            System.out.println();
-
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-        }
-    }
-    public static void main (String [] args) {
-
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-        BoardDetection bd = new BoardDetection("Board Detection", "res/boardpics/pic4.jpg");
-        bd.setPreferredSize(new Dimension(1800, 1000));
-        bd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // reagér paa luk
-        bd.pack();                       // saet vinduets stoerrelse
-        bd.setVisible(true);                      // aabn vinduet
-        bd.nextContour();
-
-    }
 }
