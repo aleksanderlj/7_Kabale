@@ -22,7 +22,8 @@ public class TableauMovement {
                 if (temporaryCard.getValue() == logicState.getTopDeckCard().getValue() + 1
                         && temporaryCard.isRed() != logicState.getTopDeckCard().isRed()) {
                     logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
-                    System.out.println("Move " + logicState.getTopDeckCard() + " from top deck to tableau row " + (i + 1));
+                    System.out.println("Move " + logicState.getTopDeckCard().toString() + " to "
+                            + logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1));
                     return true;
                 }
             }

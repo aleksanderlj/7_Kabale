@@ -14,7 +14,7 @@ public class CheckKings {
         	return false;
         else if (logicState.getTopDeckCard() != null && logicState.getTopDeckCard().getValue() == 13){
         	logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
-			System.out.println("Move " + logicState.getTopDeckCard().toString() + " from top deck to tableau row " + (freeDeck+1));
+			System.out.println("Move " + logicState.getTopDeckCard().toString() + " to T" + (freeDeck + 1));
 			return true;
         }
         else {
@@ -28,8 +28,7 @@ public class CheckKings {
 				}
 			}
         	if (highestKing != 0){
-				System.out.println("Move " + "king" + " from tableau row " +
-						(tableauKing + 1) + " to tableau row " + (freeDeck + 1));
+				System.out.println("Move " + logicState.getTableauRows().get(tableauKing).get(0) + " to T" + (freeDeck + 1));
 				int[] newHiddenCards = logicState.getHiddenCards();
 				newHiddenCards[highestKing] = newHiddenCards[highestKing]-1;
 				logicState.setHiddenCards(logicState.getHiddenCards());

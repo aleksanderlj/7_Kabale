@@ -22,28 +22,28 @@ public class CheckTabToFou {
 				case "Diamonds":
 					if (logicState.getFoundationsDeckDiamonds() != null &&
 							logicState.getFoundationsDeckDiamonds().getValue() + 1 == logicState.getTopDeckCard().getValue()) {
-						System.out.println("Move " + logicState.getTopDeckCard() + " from the top deck to the first foundation pile.");
+						System.out.println("Move " + logicState.getTopDeckCard().toString() + " to " + logicState.getFoundationsDeckDiamonds().toString());
 						return true;
 					}
 					return false;
 				case "Hearts":
 					if (logicState.getFoundationsDeckHearts() != null &&
 							logicState.getFoundationsDeckHearts().getValue() + 1 == logicState.getTopDeckCard().getValue()) {
-						System.out.println("Move " + logicState.getTopDeckCard() + " from the top deck to the second foundation pile.");
+						System.out.println("Move " + logicState.getTopDeckCard().toString() + " to " + logicState.getFoundationsDeckHearts().toString());
 						return true;
 					}
 					return false;
 				case "Clubs":
 					if (logicState.getFoundationsDeckClubs() != null &&
 							logicState.getFoundationsDeckClubs().getValue() + 1 == logicState.getTopDeckCard().getValue()) {
-						System.out.println("Move " + logicState.getTopDeckCard() + " from the top deck to the third foundation pile.");
+						System.out.println("Move " + logicState.getTopDeckCard().toString() + " to " + logicState.getFoundationsDeckClubs().toString());
 						return true;
 					}
 					return false;
 				case "Spades":
 					if (logicState.getFoundationsDeckSpades() != null &&
 							logicState.getFoundationsDeckSpades().getValue() + 1 == logicState.getTopDeckCard().getValue()) {
-						System.out.println("Move " + logicState.getTopDeckCard() + " from the top deck to the fourth foundation pile.");
+						System.out.println("Move " + logicState.getTopDeckCard().toString() + " to " + logicState.getFoundationsDeckSpades().toString());
 						return true;
 					}
 					return false;
@@ -63,14 +63,11 @@ public class CheckTabToFou {
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).size() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
-						System.out.println("Move " + cardToSearchFor.toString() +
-								" from tableau row " + (i+1) +
-								" to the first foundation pile.");
+						System.out.println("Move " + cardToSearchFor.toString() + " to " + logicState.getFoundationsDeckDiamonds());
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
 							newHiddenCards[i] = newHiddenCards[i]-1;
 							logicState.setHiddenCards(newHiddenCards);
-							System.out.println("Flip the hidden card!");
 						}
 						return true;
 					}
@@ -88,14 +85,11 @@ public class CheckTabToFou {
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).size() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
-						System.out.println("Move " + cardToSearchFor.toString() +
-								" from tableau row " + (i+1) +
-								" to the second foundation pile.");
+						System.out.println("Move " + cardToSearchFor.toString() + " to " + logicState.getFoundationsDeckHearts());
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
 							newHiddenCards[i] = newHiddenCards[i]-1;
 							logicState.setHiddenCards(newHiddenCards);
-							System.out.println("Flip the hidden card!");
 						}
 						return true;
 					}
@@ -113,14 +107,11 @@ public class CheckTabToFou {
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).size() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
-						System.out.println("Move " + cardToSearchFor.toString() +
-								" from tableau row " + (i+1) +
-								" to the third foundation pile.");
+						System.out.println("Move " + cardToSearchFor.toString() + " to " + logicState.getFoundationsDeckClubs());
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
 							newHiddenCards[i] = newHiddenCards[i]-1;
 							logicState.setHiddenCards(newHiddenCards);
-							System.out.println("Flip the hidden card!");
 						}
 						return true;
 					}
@@ -138,14 +129,11 @@ public class CheckTabToFou {
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).size() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
-						System.out.println("Move " + cardToSearchFor.toString() +
-								" from tableau row " + (i+1) +
-								" to the fourth foundation pile.");
+						System.out.println("Move " + cardToSearchFor.toString() + " to " + logicState.getFoundationsDeckSpades());
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
 							newHiddenCards[i] = newHiddenCards[i]-1;
 							logicState.setHiddenCards(newHiddenCards);
-							System.out.println("Flip the hidden card!");
 						}
 						return true;
 					}

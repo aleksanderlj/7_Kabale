@@ -11,10 +11,7 @@ public class Card {
 	public Card (int value, String suit){
 		this.value = value;
 		this.suit = suit;
-		if (suit.equals("Hearts") || suit.equals("Diamonds"))
-			red = true;
-		else
-			red = false;
+		red = suit.equals("Hearts") || suit.equals("Diamonds");
 	}
 	
 	@NonNull
