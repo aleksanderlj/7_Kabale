@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GameEngine ge = new GameEngine();
         ge.initiateGame();
 
+        // TODO get files from web
+        AssetDownloader assetDownloader = new AssetDownloader(this);
+        assetDownloader.downloadAssets();
+
         newGameButton.setOnClickListener(this);
         continueButton.setOnClickListener(this);
 

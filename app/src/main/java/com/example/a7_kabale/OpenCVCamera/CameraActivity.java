@@ -54,10 +54,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         System.loadLibrary("opencv_java4");
         OpenCVLoader.initDebug();
 
-        // TODO get files from web
-        AssetDownloader assetDownloader = new AssetDownloader(this);
-        assetDownloader.downloadAssets();
-
         //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
         yoloProcessor = new YOLOProcessor();
         yoloProcessor.initDarknet(this.getExternalFilesDir(null));
