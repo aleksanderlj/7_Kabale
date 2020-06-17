@@ -70,52 +70,91 @@ public class GameEngine {
 		checkKings.setLogicState(logicState);
 		tableauMovement.setLogicState(logicState);
 		
-		if (checkAces.checkTopDeckForAce() != null) {
-			System.out.println(checkAces.checkTopDeckForAce());
+		String returnString = null;
+		
+		// checkTopDeckForAce
+		returnString = checkAces.checkTopDeckForAce();
+		if (returnString != null) {
+			System.out.println(returnString);
 			System.out.println("checkTopDeckForAce FÆRDIG");
 			backToBackTopDeck = 0;
-			return checkAces.checkTopDeckForAce();
-		} else if (checkAces.checkTableauRowsForAce() != null) {
-			System.out.println(checkAces.checkTableauRowsForAce());
+			return returnString;
+		}
+		
+		// checkTopDeckForAce
+		returnString = checkAces.checkTopDeckForAce();
+		if (returnString != null) {
+			System.out.println(returnString);
 			System.out.println("checkTableauRowsForAce FÆRDIG");
 			backToBackTopDeck = 0;
-			return checkAces.checkTableauRowsForAce();
-		} else if (checkTabToFou.topDeckToFoundation() != null) {
-			System.out.println(checkTabToFou.topDeckToFoundation());
+			return returnString;
+		}
+		
+		// topDeckToFoundation
+		returnString = checkTabToFou.topDeckToFoundation();
+		if (returnString != null) {
+			System.out.println(returnString);
 			System.out.println("topDeckToFoundation FÆRDIG");
 			backToBackTopDeck = 0;
-			return checkTabToFou.topDeckToFoundation();
-		} else if (checkTabToFou.checkTableauToFoundation() != null) {
-			System.out.println(checkTabToFou.checkTableauToFoundation());
+			return returnString;
+		}
+		
+		// checkTableauToFoundation
+		returnString = checkTabToFou.checkTableauToFoundation();
+		if (returnString != null) {
+			System.out.println(returnString);
 			System.out.println("checkTableauToFoundation FÆRDIG");
 			backToBackTopDeck = 0;
-			return checkTabToFou.checkTableauToFoundation();
-		} else if (checkKings.checkForKing() != null) {
-			System.out.println(checkKings.checkForKing());
+			return returnString;
+		}
+		
+		// checkForKing
+		returnString = checkKings.checkForKing();
+		if (checkKings.checkForKing() != null) {
+			System.out.println(returnString);
 			System.out.println("checkForKing FÆRDIG");
 			backToBackTopDeck = 0;
-			return checkKings.checkForKing();
-		} else if (tableauMovement.topdeckToTableau() != null) {
-			System.out.println(tableauMovement.topdeckToTableau());
+			return returnString;
+		}
+		
+		// topdeckToTableau
+		returnString = tableauMovement.topdeckToTableau();
+		if (returnString != null) {
+			System.out.println(returnString);
 			System.out.println("topdeckToTableau FÆRDIG");
 			backToBackTopDeck = 0;
-			return tableauMovement.topdeckToTableau();
-		} else if (tableauMovement.tableauToTableauHiddenCard() != null) {
-			System.out.println(tableauMovement.tableauToTableauHiddenCard());
+			return returnString;
+		}
+		
+		// tableauToTableauHiddenCard
+		returnString = tableauMovement.tableauToTableauHiddenCard();
+		if (returnString != null) {
+			System.out.println(returnString);
 			System.out.println("tableauToTableauHidden FÆRDIG");
 			backToBackTopDeck = 0;
-			return tableauMovement.tableauToTableauHiddenCard();
-		} else if (tableauMovement.tableauToTableau() != null) {
-			System.out.println(tableauMovement.tableauToTableau());
+			return returnString;
+		}
+		
+		// tableauToTableau
+		returnString = tableauMovement.tableauToTableau();
+		if (returnString != null) {
+			System.out.println(returnString);
 			System.out.println("tableauToTableau FÆRDIG");
 			backToBackTopDeck = 0;
-			return tableauMovement.tableauToTableau();
-		} else if (tableauMovement.tabRowToTabRow() != null) {
-			System.out.println(tableauMovement.tabRowToTabRow());
+			return returnString;
+		}
+		
+		// tabRowToTabRow
+		returnString = tableauMovement.tabRowToTabRow();
+		if (returnString != null) {
+			System.out.println(returnString);
 			System.out.println("tabRowToTabRow FÆRDIG");
 			backToBackTopDeck = 0;
-			return tableauMovement.tabRowToTabRow();
-		} else if (logicState.getTotalCardsInTopDeck() > 0 && backToBackTopDeck < logicState.getTotalCardsInTopDeck()) {
+			return returnString;
+		}
+		
+		// getTotalCardsInTopDeck
+		if (logicState.getTotalCardsInTopDeck() > 0 && backToBackTopDeck < logicState.getTotalCardsInTopDeck()) {
 			System.out.println("Turn the top deck.");
 			System.out.println("topDeck FÆRDIG");
 			backToBackTopDeck++;
