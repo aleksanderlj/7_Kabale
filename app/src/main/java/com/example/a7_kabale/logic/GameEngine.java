@@ -38,7 +38,7 @@ public class GameEngine {
 	}
 
 	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
-	public void updateGameState() {
+	public String updateGameState() {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
 		topDeckCard = null; //Ace of Diamonds
@@ -61,55 +61,77 @@ public class GameEngine {
 		
 		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
-		calculateNextMove();
+		return calculateNextMove();
 	}
 	
-	private void calculateNextMove() {
+	private String calculateNextMove() {
 		checkAces.setLogicState(logicState);
 		checkTabToFou.setLogicState(logicState);
 		checkKings.setLogicState(logicState);
 		tableauMovement.setLogicState(logicState);
-
-
-		if (checkAces.checkTopDeckForAce()) {
+		
+		if (checkAces.checkTopDeckForAce() != null) {
+			System.out.println(checkAces.checkTopDeckForAce());
 			System.out.println("checkTopDeckForAce FÆRDIG");
 			backToBackTopDeck = 0;
-		} else if (checkAces.checkTableauRowsForAce()) {
+			return checkAces.checkTopDeckForAce();
+		} else if (checkAces.checkTableauRowsForAce() != null) {
+			System.out.println(checkAces.checkTableauRowsForAce());
 			System.out.println("checkTableauRowsForAce FÆRDIG");
 			backToBackTopDeck = 0;
-		} else if (checkTabToFou.topDeckToFoundation()) {
+			return checkAces.checkTableauRowsForAce();
+		} else if (checkTabToFou.topDeckToFoundation() != null) {
+			System.out.println(checkTabToFou.topDeckToFoundation());
 			System.out.println("topDeckToFoundation FÆRDIG");
 			backToBackTopDeck = 0;
-		} else if (checkTabToFou.checkTableauToFoundation()) {
+			return checkTabToFou.topDeckToFoundation();
+		} else if (checkTabToFou.checkTableauToFoundation() != null) {
+			System.out.println(checkTabToFou.checkTableauToFoundation());
 			System.out.println("checkTableauToFoundation FÆRDIG");
 			backToBackTopDeck = 0;
-		} else if (checkKings.checkForKing()) {
+			return checkTabToFou.checkTableauToFoundation();
+		} else if (checkKings.checkForKing() != null) {
+			System.out.println(checkKings.checkForKing());
 			System.out.println("checkForKing FÆRDIG");
 			backToBackTopDeck = 0;
-		} else if (tableauMovement.topdeckToTableau()) {
+			return checkKings.checkForKing();
+		} else if (tableauMovement.topdeckToTableau() != null) {
+			System.out.println(tableauMovement.topdeckToTableau());
 			System.out.println("topdeckToTableau FÆRDIG");
 			backToBackTopDeck = 0;
-		} else if (tableauMovement.tableauToTableauHiddenCard()) {
+			return tableauMovement.topdeckToTableau();
+		} else if (tableauMovement.tableauToTableauHiddenCard() != null) {
+			System.out.println(tableauMovement.tableauToTableauHiddenCard());
 			System.out.println("tableauToTableauHidden FÆRDIG");
 			backToBackTopDeck = 0;
-		} else if (tableauMovement.tableauToTableau()) {
+			return tableauMovement.tableauToTableauHiddenCard();
+		} else if (tableauMovement.tableauToTableau() != null) {
+			System.out.println(tableauMovement.tableauToTableau());
 			System.out.println("tableauToTableau FÆRDIG");
 			backToBackTopDeck = 0;
-		} else if (tableauMovement.tabRowToTabRow()) {
+			return tableauMovement.tableauToTableau();
+		} else if (tableauMovement.tabRowToTabRow() != null) {
+			System.out.println(tableauMovement.tabRowToTabRow());
 			System.out.println("tabRowToTabRow FÆRDIG");
 			backToBackTopDeck = 0;
+			return tableauMovement.tabRowToTabRow();
 		} else if (logicState.getTotalCardsInTopDeck() > 0 && backToBackTopDeck < logicState.getTotalCardsInTopDeck()) {
 			System.out.println("Turn the top deck.");
 			System.out.println("topDeck FÆRDIG");
 			backToBackTopDeck++;
+			return "Turn the top deck.";
 		} else {
 			if (logicState.getFoundationsDeckDiamonds().getValue() == 13
 					&& logicState.getFoundationsDeckHearts().getValue() == 13
 					&& logicState.getFoundationsDeckClubs().getValue() == 13
-					&& logicState.getFoundationsDeckSpades().getValue() == 13)
+					&& logicState.getFoundationsDeckSpades().getValue() == 13) {
 				System.out.println("CONGRATULATIONS - you won the game!");
-			else
-				System.out.println("Game over\nThere are no further moves!");
+				return "CONGRATULATIONS - you won the game!";
+			}
+			else {
+				System.out.println("Game over!");
+				return "Game over!";
+			}
 		}
 	}
 }
