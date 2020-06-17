@@ -74,10 +74,25 @@ public class TableauMovement {
                         temporaryCard = logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
                         if (temporaryCard.getValue() == cardToSearch.getValue() + 1
                                 && temporaryCard.isRed() != cardToSearch.isRed()) {
-                            if (logicState.getTableauRows().get(i).size() == 1){
+                            if (logicState.getTableauRows().get(i).size() == 1 && logicState.getHiddenCards()[i] != 0){
                                 System.out.println("Move " + cardToSearch.toString() + " from tableau row "
                                         + (i + 1) + " to tableau row " + (j + 1));
                                 return true;
+                            }
+                            else if (logicState.getTableauRows().get(i).size() == 1 && logicState.getHiddenCards()[i] == 0){
+                                if (logicState.getTopDeckCard().getValue() == 13){
+                                    System.out.println("Move " + cardToSearch.toString() + " from tableau row "
+                                            + (i + 1) + " to tableau row " + (j + 1));
+                                    return true;
+                                }
+                                for (int k = 0; k < logicState.getTableauRows().size(); k++){
+                                    if (logicState.getTableauRows().get(k).size() != 0 &&
+                                            logicState.getTableauRows().get(k).get(0).getValue() == 13 && logicState.getHiddenCards()[k] != 0){
+                                        System.out.println("Move " + cardToSearch.toString() + " from tableau row "
+                                                + (i + 1) + " to tableau row " + (j + 1));
+                                        return true;
+                                    }
+                                }
                             }
                             else if (checkBehindTabToFou(logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 2))) {
                                 System.out.println("Move " + cardToSearch.toString() + " from tableau row "
@@ -156,7 +171,7 @@ public class TableauMovement {
                         // Til sidst tjek om en hel række kort kan rykkes uden nogen kort bagved, men kun hvis der kan flyttes en konge på pladsen
                         else if (logicState.getHiddenCards()[tableauRow] == 0 && cardPlacement == 0) {
                             for (int j = 0; j < logicState.getTableauRows().size(); j++){
-                                if (logicState.getTableauRows().get(j).get(0).getValue() == 13) {
+                                if (logicState.getTableauRows().get(j).get(0).getValue() == 13 && logicState.getHiddenCards()[j] != 0) {
                                     System.out.println("Move the entire row of cards in tableau row "
                                             + (tableauRow + 1) + " onto " + temporaryCard + " in front of tableau row " + (i + 1));
                                     return true;
