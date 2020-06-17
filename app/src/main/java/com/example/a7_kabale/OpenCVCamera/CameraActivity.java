@@ -53,7 +53,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
         yoloProcessor = new YOLOProcessor();
-        yoloProcessor.initDarknet(this.getExternalFilesDir(null));
+        //yoloProcessor.initDarknet(this.getExternalFilesDir(null));
 
         preview = findViewById(R.id.image_preview);
         close_btn = findViewById(R.id.closepreview_btn);
