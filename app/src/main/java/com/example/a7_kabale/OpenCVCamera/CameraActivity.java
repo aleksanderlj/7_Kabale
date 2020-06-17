@@ -98,27 +98,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
 
-
-                capture_btn.setVisibility(View.GONE);
-                preview.setVisibility(View.VISIBLE);
-                close_btn.setVisibility(View.VISIBLE);
-                confirm_btn.setVisibility(View.VISIBLE);
-                s = "Create instructions based on this image?";
-                instructionTextView.setText(s);
-
-                bringButtonsToFront();
-
+                setStatePictureTaken();
                 break;
 
             case R.id.closepreview_btn:
-                s = "retry";
-                close_btn.setText(s);
-                preview.setVisibility(View.GONE);
-                close_btn.setVisibility(View.GONE);
-                confirm_btn.setVisibility(View.GONE);
-                capture_btn.setVisibility(View.VISIBLE);
-                s = "Capture image for next instruction.";
-                instructionTextView.setText(s);
+                setStateRecording();
                 break;
 
             case R.id.confirm_btn:
@@ -144,9 +128,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                         runOnUiThread(() -> {
                             preview.setImageBitmap(bm2);
-                            String s2 = "Next";
-                            close_btn.setText(s2);
-                            confirm_btn.setVisibility(View.GONE);
+                            setStateShowInstruction();
                             setInstruction("Move H6 to C7");
                             dialog.dismiss();
                         });
@@ -223,6 +205,41 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     protected void onDestroy() {
         camera.disableView();
         super.onDestroy();
+    }
+
+    private void setStateRecording(){
+        String s = "retry";
+        close_btn.setText(s);
+        preview.setVisibility(View.GONE);
+        close_btn.setVisibility(View.GONE);
+        confirm_btn.setVisibility(View.GONE);
+        capture_btn.setVisibility(View.VISIBLE);
+        s = "Capture image for next instruction.";
+        instructionTextView.setText(s);
+
+        bringButtonsToFront();
+    }
+
+    private void setStatePictureTaken(){
+        preview.setVisibility(View.VISIBLE);
+        close_btn.setVisibility(View.VISIBLE);
+        confirm_btn.setVisibility(View.VISIBLE);
+        capture_btn.setVisibility(View.GONE);
+        String s = "Create instructions based on this image?";
+        instructionTextView.setText(s);
+
+        bringButtonsToFront();
+    }
+
+    private void setStateShowInstruction(){
+        String s2 = "Next";
+        close_btn.setText(s2);
+        preview.setVisibility(View.VISIBLE);
+        close_btn.setVisibility(View.VISIBLE);
+        confirm_btn.setVisibility(View.GONE);
+        capture_btn.setVisibility(View.GONE);
+
+        bringButtonsToFront();
     }
 
     private void bringButtonsToFront() {
