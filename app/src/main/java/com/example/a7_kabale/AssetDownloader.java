@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -99,14 +100,19 @@ public class AssetDownloader {
                 query.setFilterByStatus(DownloadManager.STATUS_RUNNING);
                 cursor = dlm.query(query);
                 cursor.moveToFirst();
-                int bytesTotalIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
-                long totalBytes = cursor.getInt(bytesTotalIndex);
+                try {
+                    int bytesTotalIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
+                    long totalBytes = cursor.getInt(bytesTotalIndex);
 
-                int downloadTotalIndex = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
-                long downloadedBytes = cursor.getInt(downloadTotalIndex);
+                    int downloadTotalIndex = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
+                    long downloadedBytes = cursor.getInt(downloadTotalIndex);
 
-                publishProgress((int) ((downloadedBytes / (float) totalBytes) * 100));
-                if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                    publishProgress((int) ((downloadedBytes / (float) totalBytes) * 100));
+                    if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                        downloading = false;
+                    }
+                } catch (CursorIndexOutOfBoundsException e) {
+                    System.err.println("Download cursor went out of bounds? Stopping download dialog.");
                     downloading = false;
                 }
             }
