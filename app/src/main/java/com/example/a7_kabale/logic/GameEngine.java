@@ -89,7 +89,16 @@ public class GameEngine {
 			backToBackTopDeck = 0;
 			return returnString;
 		}
-		
+
+		// topdeckToTableau
+		returnString = tableauMovement.topdeckToTableau();
+		if (returnString != null) {
+			System.out.println(returnString);
+			System.out.println("topdeckToTableau FÆRDIG");
+			backToBackTopDeck = 0;
+			return returnString;
+		}
+
 		// topDeckToFoundation
 		returnString = checkTabToFou.topDeckToFoundation();
 		if (returnString != null) {
@@ -116,16 +125,7 @@ public class GameEngine {
 			backToBackTopDeck = 0;
 			return returnString;
 		}
-		
-		// topdeckToTableau
-		returnString = tableauMovement.topdeckToTableau();
-		if (returnString != null) {
-			System.out.println(returnString);
-			System.out.println("topdeckToTableau FÆRDIG");
-			backToBackTopDeck = 0;
-			return returnString;
-		}
-		
+
 		// tableauToTableauHiddenCard
 		returnString = tableauMovement.tableauToTableauHiddenCard();
 		if (returnString != null) {
