@@ -2,23 +2,18 @@ package com.example.a7_kabale;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.ref.WeakReference;
 
 public class AssetDownloader {
-    File storage;
-    Context context;
+    private File storage;
+    private Context context;
 
     public AssetDownloader(Context context) {
         this.context = context;
@@ -29,13 +24,15 @@ public class AssetDownloader {
         File propertyFile = new File(storage.getPath() + "/props.properties");
         if (!propertyFile.exists()) {
             try {
-                propertyFile.createNewFile();
+                if (!propertyFile.createNewFile()) {
+                    System.err.println("Properties fil kunne ikke laves!?");
+                }
                 //Skriv eventuelt noget til properties som versionsnummer af weights etc. etc. hvis vi vil
 
                 //Download alt her
                 String url1 = "https://waii.dk/upload/uploads/cards.cfg";
                 String url2 = "https://waii.dk/upload/uploads/cards.weights";
-                new DownloadFilesTask().execute(url1, url2);
+                new DownloadFilesTask(this, context).execute(url1, url2);
 
             } catch (Exception e) {
                 System.err.println("Something went wrong with asset downloads!");
@@ -52,7 +49,9 @@ public class AssetDownloader {
 
         File requestedFile = new File(storage.getPath() + "/data/" + name);
         if (requestedFile.exists()) {
-            requestedFile.delete();
+            if (!requestedFile.delete()) {
+                System.err.println("Asset fil eksisterer men blev ikke slettet?");
+            }
         }
 
         Uri uri = Uri.parse(url);
@@ -68,13 +67,23 @@ public class AssetDownloader {
 
     //Stjålet fra https://developer.android.com/reference/android/os/AsyncTask
     //Og https://stackoverflow.com/questions/20092460/show-progress-bar-while-downloading-using-download-manager
-    private class DownloadFilesTask extends AsyncTask<String, Integer, Long> {
-        final ProgressDialog progressBarDialog= new ProgressDialog(context);
+    //Weakreference fra https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur
+    private static class DownloadFilesTask extends AsyncTask<String, Integer, Long> {
+        private WeakReference<Context> contextRef;
+        private WeakReference<AssetDownloader> downloaderRef;
+
+        DownloadFilesTask(AssetDownloader assetDownloader , Context context) {
+            this.contextRef = new WeakReference<>(context);
+            this.downloaderRef = new WeakReference<>(assetDownloader);
+        }
+
+        ProgressDialog progressBarDialog;
         private boolean downloading = true;
 
         @Override
         protected void onPreExecute() {
-            progressBarDialog.setTitle("Download AI Data, please wait!");
+            progressBarDialog = new ProgressDialog(contextRef.get());
+            progressBarDialog.setTitle("Downloading AI Data, please wait!");
 
             progressBarDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressBarDialog.setProgress(0);
@@ -84,11 +93,10 @@ public class AssetDownloader {
 
         @Override
         protected Long doInBackground(String... urls) {
-            DownloadManager dlm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+            DownloadManager dlm = (DownloadManager) contextRef.get().getSystemService(Context.DOWNLOAD_SERVICE);
 
-            ArrayList<DownloadManager.Request> requests = new ArrayList<DownloadManager.Request>();
             for (String url : urls) {
-                DownloadManager.Request request = makeRequest(url);
+                DownloadManager.Request request = downloaderRef.get().makeRequest(url);
                 dlm.enqueue(request);
             }
 
