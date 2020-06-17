@@ -153,11 +153,20 @@ public class TableauMovement {
                                     + (tableauRow + 1) + " onto " + temporaryCard + " in front of tableau row " + (i + 1));
                             return true;
                         }
-                        // Til sidst tjek om en hel række kort kan rykkes uden nogen kort bagved
+                        // Til sidst tjek om en hel række kort kan rykkes uden nogen kort bagved, men kun hvis der kan flyttes en konge på pladsen
                         else if (logicState.getHiddenCards()[tableauRow] == 0 && cardPlacement == 0) {
-                            System.out.println("Move the entire row of cards in tableau row "
-                                    + (tableauRow + 1) + " onto " + temporaryCard + " in front of tableau row " + (i + 1));
-                            return true;
+                            for (int j = 0; j < logicState.getTableauRows().size(); j++){
+                                if (logicState.getTableauRows().get(j).get(0).getValue() == 13) {
+                                    System.out.println("Move the entire row of cards in tableau row "
+                                            + (tableauRow + 1) + " onto " + temporaryCard + " in front of tableau row " + (i + 1));
+                                    return true;
+                                }
+                            }
+                            if (logicState.getTopDeckCard().getValue() == 13){
+                                System.out.println("Move the entire row of cards in tableau row "
+                                        + (tableauRow + 1) + " onto " + temporaryCard + " in front of tableau row " + (i + 1));
+                                return true;
+                            }
                         }
                     }
                 }
