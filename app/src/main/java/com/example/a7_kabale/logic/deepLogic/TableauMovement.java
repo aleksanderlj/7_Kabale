@@ -34,9 +34,11 @@ public class TableauMovement {
     public boolean tableauToTableauHiddenCard() {
         /* Check om forreste kort i tableau row, hvor tableau row kun har et shown card,
         kan rykkes over på en anden tableau row - vend derefter det bagvedliggende kort. */
+        int mostHidden = 0, fromRow = 0, toRow = 0;
+        Card bestCard = null;
 
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            if (logicState.getHiddenCards()[i] > 0 && logicState.getTableauRows().get(i).size() == 1){
+            if (logicState.getHiddenCards()[i] > 0 && logicState.getTableauRows().get(i).size() == 1) {
 
                 Card cardToSearch = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 
@@ -44,19 +46,25 @@ public class TableauMovement {
                     if (logicState.getTableauRows().get(j).size() != 0) {
                         temporaryCard = logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
                         if (temporaryCard.getValue() == cardToSearch.getValue() + 1
-                                && temporaryCard.isRed() != cardToSearch.isRed()) {
-                            int[] newHiddenCards = logicState.getHiddenCards();
-                            newHiddenCards[i] = newHiddenCards[i] - 1;
-                            logicState.setHiddenCards(newHiddenCards);
-        
-                            System.out.println("Move " + cardToSearch.toString() + " from tableau row "
-                                    + (i + 1) + " to tableau row " + (j + 1) + " and flip hidden card");
-                            return true;
+                                && temporaryCard.isRed() != cardToSearch.isRed() && mostHidden <= logicState.getHiddenCards()[i]) {
+                            bestCard = cardToSearch;
+                            mostHidden = logicState.getHiddenCards()[i];
+                            fromRow = i;
+                            toRow = j;
                         }
                     }
                 }
             }
         }
+            if (mostHidden != 0) {
+                int[] newHiddenCards = logicState.getHiddenCards();
+                newHiddenCards[fromRow] = newHiddenCards[fromRow] - 1;
+                logicState.setHiddenCards(newHiddenCards);
+
+                System.out.println("Move " + bestCard.toString() + " from tableau row "
+                        + (fromRow + 1) + " to tableau row " + (toRow + 1) + " and flip hidden card");
+                return true;
+            }
         return false;
     }
 
@@ -117,7 +125,7 @@ public class TableauMovement {
 
         for (int tableauRow = 0; tableauRow < logicState.getTableauRows().size(); tableauRow++) {
             for (int cardPlacement = 0; cardPlacement <= logicState.getTableauRows().get(tableauRow).size()-2; cardPlacement++) {
-                if (cardPlacement == 0 && logicState.getTableauRows().get(tableauRow).get(cardPlacement) != null
+                if (logicState.getTableauRows().get(tableauRow).get(cardPlacement) != null
                         && checkBehindTabToTab(logicState.getTableauRows().get(tableauRow).get(cardPlacement), tableauRow, cardPlacement)){
                     return true;
                 }
