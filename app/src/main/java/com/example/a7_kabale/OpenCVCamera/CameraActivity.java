@@ -208,6 +208,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setStateRecording(){
+        camera.enableView();
         String s = "retry";
         close_btn.setText(s);
         preview.setVisibility(View.GONE);
@@ -221,6 +222,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setStatePictureTaken(){
+        camera.disableView();
         preview.setVisibility(View.VISIBLE);
         close_btn.setVisibility(View.VISIBLE);
         confirm_btn.setVisibility(View.VISIBLE);
@@ -232,6 +234,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setStateShowInstruction(){
+        camera.disableView();
         String s2 = "Next";
         close_btn.setText(s2);
         preview.setVisibility(View.VISIBLE);
