@@ -109,6 +109,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 instructionTextView.setText(s);
                 break;
 
+                // ♠ ♥ ♣ ♦
             case R.id.confirm_btn:
                 //TODO: Check om board state har ændret sig?
                 //TODO: Check om instruktioner kan gives baseret på billedet. Hvis fejl, spørg om nyt billede.
@@ -121,7 +122,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 s = "Next";
                 close_btn.setText(s);
                 confirm_btn.setVisibility(View.GONE);
-                setInstruction("Move H6 to C7");
+                setInstruction("Move Six of Hearts ♥ to Seven of Clubs ♣");
                 break;
 
             case R.id.history_btn:
