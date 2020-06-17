@@ -11,8 +11,6 @@ import java.util.*;
 import java.util.List;
 
 public class BoardDetection {
-
-    public List<MatOfPoint> fields;
     /*  Index order of the contours.
         0 - H
         1 - W
@@ -20,12 +18,20 @@ public class BoardDetection {
         6..12 - T1-T7
      */
 
-    private final Comparator<MatOfPoint> comp;
-
     public BoardDetection(){
-        fields = new ArrayList<>();
+    }
+        //TODO Extend process image to compare Cardrecognition with the found fields.
+    public static ArrayList<MatOfPoint> processImage(Mat img){
+        Mat blur = new Mat();
+        Mat grey = new Mat();
+        Mat canny = new Mat();
+        Mat persimg = new Mat();
+        Mat persblur = new Mat();
+        Mat pershsv = new Mat();
+        Mat persmask = new Mat();
+        Mat cnthiarchy = new Mat();
 
-        comp = (o1, o2) -> {
+        Comparator<MatOfPoint> comp = (o1, o2) -> {
 
             double o1x = o1.get(0, 0)[0];
             double o1y = o1.get(0, 0)[1];
@@ -44,18 +50,8 @@ public class BoardDetection {
             return (int) (o1x - o2x);
 
         };
-    }
-        //TODO Extend process image to compare Cardrecognition with the found fields.
-    public void processImage(Mat img){
-        Mat blur = new Mat();
-        Mat grey = new Mat();
-        Mat canny = new Mat();
-        Mat persimg = new Mat();
-        Mat persblur = new Mat();
-        Mat pershsv = new Mat();
-        Mat persmask = new Mat();
-        Mat cnthiarchy = new Mat();
 
+        ArrayList<MatOfPoint> fields = new ArrayList<>();
         List<MatOfPoint> contours = new ArrayList<>();
 
         //1. Process picture to find and isolate the board.
@@ -109,11 +105,11 @@ public class BoardDetection {
 
         Collections.sort(fields, comp);
 
-        return;
+        return fields;
 
     }
 
-    private MatOfPoint findMaxContour(List<MatOfPoint> contours){
+    private static MatOfPoint findMaxContour(List<MatOfPoint> contours){
         MatOfPoint maxcnt = new MatOfPoint();
         double maxarea = 0;
         for(int i = 0; i < contours.size(); i++){
@@ -157,7 +153,7 @@ public class BoardDetection {
 
      //This has the potential to be stuck in infinite loop, trying to find an epsilon which approximates to 4. This epsilon might not exist.
     //TODO Create watchdog thread to close the process and force reset.
-    private MatOfPoint2f approxContourAsRect(MatOfPoint contour){
+    private static MatOfPoint2f approxContourAsRect(MatOfPoint contour){
         Thread watchdog = new Thread();
         MatOfPoint2f m2f = new MatOfPoint2f(contour.toArray());
         MatOfPoint2f approx = new MatOfPoint2f();
@@ -226,7 +222,7 @@ public class BoardDetection {
 
 
     //inspired by: https://www.pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
-    private MatOfPoint2f sortApproxContour(MatOfPoint2f approx){
+    private static MatOfPoint2f sortApproxContour(MatOfPoint2f approx){
         Point[] pntarr = new Point[4];
         Point[] approxarr = approx.toArray();
         List<Double> sumarr = new ArrayList<>();
@@ -260,7 +256,7 @@ public class BoardDetection {
 
     }
 
-    private void printContour(MatOfPoint2f contour){
+    private static void printContour(MatOfPoint2f contour){
         for(int i = 0; i < contour.rows(); i++)
             for(int j = 0; j < contour.cols(); j++)
                 System.out.printf("( %d , %d ) = %f %f \n", i, j, contour.get(i, j)[0], contour.get(i, j)[1]);

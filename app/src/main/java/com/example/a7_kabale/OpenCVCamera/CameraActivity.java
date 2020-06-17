@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a7_kabale.AssetDownloader;
+import com.example.a7_kabale.ComputerVision.BoardDetection;
 import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
@@ -28,7 +29,10 @@ import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
+
+import static com.example.a7_kabale.ComputerVision.BoardDetection.processImage;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
@@ -121,10 +125,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 Executors.newSingleThreadExecutor().execute(() -> {
 
                     //TODO FIX DA BIG BOY NO CARD BUG
-                    ArrayList arr = yoloProcessor.getCards(frame);
-                    frame = yoloProcessor.DrawMatFromList(frame, arr);
+                    ArrayList yolocards = yoloProcessor.getCards(frame);
+                    List<MatOfPoint> fields = BoardDetection.processImage(frame);
+                    Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 255), 5);
 
-                    frame = drawArrow(frame, 200, 200, 500, 500);
+                    //frame = yoloProcessor.DrawMatFromList(frame, yolocards);
+                    //frame = drawArrow(frame, 200, 200, 500, 500);
+
+
                     final Bitmap bm2 = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                     Utils.matToBitmap(frame, bm2);
                     preview.setImageBitmap(bm2);
