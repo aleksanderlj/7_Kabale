@@ -20,7 +20,23 @@ public class Card {
 	@NonNull
 	@Override
 	public String toString() {
-		return this.suit + " " + this.value;
+		String returnString = "";
+		if (this.value < 10) {
+			returnString = returnString + this.suit.charAt(0) + this.value;
+			return returnString;
+		}
+		else if (this.value == 11){
+			returnString = returnString + this.suit.charAt(0) + "J";
+			return returnString;
+		}
+		else if (this.value == 12){
+			returnString = returnString + this.suit.charAt(0) + "Q";
+			return returnString;
+		}
+		else {
+			returnString = returnString + this.suit.charAt(0) + "K";
+			return returnString;
+		}
 	}
 	
 	public int getValue() {
