@@ -1,9 +1,13 @@
 package com.example.a7_kabale.ComputerVision;
 
+import com.example.a7_kabale.RecognizedCard;
+import com.example.a7_kabale.logic.Card;
+
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -18,7 +22,7 @@ public class BoardDetection {
     public BoardDetection(){
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
-    public static ArrayList<MatOfPoint> processImage(Mat img){
+    public static ArrayList<ArrayContourObject> processImage(Mat img){
         Mat blur = new Mat();
         Mat grey = new Mat();
         Mat canny = new Mat();
@@ -102,7 +106,11 @@ public class BoardDetection {
 
         Collections.sort(fields, comp);
         persimg.copyTo(img);
-        return fields;
+        ArrayList<ArrayContourObject> contlist = new ArrayList<>();
+        for (MatOfPoint cont : fields){
+            contlist.add(new ArrayContourObject(cont));
+        }
+        return contlist;
     }
 
     private static MatOfPoint findMaxContour(List<MatOfPoint> contours){
@@ -257,6 +265,45 @@ public class BoardDetection {
             for(int j = 0; j < contour.cols(); j++)
                 System.out.printf("( %d , %d ) = %f %f \n", i, j, contour.get(i, j)[0], contour.get(i, j)[1]);
     }
+
+    public static ArrayList<ArrayList<RecognizedCard>> cardSegmenter(ArrayList<ArrayContourObject> contours, ArrayList<RecognizedCard> recognizedCards) {
+        ArrayList<ArrayList<RecognizedCard>> cardList = new ArrayList<ArrayList<RecognizedCard>>();
+        ArrayList<RecognizedCard> topDeckCard = new ArrayList<>();
+        ArrayList<RecognizedCard> foundationDeckDiamonds = new ArrayList<>();
+        ArrayList<RecognizedCard> foundationDeckHearts = new ArrayList<>();
+        ArrayList<RecognizedCard> foundationDeckClubs = new ArrayList<>();
+        ArrayList<RecognizedCard> foundationDeckSpades = new ArrayList<>();
+        ArrayList<RecognizedCard> tableauRows = new ArrayList<>();
+        cardList.add(0, topDeckCard);
+        cardList.add(1, foundationDeckDiamonds);
+        cardList.add(2, foundationDeckHearts);
+        cardList.add(3, foundationDeckClubs);
+        cardList.add(4, foundationDeckSpades);
+        cardList.add(5, tableauRows);
+
+
+        for (ArrayContourObject cont : contours) {
+            for (RecognizedCard card : recognizedCards) {
+                Point topLeft = card.getRect().tl();
+                Point contTL = cont.topLeft();
+                Point contBR = cont.bottomRight();
+
+                //If fra https://www.geeksforgeeks.org/check-if-a-point-lies-on-or-inside-a-rectangle-set-2/
+                if (topLeft.x > contTL.x && topLeft.x < contBR.x
+                    && topLeft.y > contTL.y && topLeft.y < contBR.y) {
+                    cardList.get(contours.indexOf(cont)).add(card);
+                    recognizedCards.remove(card);
+                }
+            }
+        }
+
+        if (!recognizedCards.isEmpty()) {
+            System.err.println("Something is very wrong. Some recognized cards were not inside contours!");
+        }
+
+        return cardList;
+    }
+
 
 
 }

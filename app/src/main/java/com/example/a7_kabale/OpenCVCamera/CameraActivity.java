@@ -13,13 +13,16 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a7_kabale.AssetDownloader;
+import com.example.a7_kabale.ComputerVision.ArrayContourObject;
 import com.example.a7_kabale.ComputerVision.BoardDetection;
 import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
+import com.example.a7_kabale.RecognizedCard;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 import com.example.a7_kabale.YOLOProcessor;
+import com.example.a7_kabale.logic.Card;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
@@ -28,6 +31,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -125,7 +129,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 Executors.newSingleThreadExecutor().execute(() -> {
 
                     //TODO FIX DA BIG BOY NO CARD BUG
-                    List<MatOfPoint> fields = BoardDetection.processImage(frame);
+                    ArrayList fields = BoardDetection.processImage(frame);
+                    ArrayList recognizedCards = yoloProcessor.getCards(frame);
+                    ArrayList<ArrayList<RecognizedCard>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
+
                     //ArrayList yolocards = yoloProcessor.getCards(frame);
 
                     //Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 0, 255), 5);
