@@ -2,11 +2,8 @@ package com.example.a7_kabale.ComputerVision;
 
 import org.opencv.core.*;
 import org.opencv.core.Point;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -58,7 +55,7 @@ public class BoardDetection {
 
         Imgproc.GaussianBlur(img, blur, new Size(5, 5), 0);
 
-        Imgproc.cvtColor(blur, grey, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.cvtColor(blur, grey, Imgproc.COLOR_RGBA2GRAY);
 
         Imgproc.Canny(grey, canny, 10, 70);
 
@@ -71,8 +68,7 @@ public class BoardDetection {
         approx = sortApproxContour(approx);
 
         //2. Perspective warp the board to an picture of only the board.
-
-        Size imgsize = new Size(1500, 1500);
+        Size imgsize = img.size();
 
         //Create an transform matrix of the wished size. 1500x1500.
         Mat dst = Mat.zeros(4,2,CvType.CV_32F);
@@ -88,6 +84,7 @@ public class BoardDetection {
 
         //3. Find fields and sort them in the proper order.
         Imgproc.GaussianBlur(persimg, persblur, new Size(5, 5), 0);
+        Imgproc.cvtColor(persblur, persblur, Imgproc.COLOR_RGBA2BGR);
         Imgproc.cvtColor(persblur, pershsv, Imgproc.COLOR_BGR2HSV);
         contours.clear();
         Core.inRange(pershsv,  new Scalar(90,25, 25), new Scalar(150, 255, 255), persmask);
@@ -104,9 +101,8 @@ public class BoardDetection {
         //TODO Check size of list. Should be 13 else there was an error.
 
         Collections.sort(fields, comp);
-
+        persimg.copyTo(img);
         return fields;
-
     }
 
     private static MatOfPoint findMaxContour(List<MatOfPoint> contours){

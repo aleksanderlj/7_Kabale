@@ -125,21 +125,20 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 Executors.newSingleThreadExecutor().execute(() -> {
 
                     //TODO FIX DA BIG BOY NO CARD BUG
-                    ArrayList yolocards = yoloProcessor.getCards(frame);
                     List<MatOfPoint> fields = BoardDetection.processImage(frame);
-                    Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 255), 5);
+                    //ArrayList yolocards = yoloProcessor.getCards(frame);
 
+                    //Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 0, 255), 5);
                     //frame = yoloProcessor.DrawMatFromList(frame, yolocards);
                     //frame = drawArrow(frame, 200, 200, 500, 500);
 
-
+                    //Imgproc.cvtColor(frame, frame, Imgproc.COLOR_GRAY2RGBA);
                     final Bitmap bm2 = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                     Utils.matToBitmap(frame, bm2);
-                    preview.setImageBitmap(bm2);
-
-                    String s2 = "Next";
 
                     runOnUiThread(() -> {
+                        preview.setImageBitmap(bm2);
+                        String s2 = "Next";
                         close_btn.setText(s2);
                         confirm_btn.setVisibility(View.GONE);
                         setInstruction("Move H6 to C7");
