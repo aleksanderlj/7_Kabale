@@ -41,47 +41,23 @@ public class GameEngine {
 	public void updateGameState() {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
-		topDeckCard = new Card (8, "Diamonds"); //Ace of Diamonds
+		topDeckCard = null; //Ace of Diamonds
 
 		//Made from the picture in our Discord chat:
-		tableauRows.get(0).add(new Card(13, "Clubs"));
-		tableauRows.get(0).add(new Card(12, "Diamonds"));
-		tableauRows.get(0).add(new Card(11, "Spades"));
-		tableauRows.get(0).add(new Card(10, "Diamonds"));
-		tableauRows.get(0).add(new Card(9, "Spades"));
-		tableauRows.get(0).add(new Card(8, "Hearts"));
-		tableauRows.get(0).add(new Card(7, "Clubs"));
-		
-		tableauRows.get(1).add(new Card(13, "Diamonds"));
-		tableauRows.get(1).add(new Card(12, "Clubs"));
-		tableauRows.get(1).add(new Card(11, "Hearts"));
-		tableauRows.get(1).add(new Card(10, "Spades"));
-		tableauRows.get(1).add(new Card(9, "Diamonds"));
-		tableauRows.get(1).add(new Card(8, "Spades"));
-		tableauRows.get(1).add(new Card(7, "Hearts"));
-		tableauRows.get(1).add(new Card(6, "Clubs"));
-		//tableauRows.get(1).add(new Card(5, "Diamonds"));
-		
-		
-		tableauRows.get(3).add(new Card(13, "Spades"));
-		tableauRows.get(3).add(new Card(12, "Hearts"));
-		tableauRows.get(3).add(new Card(11, "Clubs"));
-		tableauRows.get(3).add(new Card(10, "Hearts"));
-		
-		tableauRows.get(4).add(new Card(13, "Hearts"));
-		tableauRows.get(4).add(new Card(12, "Spades"));
-		tableauRows.get(4).add(new Card(11, "Diamonds"));
-		tableauRows.get(4).add(new Card(10, "Clubs"));
-		tableauRows.get(4).add(new Card(9, "Hearts"));
-		tableauRows.get(4).add(new Card(8, "Clubs"));
-		tableauRows.get(4).add(new Card(7, "Diamonds"));
+		tableauRows.get(0).add(new Card(5, "Clubs"));
+		tableauRows.get(1).add(new Card(6, "Diamonds"));
+		tableauRows.get(2).add(new Card(13, "Spades"));
+		tableauRows.get(3).add(new Card(9, "Diamonds"));
+		tableauRows.get(4).add(new Card(10, "Spades"));
+		tableauRows.get(5).add(new Card(6, "Hearts"));
+		tableauRows.get(6).add(new Card(7, "Clubs"));
 
 
 		//Da alle disse bunker er tomme fra start.
-		foundationsDeckDiamonds = new Card(3,"Diamonds");
-		foundationsDeckHearts = new Card(6, "Hearts");
-		foundationsDeckClubs = new Card (4, "Clubs");
-		foundationsDeckSpades = new Card(6, "Spades");
+		foundationsDeckDiamonds = new Card(1,"Diamonds");
+		foundationsDeckHearts = new Card(1, "Hearts");
+		foundationsDeckClubs = new Card (1, "Clubs");
+		foundationsDeckSpades = new Card(1, "Spades");
 		
 		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
