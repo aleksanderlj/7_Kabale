@@ -113,8 +113,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 final List<MatOfPoint> fields = fieldsTemp;
                 Executors.newSingleThreadExecutor().execute(() -> {
-
-                    //TODO FIX DA BIG BOY NO CARD BUG
                     try {
                         //List<MatOfPoint> fields = BoardDetection.processImage(frame);
                         ArrayList yolocards = yoloProcessor.getCards(frame);
