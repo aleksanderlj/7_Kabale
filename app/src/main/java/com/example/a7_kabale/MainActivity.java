@@ -12,10 +12,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.a7_kabale.AndroidCamera.AndroidCameraActivity;
 import com.example.a7_kabale.Database.*;
 import com.example.a7_kabale.OpenCVCamera.CameraActivity;
-import com.example.a7_kabale.RecyclerView.RecyclerAdapter;
 import com.example.a7_kabale.logic.GameEngine;
 
 import java.util.concurrent.Executors;

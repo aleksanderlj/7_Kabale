@@ -7,17 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.a7_kabale.AssetDownloader;
 import com.example.a7_kabale.ComputerVision.BoardDetection;
 import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
+import com.example.a7_kabale.RecognizedCard;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 import com.example.a7_kabale.YOLOProcessor;
@@ -33,19 +32,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-import static com.example.a7_kabale.ComputerVision.BoardDetection.processImage;
-
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
     AppDatabase db;
-    Button close_btn, capture_btn, confirm_btn;
+    Button close_btn, capture_btn, confirm_btn, overlay_btn;
     ImageView preview;
     TextView instructionTextView;
     JavaCameraView camera;
-    Mat video, frame;
+    Mat video, frame, overlayFrame;
     Intent i;
     Button historyButton;
     YOLOProcessor yoloProcessor;
+    List<MatOfPoint> fields;
+    Bitmap bm, bmOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +63,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn = findViewById(R.id.confirm_btn);
         instructionTextView = findViewById(R.id.instructionTextView);
         historyButton = findViewById(R.id.history_btn);
+        overlay_btn = findViewById(R.id.overlay_btn);
+        fields = null;
 
         camera = findViewById(R.id.camera_view);
         camera.setCameraPermissionGranted();
@@ -75,20 +76,20 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.setOnClickListener(this);
         confirm_btn.setOnClickListener(this);
         historyButton.setOnClickListener(this);
+        overlay_btn.setOnClickListener(this);
 
         i = new Intent(this, MoveHistoryActivity.class);
+
+        setStateRecording();
     }
 
     @Override
     public void onClick(View v) {
-        Bitmap bm;
-        String s;
-        List<MatOfPoint> fieldsTemp = null;
         switch (v.getId()) {
             case R.id.capture_btn:
                 frame = getFrame();
 
-                fieldsTemp = BoardDetection.processImage(frame);
+                fields = BoardDetection.processImage(frame);
 
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);
@@ -107,21 +108,24 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
 
-                final List<MatOfPoint> fields = fieldsTemp;
                 Executors.newSingleThreadExecutor().execute(() -> {
                     try {
-                        //List<MatOfPoint> fields = BoardDetection.processImage(frame);
-                        ArrayList yolocards = yoloProcessor.getCards(frame);
+                        ArrayList<RecognizedCard> yolocards = yoloProcessor.getCards(frame);
 
-                        Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 0, 255), 5);
-                        frame = yoloProcessor.DrawMatFromList(frame, yolocards);
-                        //frame = drawArrow(frame, 200, 200, 500, 500);
+                        //TODO LAV PILE PÅ frame HER
+                        bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(frame, bm);
 
-                        final Bitmap bm2 = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-                        Utils.matToBitmap(frame, bm2);
+                        overlayFrame = frame.clone();
+                        Imgproc.drawContours(overlayFrame, fields, -1, new Scalar(255, 255, 0, 255), 5);
+                        overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, yolocards);
+                        overlayFrame = drawArrow(overlayFrame, 200, 200, 500, 500);
+
+                        bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(overlayFrame, bmOverlay);
 
                         runOnUiThread(() -> {
-                            preview.setImageBitmap(bm2);
+                            preview.setImageBitmap(bm);
                             setStateShowInstruction();
                             setInstruction("Move H6 to C7");
                             dialog.dismiss();
@@ -139,6 +143,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.history_btn:
                 startActivity(i);
+                break;
+
+            case R.id.overlay_btn:
+                preview.setImageBitmap(bmOverlay);
+                break;
         }
     }
 
@@ -209,6 +218,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.setVisibility(View.GONE);
         confirm_btn.setVisibility(View.GONE);
         capture_btn.setVisibility(View.VISIBLE);
+        overlay_btn.setVisibility(View.GONE);
         s = "Capture image for next instruction.";
         instructionTextView.setText(s);
 
@@ -221,6 +231,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.setVisibility(View.VISIBLE);
         confirm_btn.setVisibility(View.VISIBLE);
         capture_btn.setVisibility(View.GONE);
+        overlay_btn.setVisibility(View.GONE);
         String s = "Create instructions based on this image?";
         instructionTextView.setText(s);
 
@@ -235,6 +246,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.setVisibility(View.VISIBLE);
         confirm_btn.setVisibility(View.GONE);
         capture_btn.setVisibility(View.GONE);
+        overlay_btn.setVisibility(View.VISIBLE);
 
         bringButtonsToFront();
     }
@@ -243,8 +255,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         historyButton.bringToFront();
         confirm_btn.bringToFront();
         close_btn.bringToFront();
+        overlay_btn.bringToFront();
         historyButton.setElevation(20);
         confirm_btn.setElevation(20);
         close_btn.setElevation(20);
+        overlay_btn.setElevation(20);
     }
 }
