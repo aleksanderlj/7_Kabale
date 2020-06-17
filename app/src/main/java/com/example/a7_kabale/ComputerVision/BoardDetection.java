@@ -273,14 +273,25 @@ public class BoardDetection {
         ArrayList<RecognizedCard> foundationDeckHearts = new ArrayList<>();
         ArrayList<RecognizedCard> foundationDeckClubs = new ArrayList<>();
         ArrayList<RecognizedCard> foundationDeckSpades = new ArrayList<>();
-        ArrayList<RecognizedCard> tableauRows = new ArrayList<>();
-        cardList.add(0, topDeckCard);
-        cardList.add(1, foundationDeckDiamonds);
-        cardList.add(2, foundationDeckHearts);
-        cardList.add(3, foundationDeckClubs);
-        cardList.add(4, foundationDeckSpades);
-        cardList.add(5, tableauRows);
-
+        ArrayList<RecognizedCard> tableauRow1 = new ArrayList<>();
+        ArrayList<RecognizedCard> tableauRow2 = new ArrayList<>();
+        ArrayList<RecognizedCard> tableauRow3 = new ArrayList<>();
+        ArrayList<RecognizedCard> tableauRow4 = new ArrayList<>();
+        ArrayList<RecognizedCard> tableauRow5 = new ArrayList<>();
+        ArrayList<RecognizedCard> tableauRow6 = new ArrayList<>();
+        ArrayList<RecognizedCard> tableauRow7 = new ArrayList<>();
+        cardList.add(1, topDeckCard);
+        cardList.add(2, foundationDeckDiamonds);
+        cardList.add(3, foundationDeckHearts);
+        cardList.add(4, foundationDeckClubs);
+        cardList.add(5, foundationDeckSpades);
+        cardList.add(6, tableauRow1);
+        cardList.add(7, tableauRow2);
+        cardList.add(8, tableauRow3);
+        cardList.add(9, tableauRow4);
+        cardList.add(10, tableauRow5);
+        cardList.add(11, tableauRow6);
+        cardList.add(12, tableauRow7);
 
         for (ArrayContourObject cont : contours) {
             for (RecognizedCard card : recognizedCards) {
