@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -59,7 +60,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
         yoloProcessor = new YOLOProcessor();
-        //yoloProcessor.initDarknet(this.getExternalFilesDir(null));
+        yoloProcessor.initDarknet(this.getExternalFilesDir(null));
 
         preview = findViewById(R.id.image_preview);
         close_btn = findViewById(R.id.closepreview_btn);
@@ -86,9 +87,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         Bitmap bm;
         String s;
+        List<MatOfPoint> fieldsTemp = null;
         switch (v.getId()) {
             case R.id.capture_btn:
                 frame = getFrame();
+
+                fieldsTemp = BoardDetection.processImage(frame);
+
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
@@ -122,28 +127,36 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
 
+                final List<MatOfPoint> fields = fieldsTemp;
                 Executors.newSingleThreadExecutor().execute(() -> {
 
                     //TODO FIX DA BIG BOY NO CARD BUG
-                    List<MatOfPoint> fields = BoardDetection.processImage(frame);
-                    //ArrayList yolocards = yoloProcessor.getCards(frame);
+                    try {
+                        //List<MatOfPoint> fields = BoardDetection.processImage(frame);
+                        ArrayList yolocards = yoloProcessor.getCards(frame);
 
-                    //Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 0, 255), 5);
-                    //frame = yoloProcessor.DrawMatFromList(frame, yolocards);
-                    //frame = drawArrow(frame, 200, 200, 500, 500);
+                        Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 0, 255), 5);
+                        frame = yoloProcessor.DrawMatFromList(frame, yolocards);
+                        //frame = drawArrow(frame, 200, 200, 500, 500);
 
-                    //Imgproc.cvtColor(frame, frame, Imgproc.COLOR_GRAY2RGBA);
-                    final Bitmap bm2 = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(frame, bm2);
+                        final Bitmap bm2 = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(frame, bm2);
 
-                    runOnUiThread(() -> {
-                        preview.setImageBitmap(bm2);
-                        String s2 = "Next";
-                        close_btn.setText(s2);
-                        confirm_btn.setVisibility(View.GONE);
-                        setInstruction("Move H6 to C7");
-                        dialog.dismiss();
-                    });
+                        runOnUiThread(() -> {
+                            preview.setImageBitmap(bm2);
+                            String s2 = "Next";
+                            close_btn.setText(s2);
+                            confirm_btn.setVisibility(View.GONE);
+                            setInstruction("Move H6 to C7");
+                            dialog.dismiss();
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, "Can't see any cards, try again", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        });
+                    }
                 });
 
                 break;
