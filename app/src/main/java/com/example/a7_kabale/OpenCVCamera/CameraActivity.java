@@ -95,9 +95,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.capture_btn:
+
                 frame = getFrame();
 
                 fields = BoardDetection.processImage(frame);
+                if (fields == null){
+                    System.out.println("Error in processImage: Fields was null.");
+                    // Reset to former state.
+                }
 
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);

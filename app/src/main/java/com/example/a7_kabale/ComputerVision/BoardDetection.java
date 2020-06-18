@@ -68,6 +68,8 @@ public class BoardDetection {
 
         MatOfPoint2f approx = approxContourAsRect(maxcnt);
 
+        if(approx == null) return null;
+        if(approx.total() != 4) return null;
         approx = sortApproxContour(approx);
 
         //2. Perspective warp the board to an picture of only the board.
@@ -99,12 +101,14 @@ public class BoardDetection {
             double area = Imgproc.contourArea(cont);
             if (area >= 6000){
                 MatOfPoint2f apcontour = approxContourAsRect(cont);
+                if(apcontour == null) continue;
+                if(apcontour.total() != 4) continue;
                 apcontour = sortApproxContour(apcontour);
                 fields.add(new MatOfPoint(apcontour.toArray()));
             }
         }
         //TODO Check size of list. Should be 13 else there was an error.
-
+        if(fields.size() != 13) return null;
         Collections.sort(fields, comp);
         persimg.copyTo(img);
         ArrayList<ArrayContourObject> contlist = new ArrayList<>();
