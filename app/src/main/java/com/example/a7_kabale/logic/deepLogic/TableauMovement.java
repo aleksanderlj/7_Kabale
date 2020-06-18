@@ -13,37 +13,36 @@ public class TableauMovement {
     }
 
 
-    public String topdeckToTableau() {
+    public Card[] topdeckToTableau() {
         // Check om topdeck kortet kan lægges ned på en tableau row.
         if (logicState.getTopDeckCard() == null)
             return null;
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            if (logicState.getTableauRows().get(i).size() != 0) {
+            if (logicState.getTableauRows().get(i).get(0).getValue() == 0) {
                 temporaryCard = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
                 if (temporaryCard.getValue() == logicState.getTopDeckCard().getValue() + 1
                         && temporaryCard.isRed() != logicState.getTopDeckCard().isRed()) {
                     logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
-                    return "Move " + logicState.getTopDeckCard().toString() + " to "
-                            + logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
+                    return new Card[] {logicState.getTopDeckCard(), logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1)};
                 }
             }
         }
         return null;
     }
 
-    public String tableauToTableauHiddenCard() {
+    public Card[] tableauToTableauHiddenCard() {
         /* Check om forreste kort i tableau row, hvor tableau row kun har et shown card,
         kan rykkes over på en anden tableau row - vend derefter det bagvedliggende kort. */
         int mostHidden = 0, fromRow = 0, toRow = 0;
         Card bestCard = null;
 
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            if (logicState.getHiddenCards()[i] > 0 && logicState.getTableauRows().get(i).size() == 1) {
-
+            if (logicState.getHiddenCards()[i] > 0 && logicState.getTableauRows().get(i).size() == 1 &&
+                    logicState.getTableauRows().get(i).get(0).getValue() != 0) {
                 Card cardToSearch = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 
                 for (int j = 0; j < logicState.getTableauRows().size(); j++) {
-                    if (logicState.getTableauRows().get(j).size() != 0) {
+                    if (logicState.getTableauRows().get(j).get(0).getValue() != 0) {
                         temporaryCard = logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
                         if (temporaryCard.getValue() == cardToSearch.getValue() + 1
                                 && temporaryCard.isRed() != cardToSearch.isRed() && mostHidden <= logicState.getHiddenCards()[i]) {
@@ -60,44 +59,39 @@ public class TableauMovement {
             int[] newHiddenCards = logicState.getHiddenCards();
             newHiddenCards[fromRow] = newHiddenCards[fromRow] - 1;
             logicState.setHiddenCards(newHiddenCards);
-            return "Move " + bestCard.toString() + " to " +
-                    logicState.getTableauRows().get(toRow).get(logicState.getTableauRows().get(toRow).size() - 1);
+            return new Card[] {bestCard, logicState.getTableauRows().get(toRow).get(logicState.getTableauRows().get(toRow).size() - 1)};
         }
         return null;
     }
 
 
-    public String tableauToTableau() {
+    public Card[] tableauToTableau() {
         /* Check om forreste kort i tableau deck, kan rykkes over på et andet tableau deck,
         sålænge der ikke skabes et infinite loop. */
 
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            if (logicState.getTableauRows().get(i).size() >= 1) {
+            if (logicState.getTableauRows().get(i).size() >= 1 && logicState.getTableauRows().get(i).get(0).getValue() != 0) {
                 Card cardToSearch = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 
                 for (int j = 0; j < logicState.getTableauRows().size(); j++) {
-                    if (logicState.getTableauRows().get(j).size() != 0) {
+                    if (logicState.getTableauRows().get(j).get(0).getValue() != 0) {
                         temporaryCard = logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
                         if (temporaryCard.getValue() == cardToSearch.getValue() + 1
                                 && temporaryCard.isRed() != cardToSearch.isRed()) {
                             if (logicState.getTableauRows().get(i).size() == 1 && logicState.getHiddenCards()[i] != 0) {
-                                return "Move " + cardToSearch.toString() + " to " +
-                                        logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
+                                return new Card[] {cardToSearch, logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1)};
                             } else if (logicState.getTableauRows().get(i).size() == 1 && logicState.getHiddenCards()[i] == 0) {
                                 if (logicState.getTopDeckCard().getValue() == 13) {
-                                    return "Move " + cardToSearch.toString() + " to " +
-                                            logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
+                                    return new Card[] {cardToSearch, logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1)};
                                 }
                                 for (int k = 0; k < logicState.getTableauRows().size(); k++) {
                                     if (logicState.getTableauRows().get(k).size() != 0 &&
                                             logicState.getTableauRows().get(k).get(0).getValue() == 13 && logicState.getHiddenCards()[k] != 0) {
-                                        return "Move " + cardToSearch.toString() + " to " +
-                                                logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
+                                        return new Card[] {cardToSearch, logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1)};
                                     }
                                 }
                             } else if (checkBehindTabToFou(logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 2))) {
-                                return "Move " + cardToSearch.toString() + " to " +
-                                        logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1);
+                                return new Card[] {cardToSearch, logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1)};
                             }
                         }
                     }
@@ -107,7 +101,7 @@ public class TableauMovement {
         return null;
     }
 
-    public String tabRowToTabRow() {
+    public Card[] tabRowToTabRow() {
         /*
         Check om række af kort i tableau deck, kan rykkes over på et andet tableau deck,
         sålænge der ikke skabes et infinite loop. Undgå loopet ved at tjekke,
@@ -130,24 +124,24 @@ public class TableauMovement {
     private boolean checkBehindTabToFou(Card card) {
         switch (card.getSuit()) {
             case "Diamonds":
-                return logicState.getFoundationsDeckDiamonds() != null && logicState.getFoundationsDeckDiamonds().getValue() == card.getValue() - 1;
+                return logicState.getFoundationsDeckDiamonds().getValue() != 0 && logicState.getFoundationsDeckDiamonds().getValue() == card.getValue() - 1;
             case "Hearts":
-                return logicState.getFoundationsDeckHearts() != null && logicState.getFoundationsDeckHearts().getValue() == card.getValue() - 1;
+                return logicState.getFoundationsDeckHearts().getValue() != 0 && logicState.getFoundationsDeckHearts().getValue() == card.getValue() - 1;
             case "Clubs":
-                return logicState.getFoundationsDeckClubs() != null && logicState.getFoundationsDeckClubs().getValue() == card.getValue() - 1;
+                return logicState.getFoundationsDeckClubs().getValue() != 0 && logicState.getFoundationsDeckClubs().getValue() == card.getValue() - 1;
             case "Spades":
-                return logicState.getFoundationsDeckSpades() != null && logicState.getFoundationsDeckSpades().getValue() == card.getValue() - 1;
+                return logicState.getFoundationsDeckSpades().getValue() != 0 && logicState.getFoundationsDeckSpades().getValue() == card.getValue() - 1;
         }
         return false;
     }
 
-    private String checkBehindTabToTab(Card card, int tableauRow, int cardPlacement) {
+    private Card[] checkBehindTabToTab(Card card, int tableauRow, int cardPlacement) {
           /* Check om bagerste kort i række af kort i tableau row, kan rykkes over på et andet tableau deck,
         sålænge der ikke skabes et infinite loop. */
 
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
             if (i != tableauRow) {
-                if (logicState.getTableauRows().get(i).size() != 0) {
+                if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
                     temporaryCard = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
                     if (temporaryCard.getValue() == card.getValue() + 1
                             && temporaryCard.isRed() != card.isRed()) {
@@ -156,22 +150,22 @@ public class TableauMovement {
                             int[] newHiddenCards = logicState.getHiddenCards();
                             newHiddenCards[i] = newHiddenCards[i] - 1;
                             logicState.setHiddenCards(newHiddenCards);
-                            return "Move " + card + " to " + temporaryCard;
+                            return new Card[] {card, temporaryCard};
                         }
                         // Derefter tjek for at kortet bagved rækken der flyttes (hvis der er et) kan rykkes op på foundations bagefter:
                         else if (cardPlacement != 0 && logicState.getTableauRows().get(tableauRow).get(cardPlacement - 1) != null
                                 && checkBehindTabToFou(logicState.getTableauRows().get(tableauRow).get(cardPlacement - 1))) {
-                            return "Move " + card + " to " + temporaryCard;
+                            return new Card[] {card, temporaryCard};
                         }
                         // Til sidst tjek om en hel række kort kan rykkes uden nogen kort bagved, men kun hvis der kan flyttes en konge på pladsen
                         else if (logicState.getHiddenCards()[tableauRow] == 0 && cardPlacement == 0) {
                             for (int j = 0; j < logicState.getTableauRows().size(); j++) {
                                 if (logicState.getTableauRows().get(j).get(0).getValue() == 13 && logicState.getHiddenCards()[j] != 0) {
-                                    return "Move " + card + " to " + temporaryCard;
+                                    return new Card[] {card, temporaryCard};
                                 }
                             }
                             if (logicState.getTopDeckCard().getValue() == 13) {
-                                return "Move " + card + " to " + temporaryCard;
+                                return new Card[] {card, temporaryCard};
                             }
                         }
                     }

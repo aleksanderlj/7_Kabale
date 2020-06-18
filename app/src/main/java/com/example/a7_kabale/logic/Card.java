@@ -25,12 +25,16 @@ public class Card {
 
 			if (classID % 4 == 0) {
 				suit="Spades";
+				red = false;
 			} else if (classID % 4 == 1) {
 				suit="Clubs";
+				red = false;
 			} else if (classID % 4 == 2) {
 				suit="Hearts";
+				red = true;
 			} else if (classID % 4 == 3) {
 				suit="Diamonds";
+				red = true;
 			}
 
 			value = (classID / 4) + 1;
