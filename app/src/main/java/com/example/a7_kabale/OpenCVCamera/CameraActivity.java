@@ -17,7 +17,6 @@ import com.example.a7_kabale.ComputerVision.BoardDetection;
 import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
-import com.example.a7_kabale.RecognizedCard;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 import com.example.a7_kabale.logic.Card;
@@ -48,7 +47,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     Intent i;
     Button historyButton;
     YOLOProcessor yoloProcessor;
-    List<MatOfPoint> fields;
+    ArrayList<ArrayContourObject> fields;
     Bitmap bm, bmOverlay;
     GameEngine ge;
 
@@ -84,6 +83,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         historyButton.setOnClickListener(this);
         overlay_btn.setOnClickListener(this);
 
+        ge = new GameEngine();
         ge.initiateGame();
 
         i = new Intent(this, MoveHistoryActivity.class);
@@ -118,23 +118,19 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 Executors.newSingleThreadExecutor().execute(() -> {
                     try {
-                        ArrayList<RecognizedCard> yolocards = yoloProcessor.getCards(frame);
+
+                        ArrayList recognizedCards = yoloProcessor.getCards(frame);
+                        ArrayList<ArrayList<Card>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
+                        //Get answer here!!!
+                        //ge.updateGameState(cardList);
 
                         //TODO LAV PILE PÅ frame HER
                         bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                         Utils.matToBitmap(frame, bm);
-                    //TODO FIX DA BIG BOY NO CARD BUG
-                    ArrayList fields = BoardDetection.processImage(frame);
-                    ArrayList recognizedCards = yoloProcessor.getCards(frame);
-                    ArrayList<ArrayList<Card>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
-                    //Get answer here!!!
-                    ge.updateGameState(cardList);
-
-                    //ArrayList yolocards = yoloProcessor.getCards(frame);
 
                         overlayFrame = frame.clone();
-                        Imgproc.drawContours(overlayFrame, fields, -1, new Scalar(255, 255, 0, 255), 5);
-                        overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, yolocards);
+                        //Imgproc.drawContours(overlayFrame, fields, -1, new Scalar(255, 255, 0, 255), 5);
+                        overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
                         overlayFrame = drawArrow(overlayFrame, 200, 200, 500, 500);
 
                         bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
@@ -226,7 +222,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         super.onDestroy();
     }
 
-    private void setStateRecording(){
+    private void setStateRecording() {
         camera.enableView();
         String s = "retry";
         close_btn.setText(s);
@@ -241,7 +237,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         bringButtonsToFront();
     }
 
-    private void setStatePictureTaken(){
+    private void setStatePictureTaken() {
         camera.disableView();
         preview.setVisibility(View.VISIBLE);
         close_btn.setVisibility(View.VISIBLE);
@@ -254,7 +250,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         bringButtonsToFront();
     }
 
-    private void setStateShowInstruction(){
+    private void setStateShowInstruction() {
         camera.disableView();
         String s2 = "Next";
         close_btn.setText(s2);

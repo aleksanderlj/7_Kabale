@@ -15,6 +15,7 @@ import android.widget.Button;
 import com.example.a7_kabale.Database.*;
 import com.example.a7_kabale.OpenCVCamera.CameraActivity;
 import com.example.a7_kabale.logic.GameEngine;
+import com.example.a7_kabale.yolo.AssetDownloader;
 
 import java.util.concurrent.Executors;
 

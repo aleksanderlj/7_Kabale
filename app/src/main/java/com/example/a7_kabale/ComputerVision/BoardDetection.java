@@ -269,6 +269,7 @@ public class BoardDetection {
 
     public static ArrayList<ArrayList<Card>> cardSegmenter(ArrayList<ArrayContourObject> contours, ArrayList<Card> Cards) {
         ArrayList<ArrayList<Card>> cardList = new ArrayList<ArrayList<Card>>();
+        cardList.add(null);
         ArrayList<Card> topDeckCard = new ArrayList<>();
         ArrayList<Card> foundationDeckDiamonds = new ArrayList<>();
         ArrayList<Card> foundationDeckHearts = new ArrayList<>();
@@ -294,7 +295,8 @@ public class BoardDetection {
         cardList.add(11, tableauRow6);
         cardList.add(12, tableauRow7);
 
-        for (ArrayContourObject cont : contours) {
+        for (int i = 1; i < contours.size(); i++) {
+            ArrayContourObject cont = contours.get(i);
             for (Card card : Cards) {
                 Point topLeft = card.getRect().tl();
                 Point contTL = cont.topLeft();
@@ -302,7 +304,7 @@ public class BoardDetection {
 
                 //If fra https://www.geeksforgeeks.org/check-if-a-point-lies-on-or-inside-a-rectangle-set-2/
                 if (topLeft.x > contTL.x && topLeft.x < contBR.x
-                    && topLeft.y > contTL.y && topLeft.y < contBR.y) {
+                        && topLeft.y > contTL.y && topLeft.y < contBR.y) {
                     cardList.get(contours.indexOf(cont)).add(card);
                     Cards.remove(card);
                 }
