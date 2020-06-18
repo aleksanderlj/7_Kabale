@@ -82,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:fontFamily="serif"
+        android:fontFamily="@font/bitter"
         android:text="History"
         android:textColor="@android:color/white"
         android:textSize="14sp"
@@ -92,10 +92,11 @@
 
     <TextView
         android:id="@+id/historyText1"
+        style="@style/ShadowText2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:elevation="15dp"
-        android:fontFamily="serif"
+        android:fontFamily="@font/bitter"
         android:text="@string/history_info1"
         android:textColor="@color/colorDarkRed"
         android:textSize="10sp"
