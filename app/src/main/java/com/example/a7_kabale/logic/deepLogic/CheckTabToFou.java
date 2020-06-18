@@ -11,43 +11,43 @@ public class CheckTabToFou {
 	public CheckTabToFou(){
 	}
 	
-	public String checkTableauToFoundation(){
+	public Card[] checkTableauToFoundation(){
 		if (checkTableauToFoundationDiamonds())
-			return "Move " + cardToSearchFor.toString() + " to " + logicState.getFoundationsDeckDiamonds();
+			return new Card[] {cardToSearchFor, logicState.getFoundationsDeckDiamonds()};
 		else if (checkTableauToFoundationHearts())
-			return "Move " + cardToSearchFor.toString() + " to " + logicState.getFoundationsDeckHearts();
+			return new Card[] {cardToSearchFor, logicState.getFoundationsDeckHearts()};
 		else if (checkTableauToFoundationClubs())
-			return "Move " + cardToSearchFor.toString() + " to " + logicState.getFoundationsDeckClubs();
+			return new Card[] {cardToSearchFor, logicState.getFoundationsDeckClubs()};
 		else if (checkTableauToFoundationSpades())
-			return "Move " + cardToSearchFor.toString() + " to " + logicState.getFoundationsDeckSpades();
+			return new Card[] {cardToSearchFor, logicState.getFoundationsDeckSpades()};
 		return null;
 	}
 
-	public String topDeckToFoundation() {
-		if (logicState.getTopDeckCard() != null) {
+	public Card[] topDeckToFoundation() {
+		if (logicState.getTopDeckCard().getValue() != 0) {
 			switch (logicState.getTopDeckCard().getSuit()) {
 				case "Diamonds":
-					if (logicState.getFoundationsDeckDiamonds() != null &&
+					if (logicState.getFoundationsDeckDiamonds().getValue() != 0 &&
 							logicState.getFoundationsDeckDiamonds().getValue() + 1 == logicState.getTopDeckCard().getValue()) {
-						return "Move " + logicState.getTopDeckCard().toString() + " to " + logicState.getFoundationsDeckDiamonds().toString();
+						return new Card[] {logicState.getTopDeckCard(), logicState.getFoundationsDeckDiamonds()};
 					}
 					return null;
 				case "Hearts":
-					if (logicState.getFoundationsDeckHearts() != null &&
+					if (logicState.getFoundationsDeckHearts().getValue() != 0 &&
 							logicState.getFoundationsDeckHearts().getValue() + 1 == logicState.getTopDeckCard().getValue()) {
-						return "Move " + logicState.getTopDeckCard().toString() + " to " + logicState.getFoundationsDeckHearts().toString();
+						return new Card[] {logicState.getTopDeckCard(), logicState.getFoundationsDeckHearts()};
 					}
 					return null;
 				case "Clubs":
-					if (logicState.getFoundationsDeckClubs() != null &&
+					if (logicState.getFoundationsDeckClubs().getValue() != 0 &&
 							logicState.getFoundationsDeckClubs().getValue() + 1 == logicState.getTopDeckCard().getValue()) {
-						return "Move " + logicState.getTopDeckCard().toString() + " to " + logicState.getFoundationsDeckClubs().toString();
+						return new Card[] {logicState.getTopDeckCard(), logicState.getFoundationsDeckClubs()};
 					}
 					return null;
 				case "Spades":
-					if (logicState.getFoundationsDeckSpades() != null &&
+					if (logicState.getFoundationsDeckSpades().getValue() != 0 &&
 							logicState.getFoundationsDeckSpades().getValue() + 1 == logicState.getTopDeckCard().getValue()) {
-						return "Move " + logicState.getTopDeckCard().toString() + " to " + logicState.getFoundationsDeckSpades().toString();
+						return new Card[] {logicState.getTopDeckCard(), logicState.getFoundationsDeckSpades()};
 					}
 					return null;
 			}
@@ -58,13 +58,13 @@ public class CheckTabToFou {
 	// Private metoder
 	private boolean checkTableauToFoundationDiamonds() {
 		// Først tjek for at der er minimum et es og tjek for at alle kort ikke er der
-		if (logicState.getFoundationsDeckDiamonds() != null && logicState.getFoundationsDeckDiamonds().getValue() < 13) {
+		if (logicState.getFoundationsDeckDiamonds().getValue() != 0 && logicState.getFoundationsDeckDiamonds().getValue() < 13) {
 			// Da vi skal finde kortet, der er 1 højere
 			cardToSearchFor = new Card(logicState.getFoundationsDeckDiamonds().getValue() + 1, logicState.getFoundationsDeckDiamonds().getSuit());
 
 			// Herefter forreste kort i hver række:
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-				if (logicState.getTableauRows().get(i).size() != 0) {
+				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
@@ -80,12 +80,12 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationHearts(){
-		if (logicState.getFoundationsDeckHearts() != null && logicState.getFoundationsDeckHearts().getValue() < 13) {
+		if (logicState.getFoundationsDeckHearts().getValue() != 0 && logicState.getFoundationsDeckHearts().getValue() < 13) {
 
 			cardToSearchFor = new Card(logicState.getFoundationsDeckHearts().getValue() + 1, logicState.getFoundationsDeckHearts().getSuit());
 
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-				if (logicState.getTableauRows().get(i).size() != 0) {
+				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
@@ -101,12 +101,12 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationClubs(){
-		if (logicState.getFoundationsDeckClubs() != null && logicState.getFoundationsDeckClubs().getValue() < 13) {
+		if (logicState.getFoundationsDeckClubs().getValue() != 0 && logicState.getFoundationsDeckClubs().getValue() < 13) {
 
 			cardToSearchFor = new Card(logicState.getFoundationsDeckClubs().getValue() + 1, logicState.getFoundationsDeckClubs().getSuit());
 
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-				if (logicState.getTableauRows().get(i).size() != 0) {
+				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
@@ -122,12 +122,12 @@ public class CheckTabToFou {
 	}
 
 	private boolean checkTableauToFoundationSpades(){
-		if (logicState.getFoundationsDeckSpades() != null && logicState.getFoundationsDeckSpades().getValue() < 13) {
+		if (logicState.getFoundationsDeckSpades().getValue() != 0 && logicState.getFoundationsDeckSpades().getValue() < 13) {
 
 			cardToSearchFor = new Card(logicState.getFoundationsDeckSpades().getValue() + 1, logicState.getFoundationsDeckSpades().getSuit());
 
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-				if (logicState.getTableauRows().get(i).size() != 0) {
+				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();

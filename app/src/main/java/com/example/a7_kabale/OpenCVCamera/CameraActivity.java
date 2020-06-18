@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.a7_kabale.ComputerVision.ArrayContourObject;
 import com.example.a7_kabale.ComputerVision.BoardDetection;
 import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
@@ -19,7 +20,10 @@ import com.example.a7_kabale.Database.Entity.Instruction;
 import com.example.a7_kabale.RecognizedCard;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
-import com.example.a7_kabale.YOLOProcessor;
+import com.example.a7_kabale.logic.Card;
+import com.example.a7_kabale.logic.GameEngine;
+import com.example.a7_kabale.yolo.AssetDownloader;
+import com.example.a7_kabale.yolo.YOLOProcessor;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
@@ -28,6 +32,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -45,6 +50,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     YOLOProcessor yoloProcessor;
     List<MatOfPoint> fields;
     Bitmap bm, bmOverlay;
+    GameEngine ge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +83,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn.setOnClickListener(this);
         historyButton.setOnClickListener(this);
         overlay_btn.setOnClickListener(this);
+
+        ge.initiateGame();
 
         i = new Intent(this, MoveHistoryActivity.class);
 
@@ -115,6 +123,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         //TODO LAV PILE PÅ frame HER
                         bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                         Utils.matToBitmap(frame, bm);
+                    //TODO FIX DA BIG BOY NO CARD BUG
+                    ArrayList fields = BoardDetection.processImage(frame);
+                    ArrayList recognizedCards = yoloProcessor.getCards(frame);
+                    ArrayList<ArrayList<Card>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
+                    //Get answer here!!!
+                    ge.updateGameState(cardList);
+
+                    //ArrayList yolocards = yoloProcessor.getCards(frame);
 
                         overlayFrame = frame.clone();
                         Imgproc.drawContours(overlayFrame, fields, -1, new Scalar(255, 255, 0, 255), 5);

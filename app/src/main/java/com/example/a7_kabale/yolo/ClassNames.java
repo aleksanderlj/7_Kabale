@@ -1,4 +1,4 @@
-package com.example.a7_kabale;
+package com.example.a7_kabale.yolo;
 
 import java.util.ArrayList;
 
