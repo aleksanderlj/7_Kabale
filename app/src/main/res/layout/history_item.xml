@@ -32,12 +32,12 @@
                     android:id="@+id/historyText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fontFamily="serif"
+                    android:fontFamily="@font/bitter"
                     android:gravity="center_vertical"
                     android:padding="2dp"
                     android:text="Move Six of Hearts ♥ to Seven of Clubs ♣"
                     android:textColor="@color/colorBlack"
-                    android:textSize="12sp"></TextView>
+                    android:textSize="14sp"></TextView>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
