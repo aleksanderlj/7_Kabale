@@ -2,16 +2,38 @@ package com.example.a7_kabale.logic;
 
 import androidx.annotation.NonNull;
 
+import org.opencv.core.Rect;
+
 public class Card {
 	private int value;
 	private String suit;
 	private boolean red;
+	float confidence;
+	Rect rect;
 	//	// This value is only meant for cards in the stackdecks
 	
 	public Card (int value, String suit){
 		this.value = value;
 		this.suit = suit;
 		red = suit.equals("Hearts") || suit.equals("Diamonds");
+		confidence = 100;
+	}
+
+	public Card (int classID, float confidence, Rect rect) {
+		this.confidence = confidence;
+		this.rect = rect;
+
+			if (classID % 4 == 0) {
+				suit="Spades";
+			} else if (classID % 4 == 1) {
+				suit="Clubs";
+			} else if (classID % 4 == 2) {
+				suit="Hearts";
+			} else if (classID % 4 == 3) {
+				suit="Diamonds";
+			}
+
+			value = (classID / 4) + 1;
 	}
 	
 	@NonNull
@@ -58,5 +80,13 @@ public class Card {
 	
 	public void setRed(boolean red) {
 		this.red = red;
+	}
+
+	public Rect getRect() {
+		return rect;
+	}
+
+	public float getConfidence() {
+		return confidence;
 	}
 }

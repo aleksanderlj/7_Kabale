@@ -1,4 +1,6 @@
-package com.example.a7_kabale;
+package com.example.a7_kabale.yolo;
+
+import com.example.a7_kabale.logic.Card;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -28,7 +30,7 @@ public class YOLOProcessor {
         darkNet = Dnn.readNetFromDarknet(cfg, weight);
     }
 
-    public ArrayList<RecognizedCard> getCards(Mat mat) {
+    public ArrayList<Card> getCards(Mat mat) {
         //Mat input skal være RGB og ikke RGBA - ellers crasher vi..
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGBA2RGB);
 
@@ -82,23 +84,23 @@ public class YOLOProcessor {
         Dnn.NMSBoxes(boxes, confidences, threshold, nmsThresh, indices);
 
         // Generate list of spotted objects
-        ArrayList<RecognizedCard> recognizedCards = new ArrayList<>();
+        ArrayList<Card> recognizedCards = new ArrayList<>();
 
         int[] ind = indices.toArray();
         for (int i = 0; i < ind.length; ++i) {
             int idx = ind[i];
-            RecognizedCard card = new RecognizedCard(clsIds.get(idx), confs.get(idx), rects.get(idx));
+            Card card = new Card(clsIds.get(idx), confs.get(idx), rects.get(idx));
             recognizedCards.add(card);
         }
 
         return recognizedCards;
     }
 
-    public Mat DrawMatFromList(Mat mat, ArrayList<RecognizedCard> recognizedCards) {
+    public Mat DrawMatFromList(Mat mat, ArrayList<Card> recognizedCards) {
         for (int i = 0; i < recognizedCards.size(); i++) {
             Rect rect = recognizedCards.get(i).getRect();
             Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 0, 255), 4);
-            Imgproc.putText(mat, recognizedCards.get(i).getClassName(), rect.tl(), Imgproc.FONT_HERSHEY_SIMPLEX, 2, new Scalar(255,0,0), 3);
+            Imgproc.putText(mat, recognizedCards.get(i).getSuit() + recognizedCards.get(i).getValue(), rect.tl(), Imgproc.FONT_HERSHEY_SIMPLEX, 2, new Scalar(255,0,0), 3);
         }
 
         return mat;
