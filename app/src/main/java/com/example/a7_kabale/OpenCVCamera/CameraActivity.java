@@ -20,6 +20,7 @@ import com.example.a7_kabale.Database.Entity.Instruction;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 import com.example.a7_kabale.logic.Card;
+import com.example.a7_kabale.logic.GameEngine;
 import com.example.a7_kabale.yolo.AssetDownloader;
 import com.example.a7_kabale.yolo.YOLOProcessor;
 
@@ -48,6 +49,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     Intent i;
     Button historyButton;
     YOLOProcessor yoloProcessor;
+    GameEngine ge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.setOnClickListener(this);
         confirm_btn.setOnClickListener(this);
         historyButton.setOnClickListener(this);
+
+        ge.initiateGame();
 
         i = new Intent(this, MoveHistoryActivity.class);
     }
@@ -131,7 +135,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     ArrayList fields = BoardDetection.processImage(frame);
                     ArrayList recognizedCards = yoloProcessor.getCards(frame);
                     ArrayList<ArrayList<Card>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
-
+                    //Get answer here!!!
+                    ge.updateGameState(cardList);
+                    
                     //ArrayList yolocards = yoloProcessor.getCards(frame);
 
                     //Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 0, 255), 5);

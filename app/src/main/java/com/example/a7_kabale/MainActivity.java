@@ -37,9 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkDatabaseCondition();
         getPermissions();
 
-        GameEngine ge = new GameEngine();
-        ge.initiateGame();
-
         newGameButton.setOnClickListener(this);
         continueButton.setOnClickListener(this);
 
