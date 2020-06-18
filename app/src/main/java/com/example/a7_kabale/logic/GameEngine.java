@@ -139,7 +139,7 @@ public class GameEngine {
 		// tableauToTableau
 		retrunCards = tableauMovement.tableauToTableau();
 		if (retrunCards != null) {
-			System.out.println(retrunCards);
+			System.out.println(retrunCards.toString());
 			System.out.println("tableauToTableau FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
@@ -148,7 +148,7 @@ public class GameEngine {
 		// tabRowToTabRow
 		retrunCards = tableauMovement.tabRowToTabRow();
 		if (retrunCards != null) {
-			System.out.println(retrunCards);
+			System.out.println(retrunCards.toString());
 			System.out.println("tabRowToTabRow FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
