@@ -7,30 +7,26 @@ public class CheckAces {
 
 	public CheckAces(){}
 	
-	public boolean checkTopDeckForAce(){
+	public String checkTopDeckForAce(){
 		if (logicState.getTopDeckCard() == null)
-			return false;
+			return null;
 		if (logicState.getTopDeckCard().getValue() == 1) {
 			logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 			switch (logicState.getTopDeckCard().getSuit()) {
 				case "Diamonds":
-					System.out.println("Move the "+ logicState.getTopDeckCard().toString() + " from the top deck to the first foundation pile.");
-					return true;
+					return "Move "+ logicState.getTopDeckCard().toString() + " to F" + 1;
 				case "Hearts":
-					System.out.println("Move the " + logicState.getTopDeckCard().toString() + " from the top deck to the second foundation pile.");
-					return true;
+					return "Move "+ logicState.getTopDeckCard().toString() + " to F" + 2;
 				case "Clubs":
-					System.out.println("Move the " + logicState.getTopDeckCard().toString() + " from the top deck to the third foundation pile.");
-					return true;
+					return "Move "+ logicState.getTopDeckCard().toString() + " to F" + 3;
 				case "Spades":
-					System.out.println("Move the " + logicState.getTopDeckCard().toString() + " from the top deck to the fourth foundation pile.");
-					return true;
+					return "Move "+ logicState.getTopDeckCard().toString() + " to F" + 4;
 			}
 		}
-		return false;
+		return null;
 	}
 	
-	public boolean checkTableauRowsForAce(){
+	public String checkTableauRowsForAce(){
 		int tableauNumber;
 		for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 			tableauNumber = i + 1;
@@ -39,38 +35,34 @@ public class CheckAces {
 					int[] newHiddenCards = logicState.getHiddenCards();
 					switch (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit()) {
 						case "Diamonds":
-							System.out.println("Move the Diamonds Ace from tableau row " + tableauNumber + " to the first foundation pile.");
 							if (logicState.getHiddenCards()[tableauNumber] != 0) {
 								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
-							return true;
+							return "Move D1 to F" + 1;
 						case "Hearts":
-							System.out.println("Move the Hearts Ace from the tableau row " + tableauNumber + " to the second foundation pile.");
 							if (logicState.getHiddenCards()[tableauNumber] != 0) {
 								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
-							return true;
+							return "Move H1 to F" + 2;
 						case "Clubs":
-							System.out.println("Move the Clubs Ace from the tableau row " + tableauNumber + " to the third foundation pile.");
 							if (logicState.getHiddenCards()[tableauNumber] != 0) {
 								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
-							return true;
+							return "Move C1 to F" + 3;
 						case "Spades":
-							System.out.println("Move the Spades Ace from the tableau row " + tableauNumber + " to the fourth foundation pile.");
 							if (logicState.getHiddenCards()[tableauNumber] != 0) {
 								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
-							return true;
+							return "Move S1 to F" + 4;
 					}
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public void setLogicState(LogicState logicState) {
