@@ -1,5 +1,6 @@
 package com.example.a7_kabale.ComputerVision;
 
+import android.os.CountDownTimer;
 import android.os.Handler;
 
 import com.example.a7_kabale.logic.Card;
@@ -20,7 +21,9 @@ public class BoardDetection {
         6..12 - T1-T7
      */
 
-    private Handler mHandler;
+
+    private CountDownTimer cdt;
+    private boolean stopapprox;
     public BoardDetection(){
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
@@ -33,8 +36,20 @@ public class BoardDetection {
         Mat pershsv = new Mat();
         Mat persmask = new Mat();
         Mat cnthiarchy = new Mat();
-        mHandler = new Handler();
 
+
+        cdt = new CountDownTimer(5000, 0) {
+
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                stopapprox = true;
+            }
+        };
         Comparator<MatOfPoint> comp = (o1, o2) -> {
 
             double o1x = o1.get(0, 0)[0];
@@ -167,18 +182,16 @@ public class BoardDetection {
      //This has the potential to be stuck in infinite loop, trying to find an epsilon which approximates to 4. This epsilon might not exist.
     //TODO Create watchdog thread to close the process and force reset.
     private MatOfPoint2f approxContourAsRect(MatOfPoint contour){
-
-        Thread watchdog = new Thread(() -> {
-
-        });
+        stopapprox = false;
+        cdt.start();
         MatOfPoint2f m2f = new MatOfPoint2f(contour.toArray());
         MatOfPoint2f approx = new MatOfPoint2f();
         double epsilon = 0.01 * Imgproc.arcLength(m2f, true);
         double lepsilon = 0, repsilon = 0;
-        Boolean increased = null;
         //If are contour has less vertices then 4, then we cannot approximate and we will never be able to isolate the board.
         if(m2f.total() < 4) {
             System.err.println("ERR: Can't approx when contour is already less than 4 vertices");
+            cdt.cancel();
             return null;
         }
         //Find an epsilon which approximates the contour to an rectangle.
@@ -189,24 +202,31 @@ public class BoardDetection {
             if(approx.total() > 4){
                 lepsilon = epsilon;
                 repsilon = 2*epsilon;
-                while (approx.total() > 4){
+                while (approx.total() > 4 || stopapprox != true){
                     Imgproc.approxPolyDP(m2f, approx, repsilon, true);
                     repsilon *= 2;
-                    if(approx.total() == 4) return approx;
+                    if(approx.total() == 4){
+                        cdt.cancel();
+                        return approx;
+                    }
                 }
             } else if (approx.total() < 4) {
                 repsilon = epsilon;
                 lepsilon = 2/epsilon;
-                while (approx.total() < 4){
+                while (approx.total() < 4 || stopapprox != true){
                     Imgproc.approxPolyDP(m2f, approx, lepsilon, true);
                     lepsilon /= 2;
-                    if(approx.total() == 4) return approx;
+                    if(approx.total() == 4) {
+                        cdt.cancel();
+                        return approx;
+                    }
                 }
             } else {
+                cdt.cancel();
                 return approx;
             }
 
-            while (repsilon > lepsilon){
+            while (stopapprox != true){
 
                     double midepsilon = lepsilon + (repsilon - lepsilon) / 2;
                     Imgproc.approxPolyDP(m2f, approx, midepsilon, true);
@@ -214,8 +234,10 @@ public class BoardDetection {
                     System.out.printf("Total = %d\nEpsilon = %f\n", approx.total(),midepsilon);
                     // If the element is present at the
                     // middle itself
-                    if (approx.total() == 4)
+                    if (approx.total() == 4){
+                        cdt.cancel();
                         return approx;
+                    }
 
                     // If element is smaller than mid, then
                     // it can only be present in left subarray
@@ -227,12 +249,17 @@ public class BoardDetection {
 
                 if (epsilon <= 0){
                     System.err.println("ERR: Epsilon was less than zero");
+                    cdt.cancel();
                     return null;
                 }
             }
         }
         System.out.println("Vertices in approx = " + approx.total());
         System.out.println("Epsilon = " + epsilon);
+        cdt.cancel();
+        if(stopapprox){
+            return null;
+        }
         return approx;
     }
 
