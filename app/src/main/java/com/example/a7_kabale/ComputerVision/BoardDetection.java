@@ -306,7 +306,7 @@ public class BoardDetection {
                 if (topLeft.x > contTL.x && topLeft.x < contBR.x
                         && topLeft.y > contTL.y && topLeft.y < contBR.y) {
                     cardList.get(contours.indexOf(cont)).add(card);
-                    Cards.remove(card);
+                    //Cards.remove(card);
                 }
             }
 
