@@ -12,17 +12,16 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.a7_kabale.AssetDownloader;
 import com.example.a7_kabale.ComputerVision.ArrayContourObject;
 import com.example.a7_kabale.ComputerVision.BoardDetection;
 import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
-import com.example.a7_kabale.RecognizedCard;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
-import com.example.a7_kabale.YOLOProcessor;
 import com.example.a7_kabale.logic.Card;
+import com.example.a7_kabale.yolo.AssetDownloader;
+import com.example.a7_kabale.yolo.YOLOProcessor;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
@@ -131,7 +130,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     //TODO FIX DA BIG BOY NO CARD BUG
                     ArrayList fields = BoardDetection.processImage(frame);
                     ArrayList recognizedCards = yoloProcessor.getCards(frame);
-                    ArrayList<ArrayList<RecognizedCard>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
+                    ArrayList<ArrayList<Card>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
 
                     //ArrayList yolocards = yoloProcessor.getCards(frame);
 

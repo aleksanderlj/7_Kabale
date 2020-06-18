@@ -1,6 +1,5 @@
 package com.example.a7_kabale.ComputerVision;
 
-import com.example.a7_kabale.RecognizedCard;
 import com.example.a7_kabale.logic.Card;
 
 import org.opencv.core.*;
@@ -266,20 +265,20 @@ public class BoardDetection {
                 System.out.printf("( %d , %d ) = %f %f \n", i, j, contour.get(i, j)[0], contour.get(i, j)[1]);
     }
 
-    public static ArrayList<ArrayList<RecognizedCard>> cardSegmenter(ArrayList<ArrayContourObject> contours, ArrayList<RecognizedCard> recognizedCards) {
-        ArrayList<ArrayList<RecognizedCard>> cardList = new ArrayList<ArrayList<RecognizedCard>>();
-        ArrayList<RecognizedCard> topDeckCard = new ArrayList<>();
-        ArrayList<RecognizedCard> foundationDeckDiamonds = new ArrayList<>();
-        ArrayList<RecognizedCard> foundationDeckHearts = new ArrayList<>();
-        ArrayList<RecognizedCard> foundationDeckClubs = new ArrayList<>();
-        ArrayList<RecognizedCard> foundationDeckSpades = new ArrayList<>();
-        ArrayList<RecognizedCard> tableauRow1 = new ArrayList<>();
-        ArrayList<RecognizedCard> tableauRow2 = new ArrayList<>();
-        ArrayList<RecognizedCard> tableauRow3 = new ArrayList<>();
-        ArrayList<RecognizedCard> tableauRow4 = new ArrayList<>();
-        ArrayList<RecognizedCard> tableauRow5 = new ArrayList<>();
-        ArrayList<RecognizedCard> tableauRow6 = new ArrayList<>();
-        ArrayList<RecognizedCard> tableauRow7 = new ArrayList<>();
+    public static ArrayList<ArrayList<Card>> cardSegmenter(ArrayList<ArrayContourObject> contours, ArrayList<Card> Cards) {
+        ArrayList<ArrayList<Card>> cardList = new ArrayList<ArrayList<Card>>();
+        ArrayList<Card> topDeckCard = new ArrayList<>();
+        ArrayList<Card> foundationDeckDiamonds = new ArrayList<>();
+        ArrayList<Card> foundationDeckHearts = new ArrayList<>();
+        ArrayList<Card> foundationDeckClubs = new ArrayList<>();
+        ArrayList<Card> foundationDeckSpades = new ArrayList<>();
+        ArrayList<Card> tableauRow1 = new ArrayList<>();
+        ArrayList<Card> tableauRow2 = new ArrayList<>();
+        ArrayList<Card> tableauRow3 = new ArrayList<>();
+        ArrayList<Card> tableauRow4 = new ArrayList<>();
+        ArrayList<Card> tableauRow5 = new ArrayList<>();
+        ArrayList<Card> tableauRow6 = new ArrayList<>();
+        ArrayList<Card> tableauRow7 = new ArrayList<>();
         cardList.add(1, topDeckCard);
         cardList.add(2, foundationDeckDiamonds);
         cardList.add(3, foundationDeckHearts);
@@ -294,7 +293,7 @@ public class BoardDetection {
         cardList.add(12, tableauRow7);
 
         for (ArrayContourObject cont : contours) {
-            for (RecognizedCard card : recognizedCards) {
+            for (Card card : Cards) {
                 Point topLeft = card.getRect().tl();
                 Point contTL = cont.topLeft();
                 Point contBR = cont.bottomRight();
@@ -303,18 +302,21 @@ public class BoardDetection {
                 if (topLeft.x > contTL.x && topLeft.x < contBR.x
                     && topLeft.y > contTL.y && topLeft.y < contBR.y) {
                     cardList.get(contours.indexOf(cont)).add(card);
-                    recognizedCards.remove(card);
+                    Cards.remove(card);
                 }
             }
+
+            if (cardList.get(contours.indexOf(cont)).isEmpty()) {
+                Card dummy = new Card(new Rect(cont.getCenterX(), cont.getCenterY(), 1, 1));
+                cardList.get(contours.indexOf(cont)).add(dummy);
+            }
+
         }
 
-        if (!recognizedCards.isEmpty()) {
+        if (!Cards.isEmpty()) {
             System.err.println("Something is very wrong. Some recognized cards were not inside contours!");
         }
 
         return cardList;
     }
-
-
-
 }

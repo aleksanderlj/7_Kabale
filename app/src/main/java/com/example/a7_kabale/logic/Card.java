@@ -35,6 +35,13 @@ public class Card {
 
 			value = (classID / 4) + 1;
 	}
+
+	public Card(Rect rect) {
+		this.rect = rect;
+		this.confidence = 100;
+		this.suit = "Dummy";
+		this.value = 0;
+	}
 	
 	@NonNull
 	@Override

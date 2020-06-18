@@ -37,4 +37,13 @@ public class ArrayContourObject {
     return new Point(x2,y2);
     }
 
+    public int getCenterX() {
+        return (int) (x1 + x2) / 2;
+    }
+
+    public int getCenterY() {
+        return (int) (y1 + y2) / 2;
+    }
+
+
 }
