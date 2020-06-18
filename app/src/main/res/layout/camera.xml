@@ -144,4 +144,12 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
         app:layout_constraintStart_toStartOf="@+id/guideline13" />
 
+    <Button
+        android:id="@+id/overlay_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Overlay"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

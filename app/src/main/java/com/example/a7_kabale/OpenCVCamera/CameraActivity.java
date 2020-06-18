@@ -7,16 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.a7_kabale.AssetDownloader;
 import com.example.a7_kabale.ComputerVision.BoardDetection;
 import com.example.a7_kabale.Database.AppDatabase;
 import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
+import com.example.a7_kabale.RecognizedCard;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 import com.example.a7_kabale.YOLOProcessor;
@@ -32,19 +32,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-import static com.example.a7_kabale.ComputerVision.BoardDetection.processImage;
-
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
     AppDatabase db;
-    Button close_btn, capture_btn, confirm_btn;
+    Button close_btn, capture_btn, confirm_btn, overlay_btn;
     ImageView preview;
     TextView instructionTextView;
     JavaCameraView camera;
-    Mat video, frame;
+    Mat video, frame, overlayFrame;
     Intent i;
     Button historyButton;
     YOLOProcessor yoloProcessor;
+    List<MatOfPoint> fields;
+    Bitmap bm, bmOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +53,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         System.loadLibrary("opencv_java4");
         OpenCVLoader.initDebug();
 
-        // TODO get files from web
-        AssetDownloader assetDownloader = new AssetDownloader(this);
-        assetDownloader.downloadAssets();
-
         //Assets skal downloades før vi kan initialisere darknet - vi skal helst implementere noget ventenoget her
         yoloProcessor = new YOLOProcessor();
-        //yoloProcessor.initDarknet(this.getExternalFilesDir(null));
+        yoloProcessor.initDarknet(this.getExternalFilesDir(null));
 
         preview = findViewById(R.id.image_preview);
         close_btn = findViewById(R.id.closepreview_btn);
@@ -67,6 +63,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn = findViewById(R.id.confirm_btn);
         instructionTextView = findViewById(R.id.instructionTextView);
         historyButton = findViewById(R.id.history_btn);
+        overlay_btn = findViewById(R.id.overlay_btn);
+        fields = null;
 
         camera = findViewById(R.id.camera_view);
         camera.setCameraPermissionGranted();
@@ -78,42 +76,30 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.setOnClickListener(this);
         confirm_btn.setOnClickListener(this);
         historyButton.setOnClickListener(this);
+        overlay_btn.setOnClickListener(this);
 
         i = new Intent(this, MoveHistoryActivity.class);
+
+        setStateRecording();
     }
 
     @Override
     public void onClick(View v) {
-        Bitmap bm;
-        String s;
         switch (v.getId()) {
             case R.id.capture_btn:
                 frame = getFrame();
+
+                fields = BoardDetection.processImage(frame);
+
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
 
-
-                capture_btn.setVisibility(View.GONE);
-                preview.setVisibility(View.VISIBLE);
-                close_btn.setVisibility(View.VISIBLE);
-                confirm_btn.setVisibility(View.VISIBLE);
-                s = "Create instructions based on this image?";
-                instructionTextView.setText(s);
-
-                bringButtonsToFront();
-
+                setStatePictureTaken();
                 break;
 
             case R.id.closepreview_btn:
-                s = "retry";
-                close_btn.setText(s);
-                preview.setVisibility(View.GONE);
-                close_btn.setVisibility(View.GONE);
-                confirm_btn.setVisibility(View.GONE);
-                capture_btn.setVisibility(View.VISIBLE);
-                s = "Capture image for next instruction.";
-                instructionTextView.setText(s);
+                setStateRecording();
                 break;
 
             case R.id.confirm_btn:
@@ -123,33 +109,45 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
 
                 Executors.newSingleThreadExecutor().execute(() -> {
+                    try {
+                        ArrayList<RecognizedCard> yolocards = yoloProcessor.getCards(frame);
 
-                    //TODO FIX DA BIG BOY NO CARD BUG
-                    List<MatOfPoint> fields = BoardDetection.processImage(frame);
-                    //ArrayList yolocards = yoloProcessor.getCards(frame);
+                        //TODO LAV PILE PÅ frame HER
+                        bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(frame, bm);
 
-                    //Imgproc.drawContours(frame, fields, -1, new Scalar(0, 0, 0, 255), 5);
-                    //frame = yoloProcessor.DrawMatFromList(frame, yolocards);
-                    //frame = drawArrow(frame, 200, 200, 500, 500);
+                        overlayFrame = frame.clone();
+                        Imgproc.drawContours(overlayFrame, fields, -1, new Scalar(255, 255, 0, 255), 5);
+                        overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, yolocards);
+                        overlayFrame = drawArrow(overlayFrame, 200, 200, 500, 500);
 
-                    //Imgproc.cvtColor(frame, frame, Imgproc.COLOR_GRAY2RGBA);
-                    final Bitmap bm2 = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(frame, bm2);
+                        bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(overlayFrame, bmOverlay);
 
-                    runOnUiThread(() -> {
-                        preview.setImageBitmap(bm2);
-                        String s2 = "Next";
-                        close_btn.setText(s2);
-                        confirm_btn.setVisibility(View.GONE);
-                        setInstruction("Move H6 to C7");
-                        dialog.dismiss();
-                    });
+                        runOnUiThread(() -> {
+                            preview.setImageBitmap(bm);
+                            setStateShowInstruction();
+                            setInstruction("Move H6 to C7");
+                            dialog.dismiss();
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, "Can't see any cards, try again", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        });
+                    }
                 });
 
                 break;
 
             case R.id.history_btn:
                 startActivity(i);
+                break;
+
+            case R.id.overlay_btn:
+                preview.setImageBitmap(bmOverlay);
+                break;
         }
     }
 
@@ -212,12 +210,55 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         super.onDestroy();
     }
 
+    private void setStateRecording(){
+        camera.enableView();
+        String s = "retry";
+        close_btn.setText(s);
+        preview.setVisibility(View.GONE);
+        close_btn.setVisibility(View.GONE);
+        confirm_btn.setVisibility(View.GONE);
+        capture_btn.setVisibility(View.VISIBLE);
+        overlay_btn.setVisibility(View.GONE);
+        s = "Capture image for next instruction.";
+        instructionTextView.setText(s);
+
+        bringButtonsToFront();
+    }
+
+    private void setStatePictureTaken(){
+        camera.disableView();
+        preview.setVisibility(View.VISIBLE);
+        close_btn.setVisibility(View.VISIBLE);
+        confirm_btn.setVisibility(View.VISIBLE);
+        capture_btn.setVisibility(View.GONE);
+        overlay_btn.setVisibility(View.GONE);
+        String s = "Create instructions based on this image?";
+        instructionTextView.setText(s);
+
+        bringButtonsToFront();
+    }
+
+    private void setStateShowInstruction(){
+        camera.disableView();
+        String s2 = "Next";
+        close_btn.setText(s2);
+        preview.setVisibility(View.VISIBLE);
+        close_btn.setVisibility(View.VISIBLE);
+        confirm_btn.setVisibility(View.GONE);
+        capture_btn.setVisibility(View.GONE);
+        overlay_btn.setVisibility(View.VISIBLE);
+
+        bringButtonsToFront();
+    }
+
     private void bringButtonsToFront() {
         historyButton.bringToFront();
         confirm_btn.bringToFront();
         close_btn.bringToFront();
+        overlay_btn.bringToFront();
         historyButton.setElevation(20);
         confirm_btn.setElevation(20);
         close_btn.setElevation(20);
+        overlay_btn.setElevation(20);
     }
 }

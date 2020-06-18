@@ -68,7 +68,9 @@ public class BoardDetection {
         approx = sortApproxContour(approx);
 
         //2. Perspective warp the board to an picture of only the board.
-        Size imgsize = img.size();
+        //Size imgsize = img.size();
+        double d = ((double) img.rows()) * (297.0/210.0); // Size som er ligeså høj som photo, men er samme ratio som et a4 papir
+        Size imgsize = new Size(d, img.rows());
 
         //Create an transform matrix of the wished size. 1500x1500.
         Mat dst = Mat.zeros(4,2,CvType.CV_32F);
