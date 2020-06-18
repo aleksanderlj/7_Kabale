@@ -1,5 +1,7 @@
 package com.example.a7_kabale.ComputerVision;
 
+import android.os.Handler;
+
 import com.example.a7_kabale.logic.Card;
 
 import org.opencv.core.*;
@@ -18,10 +20,11 @@ public class BoardDetection {
         6..12 - T1-T7
      */
 
+    private Handler mHandler;
     public BoardDetection(){
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
-    public static ArrayList<ArrayContourObject> processImage(Mat img){
+    public ArrayList<ArrayContourObject> processImage(Mat img){
         Mat blur = new Mat();
         Mat grey = new Mat();
         Mat canny = new Mat();
@@ -30,6 +33,7 @@ public class BoardDetection {
         Mat pershsv = new Mat();
         Mat persmask = new Mat();
         Mat cnthiarchy = new Mat();
+        mHandler = new Handler();
 
         Comparator<MatOfPoint> comp = (o1, o2) -> {
 
@@ -118,7 +122,7 @@ public class BoardDetection {
         return contlist;
     }
 
-    private static MatOfPoint findMaxContour(List<MatOfPoint> contours){
+    private MatOfPoint findMaxContour(List<MatOfPoint> contours){
         MatOfPoint maxcnt = new MatOfPoint();
         double maxarea = 0;
         for(int i = 0; i < contours.size(); i++){
@@ -162,8 +166,11 @@ public class BoardDetection {
 
      //This has the potential to be stuck in infinite loop, trying to find an epsilon which approximates to 4. This epsilon might not exist.
     //TODO Create watchdog thread to close the process and force reset.
-    private static MatOfPoint2f approxContourAsRect(MatOfPoint contour){
-        Thread watchdog = new Thread();
+    private MatOfPoint2f approxContourAsRect(MatOfPoint contour){
+
+        Thread watchdog = new Thread(() -> {
+
+        });
         MatOfPoint2f m2f = new MatOfPoint2f(contour.toArray());
         MatOfPoint2f approx = new MatOfPoint2f();
         double epsilon = 0.01 * Imgproc.arcLength(m2f, true);
@@ -231,7 +238,7 @@ public class BoardDetection {
 
 
     //inspired by: https://www.pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
-    private static MatOfPoint2f sortApproxContour(MatOfPoint2f approx){
+    private MatOfPoint2f sortApproxContour(MatOfPoint2f approx){
         Point[] pntarr = new Point[4];
         Point[] approxarr = approx.toArray();
         List<Double> sumarr = new ArrayList<>();
@@ -265,13 +272,13 @@ public class BoardDetection {
 
     }
 
-    private static void printContour(MatOfPoint2f contour){
+    private void printContour(MatOfPoint2f contour){
         for(int i = 0; i < contour.rows(); i++)
             for(int j = 0; j < contour.cols(); j++)
                 System.out.printf("( %d , %d ) = %f %f \n", i, j, contour.get(i, j)[0], contour.get(i, j)[1]);
     }
 
-    public static ArrayList<ArrayList<Card>> cardSegmenter(ArrayList<ArrayContourObject> contours, ArrayList<Card> Cards) {
+    public ArrayList<ArrayList<Card>> cardSegmenter(ArrayList<ArrayContourObject> contours, ArrayList<Card> Cards) {
         ArrayList<ArrayList<Card>> cardList = new ArrayList<ArrayList<Card>>();
         cardList.add(null);
         ArrayList<Card> topDeckCard = new ArrayList<>();
