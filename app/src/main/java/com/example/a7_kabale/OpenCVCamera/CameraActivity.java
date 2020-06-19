@@ -373,6 +373,22 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
         s += card.getSuit();
+
+        switch (card.getSuit()){
+            case "Diamonds":
+                s += " ♦";
+                break;
+            case "Hearts":
+                s += " ♥";
+                break;
+            case "Clubs":
+                s += " ♣";
+                break;
+            case "Spades":
+                s += " ♠";
+                break;
+        }
+
         return s;
     }
 }
