@@ -123,7 +123,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                         ArrayList<ArrayList<Card>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
                         //Get answer here!!!
-                        //ge.updateGameState(cardList);
+                        ge.updateGameState(cardList);
 
                         //TODO LAV PILE PÅ frame HER
                         bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);

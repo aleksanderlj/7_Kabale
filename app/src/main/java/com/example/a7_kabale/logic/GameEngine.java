@@ -27,21 +27,14 @@ public class GameEngine {
 	}
 
 	private void initiateCardsArray() {
-		//Fra venstre mod højre
 		tableauRows = new ArrayList<>();
-		tableauRows.add(new ArrayList<>());
-		tableauRows.add(new ArrayList<>());
-		tableauRows.add(new ArrayList<>());
-		tableauRows.add(new ArrayList<>());
-		tableauRows.add(new ArrayList<>());
-		tableauRows.add(new ArrayList<>());
-		tableauRows.add(new ArrayList<>());
 	}
 
 	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
 	public Card[] updateGameState(ArrayList<ArrayList<Card>> input) {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
+		initiateCardsArray();
 		topDeckCard = input.get(1).get(0); //Ace of Diamonds
 
 		//Made from the picture in our Discord chat:

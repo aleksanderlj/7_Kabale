@@ -310,7 +310,7 @@ public class BoardDetection {
                 }
             }
 
-            if (cardList.get(contours.indexOf(cont)).isEmpty()) {
+            if (cardList.get(contours.indexOf(cont)).size() == 0) {
                 Card dummy = new Card(new Rect(cont.getCenterX(), cont.getCenterY(), 1, 1));
                 cardList.get(contours.indexOf(cont)).add(dummy);
             }
