@@ -241,14 +241,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setStateRecording() {
         enableCamera();
-        String s = "retry";
-        close_btn.setText(s);
         preview.setVisibility(View.GONE);
         close_btn.setVisibility(View.GONE);
         confirm_btn.setVisibility(View.GONE);
         capture_btn.setVisibility(View.VISIBLE);
         overlay_btn.setVisibility(View.GONE);
-        s = "Capture image for next instruction.";
+        String s = "Capture image for next instruction.";
         instructionTextView.setText(s);
 
         bringButtonsToFront();
@@ -256,12 +254,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setStatePictureTaken() {
         disableCamera();
+        String s = "retry";
+        close_btn.setText(s);
         preview.setVisibility(View.VISIBLE);
         close_btn.setVisibility(View.VISIBLE);
         confirm_btn.setVisibility(View.VISIBLE);
         capture_btn.setVisibility(View.GONE);
         overlay_btn.setVisibility(View.GONE);
-        String s = "Create instructions based on this image?";
+        s = "Create instructions based on this image?";
         instructionTextView.setText(s);
 
         bringButtonsToFront();
