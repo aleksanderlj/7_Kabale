@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,7 +21,6 @@ import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 import com.example.a7_kabale.logic.Card;
 import com.example.a7_kabale.logic.GameEngine;
-import com.example.a7_kabale.yolo.AssetDownloader;
 import com.example.a7_kabale.yolo.YOLOProcessor;
 
 import org.opencv.android.CameraBridgeViewBase;
@@ -32,16 +30,14 @@ import org.opencv.android.Utils;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
     AppDatabase db;
     Button close_btn, capture_btn, confirm_btn, overlay_btn;
-    ImageView preview;
+    ImageView preview, darkBorder;
     TextView instructionTextView;
     JavaCameraView camera;
     Mat video, frame, overlayFrame;
@@ -72,6 +68,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         instructionTextView = findViewById(R.id.instructionTextView);
         historyButton = findViewById(R.id.history_btn);
         overlay_btn = findViewById(R.id.overlay_btn);
+        darkBorder = findViewById(R.id.dark_border);
         fields = null;
         overlayFields = null;
 
@@ -79,7 +76,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         camera.setCameraPermissionGranted();
         camera.setCameraIndex(0);
         camera.setCvCameraViewListener(this);
-        camera.enableView();
+        enableCamera();
 
         capture_btn.setOnClickListener(this);
         close_btn.setOnClickListener(this);
@@ -218,24 +215,24 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
-        camera.disableView();
+        disableCamera();
     }
 
     @Override
     protected void onResume() {
         bringButtonsToFront();
         super.onResume();
-        camera.enableView();
+        enableCamera();
     }
 
     @Override
     protected void onDestroy() {
-        camera.disableView();
+        disableCamera();
         super.onDestroy();
     }
 
     private void setStateRecording() {
-        camera.enableView();
+        enableCamera();
         String s = "retry";
         close_btn.setText(s);
         preview.setVisibility(View.GONE);
@@ -250,7 +247,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setStatePictureTaken() {
-        camera.disableView();
+        disableCamera();
         preview.setVisibility(View.VISIBLE);
         close_btn.setVisibility(View.VISIBLE);
         confirm_btn.setVisibility(View.VISIBLE);
@@ -263,7 +260,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setStateShowInstruction() {
-        camera.disableView();
+        disableCamera();
         String s2 = "Next";
         close_btn.setText(s2);
         preview.setVisibility(View.VISIBLE);
@@ -280,9 +277,21 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn.bringToFront();
         close_btn.bringToFront();
         overlay_btn.bringToFront();
+        capture_btn.bringToFront();
         historyButton.setElevation(20);
         confirm_btn.setElevation(20);
         close_btn.setElevation(20);
         overlay_btn.setElevation(20);
+        capture_btn.setElevation(20);
+    }
+
+    private void disableCamera(){
+        darkBorder.setVisibility(View.VISIBLE);
+        camera.disableView();
+    }
+
+    private void enableCamera(){
+        darkBorder.setVisibility(View.GONE);
+        camera.enableView();
     }
 }
