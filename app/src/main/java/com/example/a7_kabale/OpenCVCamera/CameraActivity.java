@@ -49,6 +49,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     Bitmap bm, bmOverlay;
     GameEngine ge;
     BoardDetection bd;
+    boolean cameraOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,14 +216,21 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
-        disableCamera();
+        if(cameraOn) {
+            disableCamera();
+            cameraOn = true;
+        } else {
+            disableCamera();
+        }
     }
 
     @Override
     protected void onResume() {
         bringButtonsToFront();
         super.onResume();
-        enableCamera();
+        if(cameraOn) {
+            enableCamera();
+        }
     }
 
     @Override
@@ -286,11 +294,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void disableCamera(){
+        cameraOn = false;
         darkBorder.setVisibility(View.VISIBLE);
         camera.disableView();
     }
 
     private void enableCamera(){
+        cameraOn = true;
         darkBorder.setVisibility(View.GONE);
         camera.enableView();
     }
