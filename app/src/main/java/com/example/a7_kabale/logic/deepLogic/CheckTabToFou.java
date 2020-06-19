@@ -65,7 +65,8 @@ public class CheckTabToFou {
 			// Herefter forreste kort i hver række:
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
-					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() ==cardToSearchFor.getValue() &&
+							logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit().equals(cardToSearchFor.getSuit())) {
 						cardToSearchFor = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
@@ -87,7 +88,8 @@ public class CheckTabToFou {
 
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
-					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() ==cardToSearchFor.getValue() &&
+							logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit().equals(cardToSearchFor.getSuit())) {
 						cardToSearchFor = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
@@ -109,7 +111,8 @@ public class CheckTabToFou {
 
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
-					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() ==cardToSearchFor.getValue() &&
+							logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit().equals(cardToSearchFor.getSuit())) {
 						cardToSearchFor = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
@@ -131,7 +134,8 @@ public class CheckTabToFou {
 
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
-					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() ==cardToSearchFor.getValue() &&
+							logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit().equals(cardToSearchFor.getSuit())) {
 						cardToSearchFor = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
