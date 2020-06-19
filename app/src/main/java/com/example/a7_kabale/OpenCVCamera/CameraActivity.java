@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,7 +21,6 @@ import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
 import com.example.a7_kabale.logic.Card;
 import com.example.a7_kabale.logic.GameEngine;
-import com.example.a7_kabale.yolo.AssetDownloader;
 import com.example.a7_kabale.yolo.YOLOProcessor;
 
 import org.opencv.android.CameraBridgeViewBase;
@@ -32,16 +30,14 @@ import org.opencv.android.Utils;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
     AppDatabase db;
     Button close_btn, capture_btn, confirm_btn, overlay_btn;
-    ImageView preview;
+    ImageView preview, darkBorder;
     TextView instructionTextView;
     JavaCameraView camera;
     Mat video, frame, overlayFrame;
@@ -55,6 +51,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     BoardDetection bd;
     String instructionFromLogic;
     Point p1, p2;
+    boolean cameraOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +71,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         instructionTextView = findViewById(R.id.instructionTextView);
         historyButton = findViewById(R.id.history_btn);
         overlay_btn = findViewById(R.id.overlay_btn);
+        darkBorder = findViewById(R.id.dark_border);
         fields = null;
         overlayFields = null;
 
@@ -81,7 +79,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         camera.setCameraPermissionGranted();
         camera.setCameraIndex(0);
         camera.setCvCameraViewListener(this);
-        camera.enableView();
+        enableCamera();
 
         capture_btn.setOnClickListener(this);
         close_btn.setOnClickListener(this);
@@ -219,52 +217,59 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
-        camera.disableView();
+        if(cameraOn) {
+            disableCamera();
+            cameraOn = true;
+        } else {
+            disableCamera();
+        }
     }
 
     @Override
     protected void onResume() {
         bringButtonsToFront();
         super.onResume();
-        camera.enableView();
+        if(cameraOn) {
+            enableCamera();
+        }
     }
 
     @Override
     protected void onDestroy() {
-        camera.disableView();
+        disableCamera();
         super.onDestroy();
     }
 
     private void setStateRecording() {
-        camera.enableView();
-        String s = "retry";
-        close_btn.setText(s);
+        enableCamera();
         preview.setVisibility(View.GONE);
         close_btn.setVisibility(View.GONE);
         confirm_btn.setVisibility(View.GONE);
         capture_btn.setVisibility(View.VISIBLE);
         overlay_btn.setVisibility(View.GONE);
-        s = "Capture image for next instruction.";
+        String s = "Capture image for next instruction.";
         instructionTextView.setText(s);
 
         bringButtonsToFront();
     }
 
     private void setStatePictureTaken() {
-        camera.disableView();
+        disableCamera();
+        String s = "retry";
+        close_btn.setText(s);
         preview.setVisibility(View.VISIBLE);
         close_btn.setVisibility(View.VISIBLE);
         confirm_btn.setVisibility(View.VISIBLE);
         capture_btn.setVisibility(View.GONE);
         overlay_btn.setVisibility(View.GONE);
-        String s = "Create instructions based on this image?";
+        s = "Create instructions based on this image?";
         instructionTextView.setText(s);
 
         bringButtonsToFront();
     }
 
     private void setStateShowInstruction() {
-        camera.disableView();
+        disableCamera();
         String s2 = "Next";
         close_btn.setText(s2);
         preview.setVisibility(View.VISIBLE);
@@ -281,10 +286,24 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn.bringToFront();
         close_btn.bringToFront();
         overlay_btn.bringToFront();
+        capture_btn.bringToFront();
         historyButton.setElevation(20);
         confirm_btn.setElevation(20);
         close_btn.setElevation(20);
         overlay_btn.setElevation(20);
+        capture_btn.setElevation(20);
+    }
+
+    private void disableCamera(){
+        cameraOn = false;
+        darkBorder.setVisibility(View.VISIBLE);
+        camera.disableView();
+    }
+
+    private void enableCamera(){
+        cameraOn = true;
+        darkBorder.setVisibility(View.GONE);
+        camera.enableView();
     }
 
     private void getInstructionFromLogic(Card[] returnCards) {
