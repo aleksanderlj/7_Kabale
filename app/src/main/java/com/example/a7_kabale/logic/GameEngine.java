@@ -102,15 +102,6 @@ public class GameEngine {
 			return retrunCards;
 		}
 		
-		// checkTableauToFoundation
-		retrunCards = checkTabToFou.checkTableauToFoundation();
-		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
-			System.out.println("checkTableauToFoundation FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
-		}
-		
 		// checkForKing
 		retrunCards = checkKings.checkForKing();
 		if (checkKings.checkForKing() != null) {
@@ -143,6 +134,15 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards.toString());
 			System.out.println("tabRowToTabRow FÆRDIG");
+			backToBackTopDeck = 0;
+			return retrunCards;
+		}
+		
+		// checkTableauToFoundation
+		retrunCards = checkTabToFou.checkTableauToFoundation();
+		if (retrunCards != null) {
+			System.out.println(retrunCards.toString());
+			System.out.println("checkTableauToFoundation FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
 		}
