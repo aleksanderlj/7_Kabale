@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.opencv.core.Rect;
 
-public class Card {
+public class Card implements Comparable<Card>  {
 	private int value;
 	private String suit;
 	private boolean red;
@@ -99,5 +99,10 @@ public class Card {
 
 	public float getConfidence() {
 		return confidence;
+	}
+
+	@Override
+	public int compareTo(Card card) {
+		return (int) (this.rect.tl().y - card.rect.tl().y);
 	}
 }
