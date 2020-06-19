@@ -21,118 +21,110 @@ public class BoardDetection {
         6..12 - T1-T7
      */
 
-
-    private CountDownTimer cdt;
-    private boolean stopapprox;
     public BoardDetection(){
-
-        cdt = new CountDownTimer(5000, 0) {
-
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                System.out.println("Timeout!-");
-                stopapprox = true;
-            }
-        };
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
     public ArrayList<MatOfPoint> processImage(Mat img){
-        Mat blur = new Mat();
-        Mat grey = new Mat();
-        Mat canny = new Mat();
-        Mat persimg = new Mat();
-        Mat persblur = new Mat();
-        Mat pershsv = new Mat();
-        Mat persmask = new Mat();
-        Mat cnthiarchy = new Mat();
+        try {
+            Mat blur = new Mat();
+            Mat grey = new Mat();
+            Mat canny = new Mat();
+            Mat persimg = new Mat();
+            Mat persblur = new Mat();
+            Mat pershsv = new Mat();
+            Mat persmask = new Mat();
+            Mat cnthiarchy = new Mat();
 
 
-        Comparator<MatOfPoint> comp = (o1, o2) -> {
+            Comparator<MatOfPoint> comp = (o1, o2) -> {
 
-            double o1x = o1.get(0, 0)[0];
-            double o1y = o1.get(0, 0)[1];
-            double o2x = o2.get(0, 0)[0];
-            double o2y = o2.get(0, 0)[1];
-            int cmp = 0;
-            int resulty = (int) (o1y - o2y);
-            if (resulty >= 20 || resulty <= -20)
-                cmp = resulty;
+                double o1x = o1.get(0, 0)[0];
+                double o1y = o1.get(0, 0)[1];
+                double o2x = o2.get(0, 0)[0];
+                double o2y = o2.get(0, 0)[1];
+                int cmp = 0;
+                int resulty = (int) (o1y - o2y);
+                if (resulty >= 20 || resulty <= -20)
+                    cmp = resulty;
 
-            //int cmp = Integer.compare((int)o1y, (int)o2y);
-            if (cmp != 0) {
-                return cmp;
+                //int cmp = Integer.compare((int)o1y, (int)o2y);
+                if (cmp != 0) {
+                    return cmp;
+                }
+
+                return (int) (o1x - o2x);
+
+            };
+
+            ArrayList<MatOfPoint> fields = new ArrayList<>();
+            List<MatOfPoint> contours = new ArrayList<>();
+
+            //1. Process picture to find and isolate the board.
+
+            Imgproc.GaussianBlur(img, blur, new Size(5, 5), 0);
+
+            Imgproc.cvtColor(blur, grey, Imgproc.COLOR_RGBA2GRAY);
+
+            Imgproc.Canny(grey, canny, 10, 70);
+
+            Imgproc.findContours(canny, contours, cnthiarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+            MatOfPoint maxcnt = findMaxContour(contours);
+
+            MatOfPoint2f approx = approxContourAsRect(maxcnt);
+
+            if (approx == null) return null;
+            if (approx.total() != 4) return null;
+            approx = sortApproxContour(approx);
+
+            //2. Perspective warp the board to an picture of only the board.
+            //Size imgsize = img.size();
+            double d = ((double) img.rows()) * (297.0 / 210.0); // Size som er ligeså høj som photo, men er samme ratio som et a4 papir
+            Size imgsize = new Size(d, img.rows());
+
+            //Create an transform matrix of the wished size. 1500x1500.
+            Mat dst = Mat.zeros(4, 2, CvType.CV_32F);
+            dst.put(0, 0, 0);
+            dst.put(0, 1, 0);
+            dst.put(1, 0, imgsize.width - 1);
+            dst.put(1, 1, 0);
+            dst.put(2, 0, imgsize.width - 1);
+            dst.put(2, 1, imgsize.height - 1);
+            dst.put(3, 0, 0);
+            dst.put(3, 1, imgsize.height - 1);
+
+            Mat warpMat = Imgproc.getPerspectiveTransform(approx, dst);
+
+
+            Imgproc.warpPerspective(img, persimg, warpMat, imgsize);
+
+            //3. Find fields and sort them in the proper order.
+            Imgproc.GaussianBlur(persimg, persblur, new Size(5, 5), 0);
+            Imgproc.cvtColor(persblur, persblur, Imgproc.COLOR_RGBA2BGR);
+            Imgproc.cvtColor(persblur, pershsv, Imgproc.COLOR_BGR2HSV);
+            contours.clear();
+            Core.inRange(pershsv, new Scalar(90, 25, 25), new Scalar(150, 255, 255), persmask);
+            Imgproc.findContours(persmask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+            for (MatOfPoint cont : contours) {
+                double area = Imgproc.contourArea(cont);
+                if (area >= 6000) {
+                    MatOfPoint2f apcontour = approxContourAsRect(cont);
+                    if (apcontour == null) continue;
+                    if (apcontour.total() != 4) continue;
+                    apcontour = sortApproxContour(apcontour);
+                    fields.add(new MatOfPoint(apcontour.toArray()));
+                }
             }
-
-            return (int) (o1x - o2x);
-
-        };
-
-        ArrayList<MatOfPoint> fields = new ArrayList<>();
-        List<MatOfPoint> contours = new ArrayList<>();
-
-        //1. Process picture to find and isolate the board.
-
-        Imgproc.GaussianBlur(img, blur, new Size(5, 5), 0);
-
-        Imgproc.cvtColor(blur, grey, Imgproc.COLOR_RGBA2GRAY);
-
-        Imgproc.Canny(grey, canny, 10, 70);
-
-        Imgproc.findContours(canny,contours,cnthiarchy,Imgproc.RETR_TREE,Imgproc.CHAIN_APPROX_SIMPLE);
-
-        MatOfPoint maxcnt = findMaxContour(contours);
-
-        MatOfPoint2f approx = approxContourAsRect(maxcnt);
-
-        if(approx == null) return null;
-        if(approx.total() != 4) return null;
-        approx = sortApproxContour(approx);
-
-        //2. Perspective warp the board to an picture of only the board.
-        //Size imgsize = img.size();
-        double d = ((double) img.rows()) * (297.0/210.0); // Size som er ligeså høj som photo, men er samme ratio som et a4 papir
-        Size imgsize = new Size(d, img.rows());
-
-        //Create an transform matrix of the wished size. 1500x1500.
-        Mat dst = Mat.zeros(4,2,CvType.CV_32F);
-        dst.put(0,0,0); dst.put(0,1,0);
-        dst.put(1,0,imgsize.width-1); dst.put(1,1,0);
-        dst.put(2,0,imgsize.width-1); dst.put(2,1,imgsize.height-1);
-        dst.put(3,0,0); dst.put(3,1,imgsize.height-1);
-
-        Mat warpMat = Imgproc.getPerspectiveTransform(approx, dst);
-
-
-        Imgproc.warpPerspective(img, persimg, warpMat, imgsize);
-
-        //3. Find fields and sort them in the proper order.
-        Imgproc.GaussianBlur(persimg, persblur, new Size(5, 5), 0);
-        Imgproc.cvtColor(persblur, persblur, Imgproc.COLOR_RGBA2BGR);
-        Imgproc.cvtColor(persblur, pershsv, Imgproc.COLOR_BGR2HSV);
-        contours.clear();
-        Core.inRange(pershsv,  new Scalar(90,25, 25), new Scalar(150, 255, 255), persmask);
-        Imgproc.findContours(persmask,contours,new Mat(),Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
-
-        for(MatOfPoint cont : contours){
-            double area = Imgproc.contourArea(cont);
-            if (area >= 6000){
-                MatOfPoint2f apcontour = approxContourAsRect(cont);
-                if(apcontour == null) continue;
-                if(apcontour.total() != 4) continue;
-                apcontour = sortApproxContour(apcontour);
-                fields.add(new MatOfPoint(apcontour.toArray()));
-            }
+            //TODO Check size of list. Should be 13 else there was an error.
+            if (fields.size() != 13) return null;
+            Collections.sort(fields, comp);
+            persimg.copyTo(img);
+            return fields;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
-        //TODO Check size of list. Should be 13 else there was an error.
-        if(fields.size() != 13) return null;
-        Collections.sort(fields, comp);
-        persimg.copyTo(img);
-        return fields;
     }
 
     public ArrayList<ArrayContourObject> convertMatOfPoint2ArrayContourObject(ArrayList<MatOfPoint> matOfPoints){
@@ -188,8 +180,7 @@ public class BoardDetection {
      //This has the potential to be stuck in infinite loop, trying to find an epsilon which approximates to 4. This epsilon might not exist.
     //TODO Create watchdog thread to close the process and force reset.
     private MatOfPoint2f approxContourAsRect(MatOfPoint contour){
-        stopapprox = false;
-        cdt.start();
+        int iterations = 0;
         MatOfPoint2f m2f = new MatOfPoint2f(contour.toArray());
         MatOfPoint2f approx = new MatOfPoint2f();
         double epsilon = 0.01 * Imgproc.arcLength(m2f, true);
@@ -197,7 +188,6 @@ public class BoardDetection {
         //If are contour has less vertices then 4, then we cannot approximate and we will never be able to isolate the board.
         if(m2f.total() < 4) {
             System.err.println("ERR: Can't approx when contour is already less than 4 vertices");
-            cdt.cancel();
             return null;
         }
         //Find an epsilon which approximates the contour to an rectangle.
@@ -208,31 +198,30 @@ public class BoardDetection {
             if(approx.total() > 4){
                 lepsilon = epsilon;
                 repsilon = 2*epsilon;
-                while (approx.total() > 4 && stopapprox != true){
+                while (approx.total() > 4 && iterations < 100){
                     Imgproc.approxPolyDP(m2f, approx, repsilon, true);
                     repsilon *= 2;
+                    iterations++;
                     if(approx.total() == 4){
-                        cdt.cancel();
                         return approx;
                     }
                 }
             } else if (approx.total() < 4) {
                 repsilon = epsilon;
                 lepsilon = 2/epsilon;
-                while (approx.total() < 4 && stopapprox != true){
+                while (approx.total() < 4 && iterations < 100){
                     Imgproc.approxPolyDP(m2f, approx, lepsilon, true);
                     lepsilon /= 2;
+                    iterations++;
                     if(approx.total() == 4) {
-                        cdt.cancel();
                         return approx;
                     }
                 }
             } else {
-                cdt.cancel();
                 return approx;
             }
-
-            while (stopapprox != true){
+            iterations = 0;
+            while (iterations < 100){
 
                     double midepsilon = lepsilon + (repsilon - lepsilon) / 2;
                     Imgproc.approxPolyDP(m2f, approx, midepsilon, true);
@@ -241,7 +230,6 @@ public class BoardDetection {
                     // If the element is present at the
                     // middle itself
                     if (approx.total() == 4){
-                        cdt.cancel();
                         return approx;
                     }
 
@@ -252,20 +240,16 @@ public class BoardDetection {
                     } else {
                         repsilon = midepsilon;
                     }
-
+                iterations++;
                 if (epsilon <= 0){
                     System.err.println("ERR: Epsilon was less than zero");
-                    cdt.cancel();
                     return null;
                 }
             }
         }
+        if(approx.total() != 4) return null;
         System.out.println("Vertices in approx = " + approx.total());
         System.out.println("Epsilon = " + epsilon);
-        cdt.cancel();
-        if(stopapprox){
-            return null;
-        }
         return approx;
     }
 
