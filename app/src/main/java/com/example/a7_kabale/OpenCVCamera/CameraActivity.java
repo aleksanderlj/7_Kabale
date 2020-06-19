@@ -103,17 +103,19 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 frame = getFrame();
                 overlayFields = bd.processImage(frame);
-                fields = bd.convertMatOfPoint2ArrayContourObject(overlayFields);
-                if (fields == null){
+                if (overlayFields == null){
                     System.out.println("Error in processImage: Fields was null.");
-                    // Reset to former state.
+                    Toast.makeText(this, "Can't find board, please try again", Toast.LENGTH_SHORT).show();
+                    setStateRecording();
+                } else {
+                    fields = bd.convertMatOfPoint2ArrayContourObject(overlayFields);
+
+                    bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(frame, bm);
+                    preview.setImageBitmap(bm);
+
+                    setStatePictureTaken();
                 }
-
-                bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(frame, bm);
-                preview.setImageBitmap(bm);
-
-                setStatePictureTaken();
                 break;
 
             case R.id.closepreview_btn:
