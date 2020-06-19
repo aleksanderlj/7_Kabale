@@ -52,6 +52,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     String instructionFromLogic;
     Point p1, p2;
     boolean cameraOn, twoCards;
+    ArrayList<ArrayList<Card>> cardList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +104,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 frame = getFrame();
                 overlayFields = bd.processImage(frame);
-                if (overlayFields == null){
+                if (overlayFields == null) {
                     System.out.println("Error in processImage: Fields was null.");
                     Toast.makeText(this, "Can't find board, please try again", Toast.LENGTH_SHORT).show();
                     setStateRecording();
@@ -121,15 +122,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         try {
 
                             ArrayList<Card> recognizedCards = yoloProcessor.getCards(frame);
-                            ArrayList<ArrayList<Card>> cardList = bd.cardSegmenter(fields, recognizedCards);
+                            cardList = bd.cardSegmenter(fields, recognizedCards);
 
                             overlayFrame = frame.clone();
-                        Imgproc.drawContours(overlayFrame, overlayFields, -1, new Scalar(255, 255, 0, 255), 5);
-                        overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
-
-                        if (twoCards){
-                            overlayFrame = drawArrow(overlayFrame);
-                        }
+                            Imgproc.drawContours(overlayFrame, overlayFields, -1, new Scalar(255, 255, 0, 255), 5);
+                            overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
 
                             bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
                             Utils.matToBitmap(overlayFrame, bmOverlay);
@@ -157,8 +154,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO: Check om board state har ændret sig?
                 //TODO: Check om instruktioner kan gives baseret på billedet. Hvis fejl, spørg om nyt billede.
 
-                //getInstructionFromLogic(ge.updateGameState(cardList));
-                //frame = drawArrow(overlayFrame);
+                getInstructionFromLogic(ge.updateGameState(cardList));
+                if (twoCards) {
+                    frame = drawArrow(frame);
+                }
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);
                 preview.setImageBitmap(bm);
@@ -187,7 +186,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    public Mat drawArrow(Mat image){
+    public Mat drawArrow(Mat image) {
         Scalar color = new Scalar(255, 0, 0, 255);
 
         Imgproc.arrowedLine(image, p1, p2, color, 3);
@@ -218,7 +217,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
-        if(cameraOn) {
+        if (cameraOn) {
             disableCamera();
             cameraOn = true;
         } else {
@@ -230,7 +229,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         bringButtonsToFront();
         super.onResume();
-        if(cameraOn) {
+        if (cameraOn) {
             enableCamera();
         }
     }
@@ -295,13 +294,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         capture_btn.setElevation(20);
     }
 
-    private void disableCamera(){
+    private void disableCamera() {
         cameraOn = false;
         darkBorder.setVisibility(View.VISIBLE);
         camera.disableView();
     }
 
-    private void enableCamera(){
+    private void enableCamera() {
         cameraOn = true;
         darkBorder.setVisibility(View.GONE);
         camera.enableView();
@@ -345,14 +344,14 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private Point getMiddleOfCard(Rect rect) {
-        double x = rect.tl().x + (rect.br().x - rect.tl().x)/2;
-        double y = rect.tl().y + (rect.br().y - rect.tl().y)/2;
+        double x = rect.tl().x + (rect.br().x - rect.tl().x) / 2;
+        double y = rect.tl().y + (rect.br().y - rect.tl().y) / 2;
         return new Point(x, y);
     }
 
-    private String getCardName(Card card){
+    private String getCardName(Card card) {
         String s = "";
-        switch (card.getValue()){
+        switch (card.getValue()) {
             case 1:
                 s = "Ace of ";
                 break;
@@ -395,7 +394,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }
         s += card.getSuit();
 
-        switch (card.getSuit()){
+        switch (card.getSuit()) {
             case "Diamonds":
                 s += " ♦";
                 break;

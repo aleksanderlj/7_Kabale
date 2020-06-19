@@ -15,7 +15,8 @@ public class CheckKings {
         	return null;
         else if (logicState.getTopDeckCard().getValue() == 13){
         	logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
-			return new Card[] {logicState.getTopDeckCard(), new Card(0, "T" + (freeDeck + 1))};
+			logicState.getTableauRows().get(freeDeck).get(0).setSuit("T" + (freeDeck + 1));
+			return new Card[] {logicState.getTopDeckCard(), logicState.getTableauRows().get(freeDeck).get(0)};
         }
         else {
         	int highestKing = 0, tableauKing = 0;
@@ -31,7 +32,8 @@ public class CheckKings {
 				int[] newHiddenCards = logicState.getHiddenCards();
 				newHiddenCards[highestKing] = newHiddenCards[highestKing]-1;
 				logicState.setHiddenCards(logicState.getHiddenCards());
-				return new Card[] {logicState.getTableauRows().get(tableauKing).get(0), new Card(0, "T" + (freeDeck + 1))};
+				logicState.getTableauRows().get(freeDeck).get(0).setSuit("T" + (freeDeck + 1));
+				return new Card[] {logicState.getTableauRows().get(tableauKing).get(0), logicState.getTableauRows().get(freeDeck).get(0)};
 			}
 		}
        	return null;

@@ -13,13 +13,17 @@ public class CheckAces {
 			logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 			switch (logicState.getTopDeckCard().getSuit()) {
 				case "Diamonds":
-					return new Card[] {logicState.getTopDeckCard(), new Card (0, "F1")};
+					logicState.getFoundationsDeckDiamonds().setSuit("F1");
+					return new Card[] {logicState.getTopDeckCard(), logicState.getFoundationsDeckDiamonds()};
 				case "Hearts":
-					return new Card[] {logicState.getTopDeckCard(), new Card (0, "F2")};
+					logicState.getFoundationsDeckHearts().setSuit("F2");
+					return new Card[] {logicState.getTopDeckCard(), logicState.getFoundationsDeckHearts()};
 				case "Clubs":
-					return new Card[] {logicState.getTopDeckCard(), new Card (0, "F3")};
+					logicState.getFoundationsDeckClubs().setSuit("F3");
+					return new Card[] {logicState.getTopDeckCard(), logicState.getFoundationsDeckClubs()};
 				case "Spades":
-					return new Card[] {logicState.getTopDeckCard(), new Card (0, "F4")};
+					logicState.getFoundationsDeckSpades().setSuit("F4");
+					return new Card[] {logicState.getTopDeckCard(), logicState.getFoundationsDeckSpades()};
 			}
 		}
 		return null;
@@ -36,29 +40,34 @@ public class CheckAces {
 								newHiddenCards[i] = newHiddenCards[i] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
+							logicState.getFoundationsDeckDiamonds().setSuit("F1");
 							return new Card[] {logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1),
-									new Card (0, "F1")};
+									logicState.getFoundationsDeckDiamonds()};
 						case "Hearts":
 							if (logicState.getHiddenCards()[i] != 0) {
 								newHiddenCards[i] = newHiddenCards[i] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
+							logicState.getFoundationsDeckHearts().setSuit("F2");
 							return new Card[] {logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1),
-									new Card (0, "F2")};
+									logicState.getFoundationsDeckHearts()};
 						case "Clubs":
 							if (logicState.getHiddenCards()[i] != 0) {
 								newHiddenCards[i] = newHiddenCards[i] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
+							logicState.getFoundationsDeckClubs().setSuit("F3");
 							return new Card[] {logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1),
-									new Card (0, "F3")};
+									logicState.getFoundationsDeckClubs()};
 						case "Spades":
 							if (logicState.getHiddenCards()[i] != 0) {
 								newHiddenCards[i] = newHiddenCards[i] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
+							logicState.getFoundationsDeckSpades().setSuit("F4");
 							return new Card[] {logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1),
-									new Card (0, "F4")};
+									logicState.getFoundationsDeckSpades()};
+
 					}
 				}
 			}
