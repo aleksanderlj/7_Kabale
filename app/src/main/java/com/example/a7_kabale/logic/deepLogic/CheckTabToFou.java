@@ -66,6 +66,7 @@ public class CheckTabToFou {
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+						cardToSearchFor = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
 							newHiddenCards[i] = newHiddenCards[i]-1;
@@ -87,6 +88,7 @@ public class CheckTabToFou {
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+						cardToSearchFor = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
 							newHiddenCards[i] = newHiddenCards[i]-1;
@@ -108,6 +110,7 @@ public class CheckTabToFou {
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+						cardToSearchFor = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
 							newHiddenCards[i] = newHiddenCards[i]-1;
@@ -129,6 +132,7 @@ public class CheckTabToFou {
 			for (int i = 0; i < logicState.getTableauRows().size(); i++) {
 				if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 					if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).toString().equals(cardToSearchFor.toString())) {
+						cardToSearchFor = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
 						if (logicState.getHiddenCards()[i] != 0){
 							int [] newHiddenCards = logicState.getHiddenCards();
 							newHiddenCards[i] = newHiddenCards[i]-1;
