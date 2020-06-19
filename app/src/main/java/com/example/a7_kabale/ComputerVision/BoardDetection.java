@@ -25,6 +25,20 @@ public class BoardDetection {
     private CountDownTimer cdt;
     private boolean stopapprox;
     public BoardDetection(){
+
+        cdt = new CountDownTimer(5000, 0) {
+
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                System.out.println("Timeout!-");
+                stopapprox = true;
+            }
+        };
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
     public ArrayList<ArrayContourObject> processImage(Mat img){
@@ -38,18 +52,6 @@ public class BoardDetection {
         Mat cnthiarchy = new Mat();
 
 
-        cdt = new CountDownTimer(5000, 0) {
-
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                stopapprox = true;
-            }
-        };
         Comparator<MatOfPoint> comp = (o1, o2) -> {
 
             double o1x = o1.get(0, 0)[0];
@@ -202,7 +204,7 @@ public class BoardDetection {
             if(approx.total() > 4){
                 lepsilon = epsilon;
                 repsilon = 2*epsilon;
-                while (approx.total() > 4 || stopapprox != true){
+                while (approx.total() > 4 && stopapprox != true){
                     Imgproc.approxPolyDP(m2f, approx, repsilon, true);
                     repsilon *= 2;
                     if(approx.total() == 4){
@@ -213,7 +215,7 @@ public class BoardDetection {
             } else if (approx.total() < 4) {
                 repsilon = epsilon;
                 lepsilon = 2/epsilon;
-                while (approx.total() < 4 || stopapprox != true){
+                while (approx.total() < 4 && stopapprox != true){
                     Imgproc.approxPolyDP(m2f, approx, lepsilon, true);
                     lepsilon /= 2;
                     if(approx.total() == 4) {
