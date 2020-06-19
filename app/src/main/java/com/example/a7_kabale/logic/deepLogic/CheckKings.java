@@ -39,7 +39,7 @@ public class CheckKings {
     
     private Integer freeTableauRow(){
         for (int i = 0; i < logicState.getTableauRows().size(); i++){
-            if (logicState.getTableauRows().get(i).get(0).getValue() != 0 && logicState.getHiddenCards()[i] == 0)
+            if (logicState.getTableauRows().get(i).get(0).getValue() == 0 && logicState.getHiddenCards()[i] == 0)
                 return i;
         }
         return null;

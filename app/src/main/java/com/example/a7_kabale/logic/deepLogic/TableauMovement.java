@@ -18,7 +18,7 @@ public class TableauMovement {
         if (logicState.getTopDeckCard() == null)
             return null;
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            if (logicState.getTableauRows().get(i).get(0).getValue() == 0) {
+            if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
                 temporaryCard = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
                 if (temporaryCard.getValue() == logicState.getTopDeckCard().getValue() + 1
                         && temporaryCard.isRed() != logicState.getTopDeckCard().isRed()) {
