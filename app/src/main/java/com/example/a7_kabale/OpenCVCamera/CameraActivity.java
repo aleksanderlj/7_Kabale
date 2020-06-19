@@ -115,7 +115,34 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     preview.setImageBitmap(bm);
 
                     setStatePictureTaken();
+
+                    ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
+                    Executors.newSingleThreadExecutor().execute(() -> {
+                        try {
+
+                            ArrayList<Card> recognizedCards = yoloProcessor.getCards(frame);
+                            ArrayList<ArrayList<Card>> cardList = bd.cardSegmenter(fields, recognizedCards);
+
+                            overlayFrame = frame.clone();
+                            Imgproc.drawContours(overlayFrame, overlayFields, -1, new Scalar(255, 255, 0, 255), 5);
+                            overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
+
+                            bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
+                            Utils.matToBitmap(overlayFrame, bmOverlay);
+
+                            runOnUiThread(() -> {
+                                dialog.dismiss();
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> {
+                                Toast.makeText(this, "Can't see any cards, try again", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            });
+                        }
+                    });
                 }
+
                 break;
 
             case R.id.closepreview_btn:
@@ -126,43 +153,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO: Check om board state har ændret sig?
                 //TODO: Check om instruktioner kan gives baseret på billedet. Hvis fejl, spørg om nyt billede.
 
-                ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
-
-                Executors.newSingleThreadExecutor().execute(() -> {
-                    try {
-
-                        ArrayList<Card> recognizedCards = yoloProcessor.getCards(frame);
-                        ArrayList<ArrayList<Card>> cardList = bd.cardSegmenter(fields, recognizedCards);
-                        //Get answer here!!!
-                        getInstructionFromLogic(ge.updateGameState(cardList));
-
-                        //TODO LAV PILE PÅ frame HER
-                        bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-                        Utils.matToBitmap(frame, bm);
-
-                        overlayFrame = frame.clone();
-                        Imgproc.drawContours(overlayFrame, overlayFields, -1, new Scalar(255, 255, 0, 255), 5);
-                        overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
-                        //overlayFrame = drawArrow(overlayFrame);
-                        overlayFrame = drawArrow(overlayFrame);
-
-                        bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
-                        Utils.matToBitmap(overlayFrame, bmOverlay);
-
-                        runOnUiThread(() -> {
-                            preview.setImageBitmap(bm);
-                            setStateShowInstruction();
-                            setInstruction(instructionFromLogic);
-                            dialog.dismiss();
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, "Can't see any cards, try again", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        });
-                    }
-                });
+                //getInstructionFromLogic(ge.updateGameState(cardList));
+                //frame = drawArrow(overlayFrame);
+                bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(frame, bm);
+                preview.setImageBitmap(bm);
+                setStateShowInstruction();
+                setInstruction(instructionFromLogic);
 
                 break;
 
@@ -261,7 +258,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.setVisibility(View.VISIBLE);
         confirm_btn.setVisibility(View.VISIBLE);
         capture_btn.setVisibility(View.GONE);
-        overlay_btn.setVisibility(View.GONE);
+        overlay_btn.setVisibility(View.VISIBLE);
         s = "Create instructions based on this image?";
         instructionTextView.setText(s);
 
@@ -276,7 +273,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.setVisibility(View.VISIBLE);
         confirm_btn.setVisibility(View.GONE);
         capture_btn.setVisibility(View.GONE);
-        overlay_btn.setVisibility(View.VISIBLE);
+        overlay_btn.setVisibility(View.GONE);
 
         bringButtonsToFront();
     }
