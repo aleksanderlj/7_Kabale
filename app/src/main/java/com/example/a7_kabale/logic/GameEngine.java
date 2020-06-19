@@ -152,18 +152,18 @@ public class GameEngine {
 			System.out.println("Turn the top deck.");
 			System.out.println("topDeck FÆRDIG");
 			backToBackTopDeck++;
-			return new Card[] {new Card(0, "Turn top deck")};
+			return new Card[] {new Card(14, "")};
 		} else {
 			if (logicState.getFoundationsDeckDiamonds().getValue() == 13
 					&& logicState.getFoundationsDeckHearts().getValue() == 13
 					&& logicState.getFoundationsDeckClubs().getValue() == 13
 					&& logicState.getFoundationsDeckSpades().getValue() == 13) {
 				System.out.println("CONGRATULATIONS - you won the game!");
-				return new Card[] {new Card(0, "CONGRATULATIONS - you won the game!")};
+				return new Card[] {new Card(15, "")};
 			}
 			else {
 				System.out.println("Game over!");
-				return new Card[] {new Card(0, "Game over!")};
+				return new Card[] {new Card(16, "")};
 			}
 		}
 	}
