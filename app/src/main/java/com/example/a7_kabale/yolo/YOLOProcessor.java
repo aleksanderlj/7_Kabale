@@ -22,7 +22,7 @@ import java.util.List;
 
 public class YOLOProcessor {
     Net darkNet;
-    Size darkNetSize = new Size(1536, 1536);
+    Size darkNetSize = new Size(2048, 2048);
 
     public void initDarknet(File storage) {
         String weight = storage.getPath() + "/data/cards.weights";
@@ -100,7 +100,7 @@ public class YOLOProcessor {
         for (int i = 0; i < recognizedCards.size(); i++) {
             Rect rect = recognizedCards.get(i).getRect();
             Imgproc.rectangle(mat, rect.tl(), rect.br(), new Scalar(0, 0, 255), 4);
-            Imgproc.putText(mat, recognizedCards.get(i).getSuit() + recognizedCards.get(i).getValue(), rect.tl(), Imgproc.FONT_HERSHEY_SIMPLEX, 2, new Scalar(255,0,0), 3);
+            Imgproc.putText(mat, recognizedCards.get(i).getSuit() + recognizedCards.get(i).getValue(), rect.tl(), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(255,0,0), 3);
         }
 
         return mat;
