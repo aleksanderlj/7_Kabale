@@ -51,7 +51,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     BoardDetection bd;
     String instructionFromLogic;
     Point p1, p2;
-    boolean cameraOn;
+    boolean cameraOn, twoCards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +143,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         overlayFrame = frame.clone();
                         Imgproc.drawContours(overlayFrame, overlayFields, -1, new Scalar(255, 255, 0, 255), 5);
                         overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
-                        //overlayFrame = drawArrow(overlayFrame);
-                        overlayFrame = drawArrow(overlayFrame);
+
+                        if (twoCards){
+                            overlayFrame = drawArrow(overlayFrame);
+                        }
 
                         bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
                         Utils.matToBitmap(overlayFrame, bmOverlay);
@@ -309,6 +311,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private void getInstructionFromLogic(Card[] returnCards) {
         String i = "";
         if (returnCards.length == 1) {
+            twoCards = false;
             // kig på suit af index 0
             switch (returnCards[0].getValue()) {
                 case 14:
@@ -322,9 +325,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     break;
             }
         } else {
+            twoCards = true;
             getPointsFromLogic(returnCards);
 
-            // tegn pil og giv instruks på 2 kort
             if (returnCards[1].getValue() == 0) {
                 String tRow = returnCards[1].getSuit();
                 i = "Move " + getCardName(returnCards[0]) + " to " + tRow;
