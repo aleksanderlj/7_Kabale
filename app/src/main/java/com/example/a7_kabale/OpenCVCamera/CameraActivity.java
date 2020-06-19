@@ -51,7 +51,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     BoardDetection bd;
     String instructionFromLogic;
     Point p1, p2;
-    boolean cameraOn, twoCards;
+    boolean cameraOn, drawArrow;
     ArrayList<ArrayList<Card>> cardList;
 
     @Override
@@ -155,7 +155,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO: Check om instruktioner kan gives baseret på billedet. Hvis fejl, spørg om nyt billede.
 
                 getInstructionFromLogic(ge.updateGameState(cardList));
-                if (twoCards) {
+                if (drawArrow) {
                     frame = drawArrow(frame);
                 }
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
@@ -309,7 +309,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private void getInstructionFromLogic(Card[] returnCards) {
         String i = "";
         if (returnCards.length == 1) {
-            twoCards = false;
+            drawArrow = false;
             // kig på suit af index 0
             switch (returnCards[0].getValue()) {
                 case 14:
@@ -323,8 +323,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     break;
             }
         } else {
-            twoCards = true;
-            getPointsFromLogic(returnCards);
+            drawArrow = true;
+            try {
+                getPointsFromLogic(returnCards);
+            } catch (Exception e){
+                e.printStackTrace();
+                drawArrow = false;
+            }
 
             if (returnCards[1].getValue() == 0) {
                 String tRow = returnCards[1].getSuit();
