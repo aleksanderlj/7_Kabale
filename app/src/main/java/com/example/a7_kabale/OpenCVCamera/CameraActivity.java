@@ -49,6 +49,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     Button historyButton;
     YOLOProcessor yoloProcessor;
     ArrayList<ArrayContourObject> fields;
+    ArrayList<MatOfPoint> overlayFields;
     Bitmap bm, bmOverlay;
     GameEngine ge;
     BoardDetection bd;
@@ -72,6 +73,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         historyButton = findViewById(R.id.history_btn);
         overlay_btn = findViewById(R.id.overlay_btn);
         fields = null;
+        overlayFields = null;
 
         camera = findViewById(R.id.camera_view);
         camera.setCameraPermissionGranted();
@@ -100,7 +102,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.capture_btn:
 
                 frame = getFrame();
-                fields = bd.processImage(frame);
+                overlayFields = bd.processImage(frame);
+                fields = bd.convertMatOfPoint2ArrayContourObject(overlayFields);
                 if (fields == null){
                     System.out.println("Error in processImage: Fields was null.");
                     // Reset to former state.
@@ -136,7 +139,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         Utils.matToBitmap(frame, bm);
 
                         overlayFrame = frame.clone();
-                        //Imgproc.drawContours(overlayFrame, fields, -1, new Scalar(255, 255, 0, 255), 5);
+                        Imgproc.drawContours(overlayFrame, overlayFields, -1, new Scalar(255, 255, 0, 255), 5);
                         overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
                         overlayFrame = drawArrow(overlayFrame, 200, 200, 500, 500);
 
