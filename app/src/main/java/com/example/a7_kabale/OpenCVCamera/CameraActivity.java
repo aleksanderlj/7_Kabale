@@ -53,6 +53,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     Bitmap bm, bmOverlay;
     GameEngine ge;
     BoardDetection bd;
+    String instructionFromLogic;
+    Point p1, p2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +136,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         ArrayList<Card> recognizedCards = yoloProcessor.getCards(frame);
                         ArrayList<ArrayList<Card>> cardList = bd.cardSegmenter(fields, recognizedCards);
                         //Get answer here!!!
-                        ge.updateGameState(cardList);
+                        getInstructionFromLogic(ge.updateGameState(cardList));
 
                         //TODO LAV PILE PÅ frame HER
                         bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
@@ -143,7 +145,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         overlayFrame = frame.clone();
                         Imgproc.drawContours(overlayFrame, overlayFields, -1, new Scalar(255, 255, 0, 255), 5);
                         overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
-                        overlayFrame = drawArrow(overlayFrame, 200, 200, 500, 500);
+                        overlayFrame = drawArrow(overlayFrame);
 
                         bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
                         Utils.matToBitmap(overlayFrame, bmOverlay);
@@ -151,7 +153,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         runOnUiThread(() -> {
                             preview.setImageBitmap(bm);
                             setStateShowInstruction();
-                            setInstruction("Move H6 to C7");
+                            setInstruction(instructionFromLogic);
                             dialog.dismiss();
                         });
                     } catch (Exception e) {
@@ -185,9 +187,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    public Mat drawArrow(Mat image, int x1, int y1, int x2, int y2) {
-        Point p1 = new Point(x1, y1);
-        Point p2 = new Point(x2, y2);
+    public Mat drawArrow(Mat image) {
         Scalar color = new Scalar(255, 0, 0, 255);
 
         Imgproc.arrowedLine(image, p1, p2, color, 3);
@@ -284,5 +284,72 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn.setElevation(20);
         close_btn.setElevation(20);
         overlay_btn.setElevation(20);
+    }
+
+    private void getInstructionFromLogic(Card[] returnCards) {
+        String i = "";
+        if (returnCards.length == 1) {
+            // kig på suit af index 0
+            switch (returnCards[0].getValue()) {
+                case 14:
+                    i = "Turn the top deck.";
+                    break;
+                case 15:
+                    i = "Game won!";
+                    break;
+                case 16:
+                    i = "Game lost.";
+                    break;
+            }
+        } else {
+            getPointsFromLogic(returnCards);
+
+            // tegn pil og giv instruks på 2 kort
+            if (returnCards[1].getValue() == 0) {
+                String tRow = returnCards[1].getSuit();
+                i = "Move " + returnCards[0].getSuit() + " to " + tRow;
+            } else {
+                i = "Move " + returnCards[0].getSuit() + " to " + returnCards[1].getSuit();
+            }
+        }
+        instructionFromLogic = i;
+    }
+
+    private void getPointsFromLogic(Card[] cards) {
+        Card card1 = cards[0];
+        Card card2 = cards[1];
+        p1 = getMiddleOfCard(card1.getRect());
+        p2 = getMiddleOfCard(card2.getRect());
+
+
+
+//        if (p1.x > p2.x) {
+//
+//            // x1 > x2 and y1 > y2
+//            if (p1.y > p2.y) {
+//                p1 = getBottomLeft(card1.getRect());
+//                p2 = getTopRight(card2.getRect());
+//
+//                if (p1.y < p2.y) {
+//                    p2 = card2.getRect().br();
+//                }
+//
+//                // x1 > x2 and y1 < y2
+//            } else if (p1.y < p2.y) {
+//                p1 = card1.getRect().tl();
+//                p2 = card2.getRect().br();
+//
+//                if (p1.y > p2.y){
+//                }
+//
+//                // x1 > x2 and y1 = y2
+//            } else {
+//
+//            }
+//        }
+    }
+
+    private Point getMiddleOfCard(Rect rect) {
+        return new Point((rect.tl().x - rect.br().x), (rect.tl().y - rect.br().y));
     }
 }
