@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class LogicState {
 	private ArrayList<ArrayList<Card>> tableauRows;
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
-	private int totalCardsInTopDeck = 8;
+	private int totalCardsInTopDeck = 24;
 	private int[] hiddenCards = {0,1,2,3,4,5,6};
 	
 	public LogicState(){}

@@ -28,37 +28,35 @@ public class CheckAces {
 	}
 	
 	public Card[] checkTableauRowsForAce(){
-		int tableauNumber;
 		for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-			tableauNumber = i + 1;
 			if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
 				if (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getValue() == 1) {
 					int[] newHiddenCards = logicState.getHiddenCards();
 					switch (logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1).getSuit()) {
 						case "Diamonds":
-							if (logicState.getHiddenCards()[tableauNumber] != 0) {
-								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
+							if (logicState.getHiddenCards()[i] != 0) {
+								newHiddenCards[i] = newHiddenCards[i] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
 							return new Card[] {logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1),
 									new Card (0, "F1")};
 						case "Hearts":
-							if (logicState.getHiddenCards()[tableauNumber] != 0) {
-								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
+							if (logicState.getHiddenCards()[i] != 0) {
+								newHiddenCards[i] = newHiddenCards[i] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
 							return new Card[] {logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1),
 									new Card (0, "F2")};
 						case "Clubs":
-							if (logicState.getHiddenCards()[tableauNumber] != 0) {
-								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
+							if (logicState.getHiddenCards()[i] != 0) {
+								newHiddenCards[i] = newHiddenCards[i] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
 							return new Card[] {logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1),
 									new Card (0, "F3")};
 						case "Spades":
-							if (logicState.getHiddenCards()[tableauNumber] != 0) {
-								newHiddenCards[tableauNumber] = newHiddenCards[tableauNumber] - 1;
+							if (logicState.getHiddenCards()[i] != 0) {
+								newHiddenCards[i] = newHiddenCards[i] - 1;
 								logicState.setHiddenCards(newHiddenCards);
 							}
 							return new Card[] {logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1),
