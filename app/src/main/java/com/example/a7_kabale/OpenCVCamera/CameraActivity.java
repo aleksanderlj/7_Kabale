@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -50,6 +51,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     ArrayList<ArrayContourObject> fields;
     Bitmap bm, bmOverlay;
     GameEngine ge;
+    BoardDetection bd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         ge = new GameEngine();
         ge.initiateGame();
+        bd = new BoardDetection();
 
         i = new Intent(this, MoveHistoryActivity.class);
 
@@ -95,9 +98,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.capture_btn:
-                frame = getFrame();
 
-                fields = BoardDetection.processImage(frame);
+                frame = getFrame();
+                fields = bd.processImage(frame);
+                if (fields == null){
+                    System.out.println("Error in processImage: Fields was null.");
+                    // Reset to former state.
+                }
 
                 bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(frame, bm);
@@ -119,9 +126,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 Executors.newSingleThreadExecutor().execute(() -> {
                     try {
 
-                        ArrayList<Card> recognizedCards = yoloProcessor.getCards(frame);
-
-                        ArrayList<ArrayList<Card>> cardList = BoardDetection.cardSegmenter(fields, recognizedCards);
+                        ArrayList recognizedCards = yoloProcessor.getCards(frame);
+                        ArrayList<ArrayList<Card>> cardList = bd.cardSegmenter(fields, recognizedCards);
                         //Get answer here!!!
                         ge.updateGameState(cardList);
 

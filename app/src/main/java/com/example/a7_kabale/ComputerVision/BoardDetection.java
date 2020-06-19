@@ -1,5 +1,8 @@
 package com.example.a7_kabale.ComputerVision;
 
+import android.os.CountDownTimer;
+import android.os.Handler;
+
 import com.example.a7_kabale.logic.Card;
 
 import org.opencv.core.*;
@@ -18,10 +21,13 @@ public class BoardDetection {
         6..12 - T1-T7
      */
 
+
+    private CountDownTimer cdt;
+    private boolean stopapprox;
     public BoardDetection(){
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
-    public static ArrayList<ArrayContourObject> processImage(Mat img){
+    public ArrayList<ArrayContourObject> processImage(Mat img){
         Mat blur = new Mat();
         Mat grey = new Mat();
         Mat canny = new Mat();
@@ -31,6 +37,19 @@ public class BoardDetection {
         Mat persmask = new Mat();
         Mat cnthiarchy = new Mat();
 
+
+        cdt = new CountDownTimer(5000, 0) {
+
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                stopapprox = true;
+            }
+        };
         Comparator<MatOfPoint> comp = (o1, o2) -> {
 
             double o1x = o1.get(0, 0)[0];
@@ -68,6 +87,8 @@ public class BoardDetection {
 
         MatOfPoint2f approx = approxContourAsRect(maxcnt);
 
+        if(approx == null) return null;
+        if(approx.total() != 4) return null;
         approx = sortApproxContour(approx);
 
         //2. Perspective warp the board to an picture of only the board.
@@ -99,12 +120,14 @@ public class BoardDetection {
             double area = Imgproc.contourArea(cont);
             if (area >= 6000){
                 MatOfPoint2f apcontour = approxContourAsRect(cont);
+                if(apcontour == null) continue;
+                if(apcontour.total() != 4) continue;
                 apcontour = sortApproxContour(apcontour);
                 fields.add(new MatOfPoint(apcontour.toArray()));
             }
         }
         //TODO Check size of list. Should be 13 else there was an error.
-
+        if(fields.size() != 13) return null;
         Collections.sort(fields, comp);
         persimg.copyTo(img);
         ArrayList<ArrayContourObject> contlist = new ArrayList<>();
@@ -114,7 +137,7 @@ public class BoardDetection {
         return contlist;
     }
 
-    private static MatOfPoint findMaxContour(List<MatOfPoint> contours){
+    private MatOfPoint findMaxContour(List<MatOfPoint> contours){
         MatOfPoint maxcnt = new MatOfPoint();
         double maxarea = 0;
         for(int i = 0; i < contours.size(); i++){
@@ -158,16 +181,17 @@ public class BoardDetection {
 
      //This has the potential to be stuck in infinite loop, trying to find an epsilon which approximates to 4. This epsilon might not exist.
     //TODO Create watchdog thread to close the process and force reset.
-    private static MatOfPoint2f approxContourAsRect(MatOfPoint contour){
-        Thread watchdog = new Thread();
+    private MatOfPoint2f approxContourAsRect(MatOfPoint contour){
+        stopapprox = false;
+        cdt.start();
         MatOfPoint2f m2f = new MatOfPoint2f(contour.toArray());
         MatOfPoint2f approx = new MatOfPoint2f();
         double epsilon = 0.01 * Imgproc.arcLength(m2f, true);
         double lepsilon = 0, repsilon = 0;
-        Boolean increased = null;
         //If are contour has less vertices then 4, then we cannot approximate and we will never be able to isolate the board.
         if(m2f.total() < 4) {
             System.err.println("ERR: Can't approx when contour is already less than 4 vertices");
+            cdt.cancel();
             return null;
         }
         //Find an epsilon which approximates the contour to an rectangle.
@@ -178,24 +202,31 @@ public class BoardDetection {
             if(approx.total() > 4){
                 lepsilon = epsilon;
                 repsilon = 2*epsilon;
-                while (approx.total() > 4){
+                while (approx.total() > 4 || stopapprox != true){
                     Imgproc.approxPolyDP(m2f, approx, repsilon, true);
                     repsilon *= 2;
-                    if(approx.total() == 4) return approx;
+                    if(approx.total() == 4){
+                        cdt.cancel();
+                        return approx;
+                    }
                 }
             } else if (approx.total() < 4) {
                 repsilon = epsilon;
                 lepsilon = 2/epsilon;
-                while (approx.total() < 4){
+                while (approx.total() < 4 || stopapprox != true){
                     Imgproc.approxPolyDP(m2f, approx, lepsilon, true);
                     lepsilon /= 2;
-                    if(approx.total() == 4) return approx;
+                    if(approx.total() == 4) {
+                        cdt.cancel();
+                        return approx;
+                    }
                 }
             } else {
+                cdt.cancel();
                 return approx;
             }
 
-            while (repsilon > lepsilon){
+            while (stopapprox != true){
 
                     double midepsilon = lepsilon + (repsilon - lepsilon) / 2;
                     Imgproc.approxPolyDP(m2f, approx, midepsilon, true);
@@ -203,8 +234,10 @@ public class BoardDetection {
                     System.out.printf("Total = %d\nEpsilon = %f\n", approx.total(),midepsilon);
                     // If the element is present at the
                     // middle itself
-                    if (approx.total() == 4)
+                    if (approx.total() == 4){
+                        cdt.cancel();
                         return approx;
+                    }
 
                     // If element is smaller than mid, then
                     // it can only be present in left subarray
@@ -216,18 +249,23 @@ public class BoardDetection {
 
                 if (epsilon <= 0){
                     System.err.println("ERR: Epsilon was less than zero");
+                    cdt.cancel();
                     return null;
                 }
             }
         }
         System.out.println("Vertices in approx = " + approx.total());
         System.out.println("Epsilon = " + epsilon);
+        cdt.cancel();
+        if(stopapprox){
+            return null;
+        }
         return approx;
     }
 
 
     //inspired by: https://www.pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
-    private static MatOfPoint2f sortApproxContour(MatOfPoint2f approx){
+    private MatOfPoint2f sortApproxContour(MatOfPoint2f approx){
         Point[] pntarr = new Point[4];
         Point[] approxarr = approx.toArray();
         List<Double> sumarr = new ArrayList<>();
@@ -261,13 +299,13 @@ public class BoardDetection {
 
     }
 
-    private static void printContour(MatOfPoint2f contour){
+    private void printContour(MatOfPoint2f contour){
         for(int i = 0; i < contour.rows(); i++)
             for(int j = 0; j < contour.cols(); j++)
                 System.out.printf("( %d , %d ) = %f %f \n", i, j, contour.get(i, j)[0], contour.get(i, j)[1]);
     }
 
-    public static ArrayList<ArrayList<Card>> cardSegmenter(ArrayList<ArrayContourObject> contours, ArrayList<Card> Cards) {
+    public ArrayList<ArrayList<Card>> cardSegmenter(ArrayList<ArrayContourObject> contours, ArrayList<Card> Cards) {
         ArrayList<ArrayList<Card>> cardList = new ArrayList<ArrayList<Card>>();
         cardList.add(null);
         ArrayList<Card> topDeckCard = new ArrayList<>();
