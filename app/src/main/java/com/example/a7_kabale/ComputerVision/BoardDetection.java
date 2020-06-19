@@ -238,6 +238,7 @@ public class BoardDetection {
                 }
             }
         }
+        if(approx.total() != 4) return null;
         System.out.println("Vertices in approx = " + approx.total());
         System.out.println("Epsilon = " + epsilon);
         return approx;
