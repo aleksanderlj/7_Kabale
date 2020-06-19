@@ -51,7 +51,7 @@ public class Card {
 	@Override
 	public String toString() {
 		String returnString = "";
-		if (this.value < 10) {
+		if (this.value <= 10) {
 			returnString = returnString + this.suit.charAt(0) + this.value;
 			return returnString;
 		}

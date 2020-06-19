@@ -18,7 +18,7 @@ public class TableauMovement {
         if (logicState.getTopDeckCard() == null)
             return null;
         for (int i = 0; i < logicState.getTableauRows().size(); i++) {
-            if (logicState.getTableauRows().get(i).get(0).getValue() == 0) {
+            if (logicState.getTableauRows().get(i).get(0).getValue() != 0) {
                 temporaryCard = logicState.getTableauRows().get(i).get(logicState.getTableauRows().get(i).size() - 1);
                 if (temporaryCard.getValue() == logicState.getTopDeckCard().getValue() + 1
                         && temporaryCard.isRed() != logicState.getTopDeckCard().isRed()) {
@@ -158,7 +158,8 @@ public class TableauMovement {
                             return new Card[] {card, temporaryCard};
                         }
                         // Til sidst tjek om en hel række kort kan rykkes uden nogen kort bagved, men kun hvis der kan flyttes en konge på pladsen
-                        else if (logicState.getHiddenCards()[tableauRow] == 0 && cardPlacement == 0) {
+                        else if (logicState.getHiddenCards()[tableauRow] == 0 && cardPlacement == 0 &&
+                                logicState.getTableauRows().get(tableauRow).get(cardPlacement).getValue() != 0) {
                             for (int j = 0; j < logicState.getTableauRows().size(); j++) {
                                 if (logicState.getTableauRows().get(j).get(0).getValue() == 13 && logicState.getHiddenCards()[j] != 0) {
                                     return new Card[] {card, temporaryCard};

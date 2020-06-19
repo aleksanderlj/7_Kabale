@@ -69,7 +69,7 @@ public class GameEngine {
 		// checkTopDeckForAce
 		retrunCards = checkAces.checkTopDeckForAce();
 		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("checkTopDeckForAce FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
@@ -78,7 +78,7 @@ public class GameEngine {
 		// checkTopDeckForAce
 		retrunCards = checkAces.checkTableauRowsForAce();
 		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("checkTableauRowsForAce FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
@@ -87,7 +87,7 @@ public class GameEngine {
 		// topdeckToTableau
 		retrunCards = tableauMovement.topdeckToTableau();
 		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("topdeckToTableau FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
@@ -96,17 +96,8 @@ public class GameEngine {
 		// topDeckToFoundation
 		retrunCards = checkTabToFou.topDeckToFoundation();
 		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("topDeckToFoundation FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
-		}
-		
-		// checkTableauToFoundation
-		retrunCards = checkTabToFou.checkTableauToFoundation();
-		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
-			System.out.println("checkTableauToFoundation FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
 		}
@@ -114,7 +105,7 @@ public class GameEngine {
 		// checkForKing
 		retrunCards = checkKings.checkForKing();
 		if (checkKings.checkForKing() != null) {
-			System.out.println(retrunCards.toString());
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("checkForKing FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
@@ -123,7 +114,7 @@ public class GameEngine {
 		// tableauToTableauHiddenCard
 		retrunCards = tableauMovement.tableauToTableauHiddenCard();
 		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("tableauToTableauHidden FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
@@ -132,7 +123,7 @@ public class GameEngine {
 		// tableauToTableau
 		retrunCards = tableauMovement.tableauToTableau();
 		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("tableauToTableau FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
@@ -141,8 +132,17 @@ public class GameEngine {
 		// tabRowToTabRow
 		retrunCards = tableauMovement.tabRowToTabRow();
 		if (retrunCards != null) {
-			System.out.println(retrunCards.toString());
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("tabRowToTabRow FÆRDIG");
+			backToBackTopDeck = 0;
+			return retrunCards;
+		}
+		
+		// checkTableauToFoundation
+		retrunCards = checkTabToFou.checkTableauToFoundation();
+		if (retrunCards != null) {
+			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+			System.out.println("checkTableauToFoundation FÆRDIG");
 			backToBackTopDeck = 0;
 			return retrunCards;
 		}
