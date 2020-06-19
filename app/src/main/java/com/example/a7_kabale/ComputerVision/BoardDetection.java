@@ -27,7 +27,7 @@ public class BoardDetection {
     public BoardDetection(){
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
-    public ArrayList<ArrayContourObject> processImage(Mat img){
+    public ArrayList<MatOfPoint> processImage(Mat img){
         Mat blur = new Mat();
         Mat grey = new Mat();
         Mat canny = new Mat();
@@ -130,8 +130,12 @@ public class BoardDetection {
         if(fields.size() != 13) return null;
         Collections.sort(fields, comp);
         persimg.copyTo(img);
+        return fields;
+    }
+
+    public ArrayList<ArrayContourObject> convertMatOfPoint2ArrayContourObject(ArrayList<MatOfPoint> matOfPoints){
         ArrayList<ArrayContourObject> contlist = new ArrayList<>();
-        for (MatOfPoint cont : fields){
+        for (MatOfPoint cont : matOfPoints){
             contlist.add(new ArrayContourObject(cont));
         }
         return contlist;
