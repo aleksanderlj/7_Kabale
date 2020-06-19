@@ -21,24 +21,7 @@ public class BoardDetection {
         6..12 - T1-T7
      */
 
-
-    private CountDownTimer cdt;
-    private boolean stopapprox;
     public BoardDetection(){
-
-        cdt = new CountDownTimer(5000, 0) {
-
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                System.out.println("Timeout!-");
-                stopapprox = true;
-            }
-        };
     }
         //TODO Extend process image to compare Cardrecognition with the found fields.
     public ArrayList<ArrayContourObject> processImage(Mat img){
@@ -184,8 +167,7 @@ public class BoardDetection {
      //This has the potential to be stuck in infinite loop, trying to find an epsilon which approximates to 4. This epsilon might not exist.
     //TODO Create watchdog thread to close the process and force reset.
     private MatOfPoint2f approxContourAsRect(MatOfPoint contour){
-        stopapprox = false;
-        cdt.start();
+        int iterations = 0;
         MatOfPoint2f m2f = new MatOfPoint2f(contour.toArray());
         MatOfPoint2f approx = new MatOfPoint2f();
         double epsilon = 0.01 * Imgproc.arcLength(m2f, true);
@@ -193,7 +175,6 @@ public class BoardDetection {
         //If are contour has less vertices then 4, then we cannot approximate and we will never be able to isolate the board.
         if(m2f.total() < 4) {
             System.err.println("ERR: Can't approx when contour is already less than 4 vertices");
-            cdt.cancel();
             return null;
         }
         //Find an epsilon which approximates the contour to an rectangle.
@@ -204,31 +185,30 @@ public class BoardDetection {
             if(approx.total() > 4){
                 lepsilon = epsilon;
                 repsilon = 2*epsilon;
-                while (approx.total() > 4 && stopapprox != true){
+                while (approx.total() > 4 && iterations < 100){
                     Imgproc.approxPolyDP(m2f, approx, repsilon, true);
                     repsilon *= 2;
+                    iterations++;
                     if(approx.total() == 4){
-                        cdt.cancel();
                         return approx;
                     }
                 }
             } else if (approx.total() < 4) {
                 repsilon = epsilon;
                 lepsilon = 2/epsilon;
-                while (approx.total() < 4 && stopapprox != true){
+                while (approx.total() < 4 && iterations < 100){
                     Imgproc.approxPolyDP(m2f, approx, lepsilon, true);
                     lepsilon /= 2;
+                    iterations++;
                     if(approx.total() == 4) {
-                        cdt.cancel();
                         return approx;
                     }
                 }
             } else {
-                cdt.cancel();
                 return approx;
             }
-
-            while (stopapprox != true){
+            iterations = 0;
+            while (iterations < 100){
 
                     double midepsilon = lepsilon + (repsilon - lepsilon) / 2;
                     Imgproc.approxPolyDP(m2f, approx, midepsilon, true);
@@ -237,7 +217,6 @@ public class BoardDetection {
                     // If the element is present at the
                     // middle itself
                     if (approx.total() == 4){
-                        cdt.cancel();
                         return approx;
                     }
 
@@ -248,20 +227,15 @@ public class BoardDetection {
                     } else {
                         repsilon = midepsilon;
                     }
-
+                iterations++;
                 if (epsilon <= 0){
                     System.err.println("ERR: Epsilon was less than zero");
-                    cdt.cancel();
                     return null;
                 }
             }
         }
         System.out.println("Vertices in approx = " + approx.total());
         System.out.println("Epsilon = " + epsilon);
-        cdt.cancel();
-        if(stopapprox){
-            return null;
-        }
         return approx;
     }
 
