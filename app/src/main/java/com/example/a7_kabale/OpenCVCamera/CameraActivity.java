@@ -126,7 +126,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 Executors.newSingleThreadExecutor().execute(() -> {
                     try {
 
-                        ArrayList recognizedCards = yoloProcessor.getCards(frame);
+                        ArrayList<Card> recognizedCards = yoloProcessor.getCards(frame);
                         ArrayList<ArrayList<Card>> cardList = bd.cardSegmenter(fields, recognizedCards);
                         //Get answer here!!!
                         ge.updateGameState(cardList);
