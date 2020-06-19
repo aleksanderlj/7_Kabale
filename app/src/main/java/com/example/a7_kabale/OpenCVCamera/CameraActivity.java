@@ -145,6 +145,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         overlayFrame = frame.clone();
                         Imgproc.drawContours(overlayFrame, overlayFields, -1, new Scalar(255, 255, 0, 255), 5);
                         overlayFrame = yoloProcessor.DrawMatFromList(overlayFrame, recognizedCards);
+                        //overlayFrame = drawArrow(overlayFrame);
                         overlayFrame = drawArrow(overlayFrame);
 
                         bmOverlay = Bitmap.createBitmap(overlayFrame.cols(), overlayFrame.rows(), Bitmap.Config.ARGB_8888);
@@ -187,7 +188,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    public Mat drawArrow(Mat image) {
+    public Mat drawArrow(Mat image){
         Scalar color = new Scalar(255, 0, 0, 255);
 
         Imgproc.arrowedLine(image, p1, p2, color, 3);
@@ -307,9 +308,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             // tegn pil og giv instruks på 2 kort
             if (returnCards[1].getValue() == 0) {
                 String tRow = returnCards[1].getSuit();
-                i = "Move " + returnCards[0].getSuit() + " to " + tRow;
+                i = "Move " + getCardName(returnCards[0]) + " to " + tRow;
             } else {
-                i = "Move " + returnCards[0].getSuit() + " to " + returnCards[1].getSuit();
+                i = "Move " + getCardName(returnCards[0]) + " to " + getCardName(returnCards[1]);
             }
         }
         instructionFromLogic = i;
@@ -320,36 +321,58 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         Card card2 = cards[1];
         p1 = getMiddleOfCard(card1.getRect());
         p2 = getMiddleOfCard(card2.getRect());
-
-
-
-//        if (p1.x > p2.x) {
-//
-//            // x1 > x2 and y1 > y2
-//            if (p1.y > p2.y) {
-//                p1 = getBottomLeft(card1.getRect());
-//                p2 = getTopRight(card2.getRect());
-//
-//                if (p1.y < p2.y) {
-//                    p2 = card2.getRect().br();
-//                }
-//
-//                // x1 > x2 and y1 < y2
-//            } else if (p1.y < p2.y) {
-//                p1 = card1.getRect().tl();
-//                p2 = card2.getRect().br();
-//
-//                if (p1.y > p2.y){
-//                }
-//
-//                // x1 > x2 and y1 = y2
-//            } else {
-//
-//            }
-//        }
     }
 
     private Point getMiddleOfCard(Rect rect) {
-        return new Point((rect.tl().x - rect.br().x), (rect.tl().y - rect.br().y));
+        double x = rect.tl().x + (rect.br().x - rect.tl().x)/2;
+        double y = rect.tl().y + (rect.br().y - rect.tl().y)/2;
+        return new Point(x, y);
+    }
+
+    private String getCardName(Card card){
+        String s = "";
+        switch (card.getValue()){
+            case 1:
+                s = "Ace of ";
+                break;
+            case 2:
+                s = "Two of ";
+                break;
+            case 3:
+                s = "Three of ";
+                break;
+            case 4:
+                s = "Four of ";
+                break;
+            case 5:
+                s = "Five of ";
+                break;
+            case 6:
+                s = "Six of ";
+                break;
+            case 7:
+                s = "Seven of ";
+                break;
+            case 8:
+                s = "Eight of ";
+                break;
+            case 9:
+                s = "Nine of ";
+                break;
+            case 10:
+                s = "Ten of ";
+                break;
+            case 11:
+                s = "Jack of ";
+                break;
+            case 12:
+                s = "Queen of ";
+                break;
+            case 13:
+                s = "King of ";
+                break;
+        }
+        s += card.getSuit();
+        return s;
     }
 }
