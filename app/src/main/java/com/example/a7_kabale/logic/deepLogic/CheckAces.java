@@ -9,8 +9,6 @@ public class CheckAces {
 	public CheckAces(){}
 	
 	public Card[] checkTopDeckForAce(){
-		if (logicState.getTopDeckCard() == null)
-			return null;
 		if (logicState.getTopDeckCard().getValue() == 1) {
 			logicState.setTotalCardsInTopDeck(logicState.getTotalCardsInTopDeck() - 1);
 			switch (logicState.getTopDeckCard().getSuit()) {

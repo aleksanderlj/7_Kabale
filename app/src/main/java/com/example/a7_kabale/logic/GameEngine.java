@@ -55,7 +55,6 @@ public class GameEngine {
 		
 		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
-		retrunCards = null;
 		return calculateNextMove();
 	}
 	
@@ -65,6 +64,7 @@ public class GameEngine {
 		checkKings.setLogicState(logicState);
 		tableauMovement.setLogicState(logicState);
 		
+		retrunCards = null;
 		
 		// checkTopDeckForAce
 		retrunCards = checkAces.checkTopDeckForAce();
