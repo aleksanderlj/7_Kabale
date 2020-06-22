@@ -104,7 +104,7 @@ public class GameEngine {
 		
 		// checkForKing
 		retrunCards = checkKings.checkForKing();
-		if (checkKings.checkForKing() != null) {
+		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("checkForKing FÆRDIG");
 			backToBackTopDeck = 0;
