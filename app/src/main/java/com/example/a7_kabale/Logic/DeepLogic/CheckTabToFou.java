@@ -1,7 +1,7 @@
-package com.example.a7_kabale.logic.deepLogic;
+package com.example.a7_kabale.Logic.DeepLogic;
 
-import com.example.a7_kabale.logic.Card;
-import com.example.a7_kabale.logic.LogicState;
+import com.example.a7_kabale.Logic.Card;
+import com.example.a7_kabale.Logic.LogicState;
 
 public class CheckTabToFou {
 

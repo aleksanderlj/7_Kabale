@@ -19,8 +19,8 @@ import com.example.a7_kabale.Database.DatabaseBuilder;
 import com.example.a7_kabale.Database.Entity.Instruction;
 import com.example.a7_kabale.RecyclerView.MoveHistoryActivity;
 import com.example.a7_kabale.R;
-import com.example.a7_kabale.logic.Card;
-import com.example.a7_kabale.logic.GameEngine;
+import com.example.a7_kabale.Logic.Card;
+import com.example.a7_kabale.Logic.GameEngine;
 import com.example.a7_kabale.yolo.YOLOProcessor;
 
 import org.opencv.android.CameraBridgeViewBase;

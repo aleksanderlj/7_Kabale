@@ -1,9 +1,9 @@
-package com.example.a7_kabale.logic;
+package com.example.a7_kabale.Logic;
 
-import com.example.a7_kabale.logic.deepLogic.CheckAces;
-import com.example.a7_kabale.logic.deepLogic.CheckKings;
-import com.example.a7_kabale.logic.deepLogic.CheckTabToFou;
-import com.example.a7_kabale.logic.deepLogic.TableauMovement;
+import com.example.a7_kabale.Logic.DeepLogic.CheckAces;
+import com.example.a7_kabale.Logic.DeepLogic.CheckKings;
+import com.example.a7_kabale.Logic.DeepLogic.CheckTabToFou;
+import com.example.a7_kabale.Logic.DeepLogic.TableauMovement;
 
 import java.util.ArrayList;
 

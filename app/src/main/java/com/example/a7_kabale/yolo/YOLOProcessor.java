@@ -1,6 +1,6 @@
 package com.example.a7_kabale.yolo;
 
-import com.example.a7_kabale.logic.Card;
+import com.example.a7_kabale.Logic.Card;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

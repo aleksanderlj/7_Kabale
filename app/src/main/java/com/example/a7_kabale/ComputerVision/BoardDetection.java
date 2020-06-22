@@ -1,15 +1,11 @@
 package com.example.a7_kabale.ComputerVision;
 
-import android.os.CountDownTimer;
-import android.os.Handler;
-
-import com.example.a7_kabale.logic.Card;
+import com.example.a7_kabale.Logic.Card;
 
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 

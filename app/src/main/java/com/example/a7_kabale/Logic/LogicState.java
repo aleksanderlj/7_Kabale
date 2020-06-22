@@ -1,4 +1,4 @@
-package com.example.a7_kabale.logic;
+package com.example.a7_kabale.Logic;
 
 import java.util.ArrayList;
 

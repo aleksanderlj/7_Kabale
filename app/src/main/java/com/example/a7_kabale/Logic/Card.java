@@ -1,4 +1,4 @@
-package com.example.a7_kabale.logic;
+package com.example.a7_kabale.Logic;
 
 import androidx.annotation.NonNull;
 
