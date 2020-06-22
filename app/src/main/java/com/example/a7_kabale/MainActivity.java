@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // TODO get files from web
         AssetDownloader assetDownloader = new AssetDownloader(this);
-        assetDownloader.downloadAssets();
+        //assetDownloader.downloadAssets();
+        assetDownloader.initLocalAssets();
+        System.out.println("nigga");
 
         newGameButton.setOnClickListener(this);
         continueButton.setOnClickListener(this);
