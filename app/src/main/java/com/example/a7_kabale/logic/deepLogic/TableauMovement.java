@@ -79,6 +79,9 @@ public class TableauMovement {
                         if (temporaryCard.getValue() == cardToSearch.getValue() + 1
                                 && temporaryCard.isRed() != cardToSearch.isRed()) {
                             if (logicState.getTableauRows().get(i).size() == 1 && logicState.getHiddenCards()[i] != 0) {
+                                int [] newHiddenCards = logicState.getHiddenCards();
+                                newHiddenCards[i] = newHiddenCards[i]-1;
+                                logicState.setHiddenCards(newHiddenCards);
                                 return new Card[] {cardToSearch, logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1)};
                             } else if (logicState.getTableauRows().get(i).size() == 1 && logicState.getHiddenCards()[i] == 0) {
                                 if (logicState.getTopDeckCard().getValue() == 13) {
@@ -87,6 +90,9 @@ public class TableauMovement {
                                 for (int k = 0; k < logicState.getTableauRows().size(); k++) {
                                     if (logicState.getTableauRows().get(k).size() != 0 &&
                                             logicState.getTableauRows().get(k).get(0).getValue() == 13 && logicState.getHiddenCards()[k] != 0) {
+                                        int [] newHiddenCards = logicState.getHiddenCards();
+                                        newHiddenCards[i] = newHiddenCards[i]-1;
+                                        logicState.setHiddenCards(newHiddenCards);
                                         return new Card[] {cardToSearch, logicState.getTableauRows().get(j).get(logicState.getTableauRows().get(j).size() - 1)};
                                     }
                                 }
