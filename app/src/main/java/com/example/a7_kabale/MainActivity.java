@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AssetDownloader assetDownloader = new AssetDownloader(this);
         //assetDownloader.downloadAssets();
         assetDownloader.initLocalAssets();
-        System.out.println("nigga");
 
         newGameButton.setOnClickListener(this);
         continueButton.setOnClickListener(this);
