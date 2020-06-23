@@ -18,7 +18,6 @@ public class GameEngine {
 	private CheckTabToFou checkTabToFou = new CheckTabToFou();
 	private CheckKings checkKings = new CheckKings();
 	private TableauMovement tableauMovement = new TableauMovement();
-	private int backToBackTopDeck = 0;
 
 	public void initiateGame() {
 		initiateCardsArray();
@@ -29,8 +28,12 @@ public class GameEngine {
 	private void initiateCardsArray() {
 		tableauRows = new ArrayList<>();
 	}
-
-	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
+	
+	public void revertGameState(int revertedTurns) {
+		logicState.setHiddenCards(logicState.getHistoricHiddenCards().get(logicState.getHistoricHiddenCards().size() - revertedTurns));
+		logicState.setTotalCardsInTopDeck(logicState.getHistoricCardsInTopDeck().get(logicState.getHistoricCardsInTopDeck().size() - revertedTurns));
+	}
+	
 	public Card[] updateGameState(ArrayList<ArrayList<Card>> input) {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
@@ -55,6 +58,8 @@ public class GameEngine {
 		
 		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
+		logicState.getHistoricHiddenCards().add(logicState.getHiddenCards());
+		logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
 		return calculateNextMove();
 	}
 	
@@ -71,7 +76,7 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("checkTopDeckForAce FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 		
@@ -80,7 +85,7 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("checkTableauRowsForAce FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 
@@ -89,7 +94,7 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("topdeckToTableau FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 
@@ -98,7 +103,7 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("topDeckToFoundation FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 		
@@ -107,7 +112,7 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("checkForKing FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 
@@ -116,7 +121,7 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("tableauToTableauHidden FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 		
@@ -125,7 +130,7 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("tableauToTableau FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 		
@@ -134,7 +139,7 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("tabRowToTabRow FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 		
@@ -143,15 +148,15 @@ public class GameEngine {
 		if (retrunCards != null) {
 			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			System.out.println("checkTableauToFoundation FÆRDIG");
-			backToBackTopDeck = 0;
+			logicState.setBackToBackTopDeck(0);
 			return retrunCards;
 		}
 		
 		// getTotalCardsInTopDeck
-		if (logicState.getTotalCardsInTopDeck() > 0 && backToBackTopDeck < logicState.getTotalCardsInTopDeck()) {
+		if (logicState.getTotalCardsInTopDeck() > 0 && logicState.getBackToBackTopDeck() < logicState.getTotalCardsInTopDeck()) {
 			System.out.println("Turn the top deck.");
 			System.out.println("topDeck FÆRDIG");
-			backToBackTopDeck++;
+			logicState.setBackToBackTopDeck(logicState.getTotalCardsInTopDeck() + 1);
 			return new Card[] {new Card(14, "")};
 		} else {
 			if (logicState.getFoundationsDeckDiamonds().getValue() == 13
