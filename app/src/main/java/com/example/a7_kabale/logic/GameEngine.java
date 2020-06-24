@@ -13,12 +13,11 @@ public class GameEngine {
 	private LogicState logicState = new LogicState();
 	private ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
-	private Card[] retrunCards = new Card[2];
+	private Card[] returnCards = new Card[2];
 	private CheckAces checkAces = new CheckAces();
 	private CheckTabToFou checkTabToFou = new CheckTabToFou();
 	private CheckKings checkKings = new CheckKings();
 	private TableauMovement tableauMovement = new TableauMovement();
-	private int backToBackTopDeck = 0;
 
 	public void initiateGame() {
 		initiateCardsArray();
@@ -29,8 +28,17 @@ public class GameEngine {
 	private void initiateCardsArray() {
 		tableauRows = new ArrayList<>();
 	}
-
-	// TODO - This must be implemented, when we get data from a picture - take a snapshot of the current cards
+	
+	public boolean revertGameState(int revertedTurns) {
+		if (revertedTurns <= logicState.getHistoricHiddenCards().size()) {
+			logicState.setHiddenCards(logicState.getHistoricHiddenCards().get(logicState.getHistoricHiddenCards().size() - revertedTurns));
+			logicState.setTotalCardsInTopDeck(logicState.getHistoricCardsInTopDeck().get(logicState.getHistoricCardsInTopDeck().size() - revertedTurns));
+			return true;
+		}
+		else
+			return false;
+	}
+	
 	public Card[] updateGameState(ArrayList<ArrayList<Card>> input) {
 		//The rank of cards in Solitaire games is: K(13), Q(12), J(11), 10, 9, 8, 7, 6, 5, 4, 3, 2, A(1).
 		//The color of the cards can be the following: Diamonds, Hearts, Clubs and Spades.
@@ -55,6 +63,8 @@ public class GameEngine {
 		
 		logicState.updateState(tableauRows, topDeckCard, foundationsDeckDiamonds,
 				foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades);
+		logicState.getHistoricHiddenCards().add(logicState.getHiddenCards());
+		logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
 		return calculateNextMove();
 	}
 	
@@ -64,94 +74,94 @@ public class GameEngine {
 		checkKings.setLogicState(logicState);
 		tableauMovement.setLogicState(logicState);
 		
-		retrunCards = null;
+		returnCards = null;
 		
 		// checkTopDeckForAce
-		retrunCards = checkAces.checkTopDeckForAce();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = checkAces.checkTopDeckForAce();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("checkTopDeckForAce FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 		
 		// checkTopDeckForAce
-		retrunCards = checkAces.checkTableauRowsForAce();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = checkAces.checkTableauRowsForAce();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("checkTableauRowsForAce FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 
 		// topdeckToTableau
-		retrunCards = tableauMovement.topdeckToTableau();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = tableauMovement.topdeckToTableau();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("topdeckToTableau FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 
 		// topDeckToFoundation
-		retrunCards = checkTabToFou.topDeckToFoundation();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = checkTabToFou.topDeckToFoundation();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("topDeckToFoundation FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 		
 		// checkForKing
-		retrunCards = checkKings.checkForKing();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = checkKings.checkForKing();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("checkForKing FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 
 		// tableauToTableauHiddenCard
-		retrunCards = tableauMovement.tableauToTableauHiddenCard();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = tableauMovement.tableauToTableauHiddenCard();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("tableauToTableauHidden FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 		
 		// tableauToTableau
-		retrunCards = tableauMovement.tableauToTableau();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = tableauMovement.tableauToTableau();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("tableauToTableau FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 		
 		// tabRowToTabRow
-		retrunCards = tableauMovement.tabRowToTabRow();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = tableauMovement.tabRowToTabRow();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("tabRowToTabRow FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 		
 		// checkTableauToFoundation
-		retrunCards = checkTabToFou.checkTableauToFoundation();
-		if (retrunCards != null) {
-			System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+		returnCards = checkTabToFou.checkTableauToFoundation();
+		if (returnCards != null) {
+			System.out.println(returnCards[0].toString() + returnCards[1].toString());
 			System.out.println("checkTableauToFoundation FÆRDIG");
-			backToBackTopDeck = 0;
-			return retrunCards;
+			logicState.setBackToBackTopDeck(0);
+			return returnCards;
 		}
 		
 		// getTotalCardsInTopDeck
-		if (logicState.getTotalCardsInTopDeck() > 0 && backToBackTopDeck < logicState.getTotalCardsInTopDeck()) {
+		if (logicState.getTotalCardsInTopDeck() > 0 && logicState.getBackToBackTopDeck() < logicState.getTotalCardsInTopDeck()) {
 			System.out.println("Turn the top deck.");
 			System.out.println("topDeck FÆRDIG");
-			backToBackTopDeck++;
+			logicState.setBackToBackTopDeck(logicState.getTotalCardsInTopDeck() + 1);
 			return new Card[] {new Card(14, "")};
 		} else {
 			if (logicState.getFoundationsDeckDiamonds().getValue() == 13

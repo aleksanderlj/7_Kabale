@@ -7,6 +7,9 @@ public class LogicState {
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 	private int totalCardsInTopDeck = 24;
 	private int[] hiddenCards = {0,1,2,3,4,5,6};
+	private int backToBackTopDeck = 0;
+	private ArrayList<int[]> historicHiddenCards = new ArrayList<>();
+	private ArrayList<Integer> historicCardsInTopDeck = new ArrayList<>();
 	
 	public LogicState(){}
 	
@@ -82,5 +85,29 @@ public class LogicState {
 	
 	public void setHiddenCards(int[] hiddenCards) {
 		this.hiddenCards = hiddenCards;
+	}
+	
+	public int getBackToBackTopDeck() {
+		return backToBackTopDeck;
+	}
+	
+	public void setBackToBackTopDeck(int backToBackTopDeck) {
+		this.backToBackTopDeck = backToBackTopDeck;
+	}
+	
+	public ArrayList<int[]> getHistoricHiddenCards() {
+		return historicHiddenCards;
+	}
+	
+	public void setHistoricCardsInTopDeck(ArrayList<Integer> historicCardsInTopDeck) {
+		this.historicCardsInTopDeck = historicCardsInTopDeck;
+	}
+	
+	public ArrayList<Integer> getHistoricCardsInTopDeck() {
+		return historicCardsInTopDeck;
+	}
+	
+	public void setHistoricHiddenCards(ArrayList<int[]> historicHiddenCards) {
+		this.historicHiddenCards = historicHiddenCards;
 	}
 }
