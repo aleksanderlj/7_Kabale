@@ -181,7 +181,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.revert_btn:
-                ge.revertGameState(1);
                 Executors.newSingleThreadExecutor().execute(() -> {
                     db = DatabaseBuilder.get(this);
                     List<Instruction> instructions = db.instructionDAO().getAll();
@@ -190,6 +189,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                             Toast.makeText(this, "Nothing to revert", Toast.LENGTH_SHORT).show();
                         });
                     } else {
+                        ge.revertGameState(1);
                         db.instructionDAO().delete(instructions.get(instructions.size() - 1));
                         runOnUiThread(() -> {
                             Toast.makeText(this, "Reverted the last move.", Toast.LENGTH_SHORT).show();
