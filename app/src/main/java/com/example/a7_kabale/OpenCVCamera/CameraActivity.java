@@ -31,12 +31,13 @@ import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, CameraBridgeViewBase.CvCameraViewListener2 {
 
     AppDatabase db;
-    Button close_btn, capture_btn, confirm_btn, overlay_btn;
+    Button close_btn, capture_btn, confirm_btn, overlay_btn, revert_btn;
     ImageView preview, darkBorder;
     TextView instructionTextView;
     JavaCameraView camera;
@@ -69,6 +70,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn = findViewById(R.id.closepreview_btn);
         capture_btn = findViewById(R.id.capture_btn);
         confirm_btn = findViewById(R.id.confirm_btn);
+        revert_btn = findViewById(R.id.revert_btn);
         instructionTextView = findViewById(R.id.instructionTextView);
         historyButton = findViewById(R.id.history_btn);
         overlay_btn = findViewById(R.id.overlay_btn);
@@ -87,6 +89,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn.setOnClickListener(this);
         historyButton.setOnClickListener(this);
         overlay_btn.setOnClickListener(this);
+        revert_btn.setOnClickListener(this);
 
         ge = new GameEngine();
         ge.initiateGame();
@@ -173,6 +176,17 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.overlay_btn:
                 preview.setImageBitmap(bmOverlay);
                 break;
+
+            case R.id.revert_btn:
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    db = DatabaseBuilder.get(this);
+                    List<Instruction> instructions = db.instructionDAO().getAll();
+                    db.instructionDAO().delete(instructions.get(instructions.size()-1));
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Reverted the last turn.", Toast.LENGTH_SHORT).show();
+                    });
+                });
+                break;
         }
     }
 
@@ -247,6 +261,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn.setVisibility(View.GONE);
         capture_btn.setVisibility(View.VISIBLE);
         overlay_btn.setVisibility(View.GONE);
+        revert_btn.setVisibility(View.VISIBLE);
         String s = "Capture image for next instruction.";
         instructionTextView.setText(s);
 
@@ -262,6 +277,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn.setVisibility(View.VISIBLE);
         capture_btn.setVisibility(View.GONE);
         overlay_btn.setVisibility(View.VISIBLE);
+        revert_btn.setVisibility(View.GONE);
         s = "Create instructions based on this image?";
         instructionTextView.setText(s);
 
@@ -277,6 +293,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         confirm_btn.setVisibility(View.GONE);
         capture_btn.setVisibility(View.GONE);
         overlay_btn.setVisibility(View.GONE);
+        revert_btn.setVisibility(View.GONE);
 
         bringButtonsToFront();
     }
@@ -287,11 +304,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         close_btn.bringToFront();
         overlay_btn.bringToFront();
         capture_btn.bringToFront();
+        revert_btn.bringToFront();
         historyButton.setElevation(20);
         confirm_btn.setElevation(20);
         close_btn.setElevation(20);
         overlay_btn.setElevation(20);
         capture_btn.setElevation(20);
+        revert_btn.setElevation(20);
     }
 
     private void disableCamera() {
