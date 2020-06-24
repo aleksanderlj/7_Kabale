@@ -22,7 +22,7 @@ import java.util.List;
 
 public class YOLOProcessor {
     Net darkNet;
-    Size darkNetSize = new Size(2048, 2048);
+    Size darkNetSize = new Size(1536, 1536); // 2048, 1536
 
     public void initDarknet(File storage) {
         String weight = storage.getPath() + "/data/cards.weights";

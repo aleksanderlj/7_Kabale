@@ -14,6 +14,7 @@ public class GameEngine {
 	private ArrayList<ArrayList<Card>> tableauRows = new ArrayList<>();
 	private Card topDeckCard, foundationsDeckDiamonds, foundationsDeckHearts, foundationsDeckClubs, foundationsDeckSpades;
 	private Card[] returnCards = new Card[2];
+	private Card[] prevCards = new Card[2];
 	private CheckAces checkAces = new CheckAces();
 	private CheckTabToFou checkTabToFou = new CheckTabToFou();
 	private CheckKings checkKings = new CheckKings();
@@ -154,23 +155,29 @@ public class GameEngine {
 			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
 			return returnCards;
 		}
+
+		// tableauToTableau
+		returnCards = tableauMovement.tableauToTableau();
+		if (returnCards != null) {
+			//System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+			//System.out.println("tableauToTableau FÆRDIG");
+			if((returnCards[0] == prevCards[0]) && (returnCards[1].getValue() == prevCards[1].getValue())){
+				returnCards = null;
+				revertGameState(1);
+			} else {
+				backToBackTopDeck = 0;
+				logicState.getHistoricHiddenCards().add(logicState.getHiddenCards().clone());
+				logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
+				prevCards = returnCards.clone();
+				return returnCards;
+			}
+		}
 		
 		// checkTableauToFoundation
 		returnCards = checkTabToFou.checkTableauToFoundation();
 		if (returnCards != null) {
 			//System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
 			//System.out.println("checkTableauToFoundation FÆRDIG");
-			backToBackTopDeck = 0;
-			logicState.getHistoricHiddenCards().add(logicState.getHiddenCards().clone());
-			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
-			return returnCards;
-		}
-		
-		// tableauToTableau
-		returnCards = tableauMovement.tableauToTableau();
-		if (returnCards != null) {
-			//System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
-			//System.out.println("tableauToTableau FÆRDIG");
 			backToBackTopDeck = 0;
 			logicState.getHistoricHiddenCards().add(logicState.getHiddenCards().clone());
 			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
