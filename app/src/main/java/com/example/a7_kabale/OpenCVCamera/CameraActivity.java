@@ -54,6 +54,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     Point p1, p2;
     boolean cameraOn, drawArrow;
     ArrayList<ArrayList<Card>> cardList;
+    TextView revertText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         historyButton = findViewById(R.id.history_btn);
         overlay_btn = findViewById(R.id.overlay_btn);
         darkBorder = findViewById(R.id.dark_border);
+        revertText = findViewById(R.id.revertText);
         fields = null;
         overlayFields = null;
 
@@ -183,7 +185,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     List<Instruction> instructions = db.instructionDAO().getAll();
                     db.instructionDAO().delete(instructions.get(instructions.size()-1));
                     runOnUiThread(() -> {
-                        Toast.makeText(this, "Reverted the last turn.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Reverted the last move.", Toast.LENGTH_SHORT).show();
                     });
                 });
                 break;
@@ -262,6 +264,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         capture_btn.setVisibility(View.VISIBLE);
         overlay_btn.setVisibility(View.GONE);
         revert_btn.setVisibility(View.VISIBLE);
+        revertText.setText("Revert");
+        revertText.setVisibility(View.VISIBLE);
         String s = "Capture image for next instruction.";
         instructionTextView.setText(s);
 
@@ -278,6 +282,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         capture_btn.setVisibility(View.GONE);
         overlay_btn.setVisibility(View.VISIBLE);
         revert_btn.setVisibility(View.GONE);
+        revertText.setVisibility(View.VISIBLE);
+        revertText.setText("Overlay");
         s = "Create instructions based on this image?";
         instructionTextView.setText(s);
 
@@ -294,6 +300,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         capture_btn.setVisibility(View.GONE);
         overlay_btn.setVisibility(View.GONE);
         revert_btn.setVisibility(View.GONE);
+        revertText.setVisibility(View.GONE);
 
         bringButtonsToFront();
     }

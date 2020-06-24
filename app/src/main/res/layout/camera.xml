@@ -168,12 +168,12 @@
         android:id="@+id/overlay_btn"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/debug"
-        app:layout_constraintBottom_toTopOf="@+id/guideline26"
+        android:background="@drawable/overlay"
+        app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toTopOf="@+id/guideline27"
+        app:layout_constraintTop_toTopOf="@+id/guideline15"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
@@ -204,7 +204,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.36" />
+        app:layout_constraintGuide_percent="0.38" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline27"
@@ -214,7 +214,7 @@
         app:layout_constraintGuide_percent="0.2457421" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/revertText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
