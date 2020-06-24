@@ -180,6 +180,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.revert_btn:
+                ge.revertGameState(1);
                 Executors.newSingleThreadExecutor().execute(() -> {
                     db = DatabaseBuilder.get(this);
                     List<Instruction> instructions = db.instructionDAO().getAll();
