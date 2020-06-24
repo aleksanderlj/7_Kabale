@@ -177,16 +177,23 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.overlay_btn:
                 preview.setImageBitmap(bmOverlay);
+                revertText.setVisibility(View.GONE);
                 break;
 
             case R.id.revert_btn:
                 Executors.newSingleThreadExecutor().execute(() -> {
                     db = DatabaseBuilder.get(this);
                     List<Instruction> instructions = db.instructionDAO().getAll();
-                    db.instructionDAO().delete(instructions.get(instructions.size()-1));
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "Reverted the last move.", Toast.LENGTH_SHORT).show();
-                    });
+                    if(instructions.size()<1){
+                        runOnUiThread(()->{
+                            Toast.makeText(this, "Nothing to revert", Toast.LENGTH_SHORT).show();
+                        });
+                    } else {
+                        db.instructionDAO().delete(instructions.get(instructions.size() - 1));
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, "Reverted the last move.", Toast.LENGTH_SHORT).show();
+                        });
+                    }
                 });
                 break;
         }
