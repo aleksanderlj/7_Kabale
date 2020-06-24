@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     MediaPlayer wauw;
-    private Button newGameButton, continueButton;
+    private Button newGameButton;
     private AppDatabase db;
 
     @Override
@@ -31,9 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wauw = MediaPlayer.create(this, R.raw.wow);
 
         newGameButton = findViewById(R.id.newGame_btn);
-        continueButton = findViewById(R.id.continue_btn);
 
-        checkDatabaseCondition();
         getPermissions();
 
         // TODO get files from web
@@ -42,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assetDownloader.initLocalAssets();
 
         newGameButton.setOnClickListener(this);
-        continueButton.setOnClickListener(this);
 
     }
 
@@ -58,10 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(i);
                 });
                 break;
-
-            case R.id.continue_btn:
-                startActivity(i);
-                break;
         }
     }
 
@@ -76,32 +69,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(ContextCompat.checkSelfPermission(this, s) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(this, new String[]{s}, 1);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        checkDatabaseCondition();
-        super.onResume();
-    }
-
-
-    // Opdaterer "Continue" knappen, hvis historik listen i databasen er tom, bliver knappen
-    // semi-gennemsigtig og disabled. Ellers enables den, så man kan fortsætte spil uden at
-    // wipe databasen.
-    private void checkDatabaseCondition(){
-        Executors.newSingleThreadExecutor().execute(() -> {
-            db = DatabaseBuilder.get(this);
-            if (!db.instructionDAO().getAll().isEmpty()){
-                runOnUiThread(() -> {
-                    continueButton.setAlpha(1);
-                    continueButton.setClickable(true);
-                });
-            } else {
-                runOnUiThread(() -> {
-                    continueButton.setAlpha(0.5f);
-                    continueButton.setClickable(false);
-                });
-            }
-        });
     }
 }
