@@ -8,12 +8,9 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.renderscript.ScriptGroup;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;

@@ -1,7 +1,5 @@
 package com.example.a7_kabale.yolo;
 
-import java.util.ArrayList;
-
 public final class ClassNames {
     public final static String[] cardList = {
             "spadeA",            "clubA",            "heartA",            "diamondA",
