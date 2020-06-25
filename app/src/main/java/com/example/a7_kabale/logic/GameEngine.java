@@ -101,17 +101,6 @@ public class GameEngine {
 			return returnCards;
 		}
 		
-		// topdeckToTableau
-		returnCards = tableauMovement.topdeckToTableau();
-		if (returnCards != null) {
-			//System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
-			//System.out.println("topdeckToTableau FÆRDIG");
-			backToBackTopDeck = 0;
-			logicState.getHistoricHiddenCards().add(logicState.getHiddenCards().clone());
-			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
-			return returnCards;
-		}
-		
 		// checkForKing
 		returnCards = checkKings.checkForKing();
 		if (returnCards != null) {
@@ -134,17 +123,6 @@ public class GameEngine {
 			return returnCards;
 		}
 		
-		// topDeckToFoundation
-		returnCards = checkTabToFou.topDeckToFoundation();
-		if (returnCards != null) {
-			//System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
-			//System.out.println("topDeckToFoundation FÆRDIG");
-			backToBackTopDeck = 0;
-			logicState.getHistoricHiddenCards().add(logicState.getHiddenCards().clone());
-			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
-			return returnCards;
-		}
-		
 		// tabRowToTabRow
 		returnCards = tableauMovement.tabRowToTabRow();
 		if (returnCards != null) {
@@ -155,7 +133,18 @@ public class GameEngine {
 			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
 			return returnCards;
 		}
-
+		
+		// checkTableauToFoundation
+		returnCards = checkTabToFou.checkTableauToFoundation();
+		if (returnCards != null) {
+			//System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+			//System.out.println("checkTableauToFoundation FÆRDIG");
+			backToBackTopDeck = 0;
+			logicState.getHistoricHiddenCards().add(logicState.getHiddenCards().clone());
+			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
+			return returnCards;
+		}
+		
 		// tableauToTableau
 		returnCards = tableauMovement.tableauToTableau();
 		if (returnCards != null) {
@@ -173,11 +162,22 @@ public class GameEngine {
 			}
 		}
 		
-		// checkTableauToFoundation
-		returnCards = checkTabToFou.checkTableauToFoundation();
+		// topdeckToTableau
+		returnCards = tableauMovement.topdeckToTableau();
 		if (returnCards != null) {
 			//System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
-			//System.out.println("checkTableauToFoundation FÆRDIG");
+			//System.out.println("topdeckToTableau FÆRDIG");
+			backToBackTopDeck = 0;
+			logicState.getHistoricHiddenCards().add(logicState.getHiddenCards().clone());
+			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
+			return returnCards;
+		}
+		
+		// topDeckToFoundation
+		returnCards = checkTabToFou.topDeckToFoundation();
+		if (returnCards != null) {
+			//System.out.println(retrunCards[0].toString() + retrunCards[1].toString());
+			//System.out.println("topDeckToFoundation FÆRDIG");
 			backToBackTopDeck = 0;
 			logicState.getHistoricHiddenCards().add(logicState.getHiddenCards().clone());
 			logicState.getHistoricCardsInTopDeck().add(logicState.getTotalCardsInTopDeck());
